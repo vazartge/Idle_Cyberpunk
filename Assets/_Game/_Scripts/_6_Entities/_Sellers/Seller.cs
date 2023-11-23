@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Customers;
 using Assets._Game._Scripts._6_Entities._Store;
@@ -18,7 +19,9 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
         DeliveredOrderState
     }
 
-    public class Seller : MonoBehaviour {
+    public class Seller : MonoBehaviour
+    {
+        public float TimeTakingOrder { get; } = 2f;
         // Параметр скорости движения продавца
         [SerializeField]
         private float _moveSpeed = 3f;
@@ -37,9 +40,10 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
         public void Construct(GameMode gameMode, Store store) {
             _gameMode = gameMode;
             _store = store;
+            SetupSeller();
         }
 
-        private void Start() {
+        private void SetupSeller() {
             _currentSellerState = SellerState.SearchingForCustomerState;
             StartCoroutine(WorkRoutine());
         }
@@ -75,9 +79,6 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
             }
         }
 
-        public void SetNewCustomer() {
-
-        }
         private IEnumerator SearchForCustomerRoutine() {
             yield return new WaitUntil(() => _store.IsCustomerAvailable); // Ожидаем, пока флаг не станет true
             _currentCustomerSlot = _store.GetWaitingCustomerSlot();
@@ -85,6 +86,7 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
             _currenSellerSlot = _store.GetSellerSlotByCustomerSlotID(_currentCustomerSlot);
             // Переключение на следующее состояние
             _currentSellerState = SellerState.MovingToCustomerForOrderState;
+            Debug.Log("New Customer");
         }
 
         
@@ -96,15 +98,14 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
 
             // Запустите Dotween анимацию и ждите её завершения
             yield return MoveToTargetWithSpeed(customerPosition, SellerState.MovingToCustomerForOrderState);
-
-            // После достижения покупателя продолжаем следующую корутину
             _currentSellerState = SellerState.TakingOrderState;
         }
 
         private IEnumerator TakingOrderRoutine() {
             // Взятие заказа у покупателя
             // ...
-            yield return null;
+            yield return new WaitForSeconds(TimeTakingOrder);
+            _currentOrder = _currentCustomer.TakeOrder();
         }
         private IEnumerator ReadingOrderRoutine() {
             // Взятие заказа у покупателя
@@ -145,6 +146,7 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
         }
 
         private IEnumerator MoveToTargetWithSpeed(Vector3 target, SellerState sender) {
+            Debug.Log("Продавец начал движение");
             float distance = Vector3.Distance(transform.position, target);
             float duration = distance / _moveSpeed; // Рассчитываем продолжительность на основе скорости и расстояния
             // Добавляем обработчик, который вызовется по завершении анимации
@@ -154,7 +156,29 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
         private void ReachedDestination(SellerState sender){
            
             // Действия после достижения цели
-            Debug.Log("Достигнута точка назначения");
+            Debug.Log("Достигнута точка назначения Продавцом");
+            switch (sender)
+            {
+                case SellerState.SearchingForCustomerState:
+                    break;
+                case SellerState.MovingToCustomerForOrderState:
+                    
+                    break;
+                case SellerState.TakingOrderState:
+                    break;
+                case SellerState.ReadingOrderState:
+                    break;
+                case SellerState.MovingToDesktopState:
+                    break;
+                case SellerState.CollectingOrderState:
+                    break;
+                case SellerState.MovingToCustomerForDeliverState:
+                    break;
+                case SellerState.DeliveredOrderState:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(sender), sender, null);
+            }
         }
     }
 }

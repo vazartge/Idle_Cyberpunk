@@ -28,16 +28,33 @@ namespace Assets._Game._Scripts._6_Entities._Customers
             MoveToTargetWithSpeed();
         }
         private void MoveToTargetWithSpeed() {
-            float distance = Vector3.Distance(transform.position, _freeSlot.transform.position);
-            float duration = distance / speed; // Рассчитываем продолжительность на основе скорости и расстояния
-            // Добавляем обработчик, который вызовется по завершении анимации
-            transform.DOMove(_freeSlot.transform.position, duration).SetEase(Ease.Linear).OnComplete(ReachedDestination);
+            // Вычисляем промежуточную точку на одной линии с прилавком, но по горизонтали от покупателя
+            Vector3 intermediatePoint = new Vector3(_freeSlot.transform.position.x, transform.position.y, transform.position.z);
+
+            // Сначала перемещаемся к промежуточной точке
+            float horizontalDistance = Vector3.Distance(transform.position, intermediatePoint);
+            float horizontalDuration = horizontalDistance / speed;
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(transform.DOMove(intermediatePoint, horizontalDuration).SetEase(Ease.Linear));
+
+            // Затем перемещаемся от промежуточной точки к прилавку
+            float verticalDistance = Vector3.Distance(intermediatePoint, _freeSlot.transform.position);
+            float verticalDuration = verticalDistance / speed;
+            sequence.Append(transform.DOMove(_freeSlot.transform.position, verticalDuration).SetEase(Ease.Linear));
+
+            // Добавляем обработчик, который вызовется по завершении всей анимации
+            sequence.OnComplete(ReachedDestination);
         }
-        private void ReachedDestination()
-        {
-            _store.CustomerIsReachedStore(this,_freeSlot);
+
+        private void ReachedDestination() {
+            _store.CustomerIsReachedStore(this, _freeSlot);
             // Действия после достижения цели
             Debug.Log("Достигнута точка назначения");
+        }
+
+        public Order TakeOrder()
+        {
+            return _order;
         }
     }
 }

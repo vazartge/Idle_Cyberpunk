@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets._Game._Scripts._6_Entities._Customers;
+using Assets._Game._Scripts._6_Entities._Sellers;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Store {
@@ -10,6 +11,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public DesktopSlot[] DesktopSlots { get; set; }
         public bool IsCustomerAvailable { get; set; }
         private Queue<CustomerSlot> _waitingCustomerSlots = new Queue<CustomerSlot>();
+        
 
 
         private void Awake()
@@ -42,16 +44,24 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             slot.Customer = customer;
             // Добавить в очередь свободных слотов 
             AddToWaitingCustomersSlotsQueue(slot);
+            
 
         }
         private void AddToWaitingCustomersSlotsQueue(CustomerSlot slot)
         {
             _waitingCustomerSlots.Enqueue(slot);
+            IsCustomerAvailable = true;
         }
 
         public CustomerSlot GetWaitingCustomerSlot()
         {
-            return _waitingCustomerSlots.Dequeue();
+            var customer = _waitingCustomerSlots.Dequeue();
+            if (_waitingCustomerSlots.Count <= 0)
+            {
+                IsCustomerAvailable = false;
+            }
+
+            return customer;
         }
 
         public SellerSlot GetSellerSlotByCustomerSlotID(CustomerSlot customerSlot)
