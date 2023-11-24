@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using Assets._Game._Scripts._2_Game;
-using Assets._Game._Scripts._6_Entities._Customers;
-using Assets._Game._Scripts._6_Entities._Sellers;
 using Assets._Game._Scripts._6_Entities._Store;
+using Assets._Game._Scripts._6_Entities._Store._Products;
+using Assets._Game._Scripts._6_Entities._Units._Customers;
+using Assets._Game._Scripts._6_Entities._Units._Sellers;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers {
@@ -80,7 +81,7 @@ namespace Assets._Game._Scripts._5_Managers {
             Customer customer = _customerPool.Dequeue(); // Получаем покупателя из пула
             customer.gameObject.SetActive(true); // Активируем покупателя
             var freeSlot = Store.GetFreeCustomerSlot();
-            var order = new Order(new Product(ProductType.MechanicalEye, 1), 1);
+            var order = new Order(customer,new MechanicalEyeProduct(), 1);
             customer.SetupCustomer(freeSlot, order);
             CurrentActiveCustomers++;
             return customer;

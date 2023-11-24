@@ -1,80 +1,76 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Assets._Game._Scripts._6_Entities._Customers;
-using Assets._Game._Scripts._6_Entities._Sellers;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Assets._Game._Scripts._6_Entities._Store._Slots;
+using Assets._Game._Scripts._6_Entities._Units._Customers;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Store {
     public class Store : MonoBehaviour {
-        public SellerSlot[] SellerSlots { get; set; }
-        public CustomerSlot[] CustomerSlots { get; set; }
-        public DesktopSlot[] DesktopSlots { get; set; }
+        public int CountOrders;
+        public List<SellerSlot> SellerSlots { get; set; }
+        public List<CustomerSlot> CustomerSlots { get; set; }
+        public List<DesktopSlot> DesktopSlots { get; set; }
+        public List<Order> Orders { get; set; }
+        private Queue<CustomerSlot> _waitingOrederCustomerSlots;
         public bool IsCustomerAvailable { get; set; }
-        private Queue<CustomerSlot> _waitingCustomerSlots = new Queue<CustomerSlot>();
-        
 
 
-        private void Awake()
-        {
+        private void Awake() {
             GetAllStoreSlots();
         }
 
-        private void GetAllStoreSlots()
-        {
-            SellerSlots = GetComponentsInChildren<SellerSlot>();
-            CustomerSlots = GetComponentsInChildren<CustomerSlot>();
-            DesktopSlots = GetComponentsInChildren<DesktopSlot>();
-            
+        private void GetAllStoreSlots() {
+            SellerSlots = GetComponentsInChildren<SellerSlot>().ToList();
+            CustomerSlots = GetComponentsInChildren<CustomerSlot>().ToList();
+            DesktopSlots = GetComponentsInChildren<DesktopSlot>().ToList();
+
         }
 
-        public CustomerSlot GetFreeCustomerSlot()
-        {
+        public CustomerSlot GetFreeCustomerSlot() {
             foreach (var slot in CustomerSlots) {
                 if (!slot.IsOccupied) {
-                    slot.IsOccupied = true;
+                    
                     return slot;
                 }
             }
+            Debug.Log("Все слоты заняты");
             return null; // Все слоты заняты
         }
 
-        public void CustomerIsReachedStore(Customer customer,CustomerSlot slot)
-        {
-            
+        public void CustomerIsReachedStore(Customer customer, CustomerSlot slot) {
+
             slot.Customer = customer;
             // Добавить в очередь свободных слотов 
             AddToWaitingCustomersSlotsQueue(slot);
-            
+
 
         }
-        private void AddToWaitingCustomersSlotsQueue(CustomerSlot slot)
-        {
-            _waitingCustomerSlots.Enqueue(slot);
+        private void AddToWaitingCustomersSlotsQueue(CustomerSlot slot) {
+            _waitingOrederCustomerSlots.Enqueue(slot);
             IsCustomerAvailable = true;
         }
 
-        public CustomerSlot GetWaitingCustomerSlot()
-        {
-            var customer = _waitingCustomerSlots.Dequeue();
-            if (_waitingCustomerSlots.Count <= 0)
-            {
+        public CustomerSlot GetWaitingCustomerSlot() {
+            if (_waitingOrederCustomerSlots.Count <= 0) {
                 IsCustomerAvailable = false;
+                return null;
             }
-
-            return customer;
+            return  _waitingOrederCustomerSlots.Dequeue();
         }
 
-        public SellerSlot GetSellerSlotByCustomerSlotID(CustomerSlot customerSlot)
-        {
-            var idCustomer = customerSlot.ID;
-            foreach (var slot in SellerSlots)
-            {
-                if (slot.ID == idCustomer)
-                {
-                    return slot;
-                }
-            }
+        public SellerSlot GetSellerSlotByCustomerSlot(CustomerSlot customerSlot) {
+            
+            return SellerSlots.FirstOrDefault(slot => slot.ID == customerSlot.ID);
+        }
 
+        public void AddNewOrder(Order order)
+        {
+            Orders.Add(order);
+            CountOrders++;
+        }
+
+        public Order GetNewJobForSeller()
+        {
             return null;
         }
     }

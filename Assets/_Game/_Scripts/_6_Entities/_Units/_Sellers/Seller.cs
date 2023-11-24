@@ -1,26 +1,28 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using Assets._Game._Scripts._5_Managers;
-using Assets._Game._Scripts._6_Entities._Customers;
 using Assets._Game._Scripts._6_Entities._Store;
+using Assets._Game._Scripts._6_Entities._Store._Slots;
+using Assets._Game._Scripts._6_Entities._Units._Base;
+using Assets._Game._Scripts._6_Entities._Units._Customers;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Assets._Game._Scripts._6_Entities._Sellers
+namespace Assets._Game._Scripts._6_Entities._Units._Sellers
 {
-    public enum SellerState {
-        SearchingForCustomerState,
-        MovingToCustomerForOrderState,
-        TakingOrderState,
-        ReadingOrderState,
-        MovingToDesktopState,
-        CollectingOrderState,
-        MovingToCustomerForDeliverState,
-        DeliveredOrderState
-    }
-
-    public class Seller : MonoBehaviour
+   
+    public class Seller : UnitGame
     {
+        private enum SellerState {
+            SearchingForCustomerState,
+            MovingToCustomerForOrderState,
+            TakingOrderState,
+            CheckCustomersWaitingSellersState,
+            TakingNewJobState,
+            MovingToDesktopState,
+            CollectingOrderState,
+            MovingToCustomerForDeliverState,
+            DeliveredOrderState
+        }
         public float TimeTakingOrder { get; } = 2f;
         // Параметр скорости движения продавца
         [SerializeField]
@@ -29,7 +31,7 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
         private Store _store;
 
         private Customer _currentCustomer;
-        private SellerState _currentSellerState = SellerState.SearchingForCustomerState;
+        private SellerState _sellerState = SellerState.SearchingForCustomerState;
         private Order _currentOrder;
         private int _currentOrderItemIndex; // Индекс текущего товара в заказе
         private bool _isCustomerAvailable;
@@ -44,15 +46,15 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
         }
 
         private void SetupSeller() {
-            _currentSellerState = SellerState.SearchingForCustomerState;
+            _sellerState = SellerState.SearchingForCustomerState;
             StartCoroutine(WorkRoutine());
         }
 
         private IEnumerator WorkRoutine() {
             while (true) {
-                switch (_currentSellerState) {
+                switch (_sellerState) {
                     case SellerState.SearchingForCustomerState:
-                        yield return StartCoroutine(SearchForCustomerRoutine());
+                        yield return StartCoroutine(WaitingForCustomerRoutine());
                         break;
                     case SellerState.MovingToCustomerForOrderState:
                         yield return StartCoroutine(MovingToCustomerForOrderRoutine());
@@ -60,8 +62,11 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
                     case SellerState.TakingOrderState:
                         yield return StartCoroutine(TakingOrderRoutine());
                         break;
-                    case SellerState.ReadingOrderState:
-                        yield return StartCoroutine(ReadingOrderRoutine());
+                    case SellerState.CheckCustomersWaitingSellersState:
+                        yield return StartCoroutine(CheckCustomersWaitingSellersRoutine());
+                        break;
+                    case SellerState.TakingNewJobState:
+                        yield return StartCoroutine(TakingNewJobRoutine());
                         break;
                     case SellerState.MovingToDesktopState:
                         yield return StartCoroutine(MoveToDesktopRoutine());
@@ -79,13 +84,13 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
             }
         }
 
-        private IEnumerator SearchForCustomerRoutine() {
+        private IEnumerator WaitingForCustomerRoutine() {
             yield return new WaitUntil(() => _store.IsCustomerAvailable); // Ожидаем, пока флаг не станет true
             _currentCustomerSlot = _store.GetWaitingCustomerSlot();
             _currentCustomer = _currentCustomerSlot.Customer;
-            _currenSellerSlot = _store.GetSellerSlotByCustomerSlotID(_currentCustomerSlot);
+            _currenSellerSlot = _store.GetSellerSlotByCustomerSlot(_currentCustomerSlot);
             // Переключение на следующее состояние
-            _currentSellerState = SellerState.MovingToCustomerForOrderState;
+            _sellerState = SellerState.MovingToCustomerForOrderState;
             Debug.Log("New Customer");
         }
 
@@ -98,18 +103,34 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
 
             // Запустите Dotween анимацию и ждите её завершения
             yield return MoveToTargetWithSpeed(customerPosition, SellerState.MovingToCustomerForOrderState);
-            _currentSellerState = SellerState.TakingOrderState;
+            _sellerState = SellerState.TakingOrderState;
         }
 
         private IEnumerator TakingOrderRoutine() {
             // Взятие заказа у покупателя
             // ...
             yield return new WaitForSeconds(TimeTakingOrder);
-            _currentOrder = _currentCustomer.TakeOrder();
+            _store.AddNewOrder(_currentCustomer.GetOrder());
         }
-        private IEnumerator ReadingOrderRoutine() {
-            // Взятие заказа у покупателя
-            // ...
+        private IEnumerator CheckCustomersWaitingSellersRoutine() {
+            // Поиск ожидающих приема Заказа Покупателей 
+            if (_store.IsCustomerAvailable)
+            {
+                _sellerState = SellerState.SearchingForCustomerState;
+            }
+            else
+            {
+                _sellerState = SellerState.TakingNewJobState;}
+
+
+            yield return null;
+        }
+
+        private IEnumerator TakingNewJobRoutine()
+        {
+            //Получение задания из списка
+            _currentOrder = _store.GetNewJobForSeller();
+
             yield return null;
         }
         private IEnumerator MoveToDesktopRoutine() {
@@ -142,7 +163,7 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
             // Доставка заказа покупателю
             // ...
             yield return new WaitForSeconds(1f);
-            _currentSellerState = SellerState.SearchingForCustomerState; // Возвращаемся к поиску нового покупателя
+            _sellerState = SellerState.SearchingForCustomerState; // Возвращаемся к поиску нового покупателя
         }
 
         private IEnumerator MoveToTargetWithSpeed(Vector3 target, SellerState sender) {
@@ -162,11 +183,10 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
                 case SellerState.SearchingForCustomerState:
                     break;
                 case SellerState.MovingToCustomerForOrderState:
-                    
                     break;
                 case SellerState.TakingOrderState:
                     break;
-                case SellerState.ReadingOrderState:
+                case SellerState.CheckCustomersWaitingSellersState:
                     break;
                 case SellerState.MovingToDesktopState:
                     break;
@@ -177,7 +197,8 @@ namespace Assets._Game._Scripts._6_Entities._Sellers
                 case SellerState.DeliveredOrderState:
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(sender), sender, null);
+                   Debug.Log("Нет вариантов при достижении цели при данном состоянии");
+                    break;
             }
         }
     }
