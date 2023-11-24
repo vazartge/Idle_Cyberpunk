@@ -6,13 +6,11 @@ using Assets._Game._Scripts._6_Entities._Units._Base;
 using DG.Tweening;
 using UnityEngine;
 
-namespace Assets._Game._Scripts._6_Entities._Units._Customers
-{
-    
+namespace Assets._Game._Scripts._6_Entities._Units._Customers {
+
 
     public class Customer : UnitGame {
-        private enum CustomerState
-        {
+        private enum CustomerState {
             MovingToTradeState,
             WaitSellerForOrderingState,
             WaitProductState,
@@ -25,25 +23,21 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers
         private CustomerState _customerState;
         public float speed = 2f; // Скорость перемещения в единицах в секунду
 
-        public void Construct(GameMode gameMode, Store store)
-        {
+        public void Construct(GameMode gameMode, Store store) {
             _gameMode = gameMode;
             _store = store;
         }
 
-        public void SetupCustomer(CustomerSlot freeSlot, Order order)
-        {
+        public void SetupCustomer(CustomerSlot freeSlot, Order order) {
             _freeSlot = freeSlot;
+            _freeSlot.Customer = this;
             _order = order;
-            MovingToTradeRoutine();
+            StartCoroutine( MovingToTradeRoutine());
         }
 
-        private IEnumerator CustomerRoutine()
-        {
-            while (true)
-            {
-                switch (_customerState)
-                {
+        private IEnumerator CustomerRoutine() {
+            while (true) {
+                switch (_customerState) {
                     case CustomerState.MovingToTradeState:
                         yield return StartCoroutine(MovingToTradeRoutine());
                         break;
@@ -84,8 +78,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers
             Debug.Log("Достигнута точка назначения");
         }
 
-        public Order GetOrder()
-        {
+        public Order TransferOrder() {
             return _order;
         }
     }

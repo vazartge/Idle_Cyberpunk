@@ -1,8 +1,8 @@
 ﻿using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
+using UnityEngine;
 
-namespace Assets._Game._Scripts._6_Entities._Store
-{
+namespace Assets._Game._Scripts._6_Entities._Store {
     public class Order {
         public int ID { get; set; }
         public Customer Customer { get; private set; }
@@ -21,11 +21,14 @@ namespace Assets._Game._Scripts._6_Entities._Store
 
         // Метод для взятия товара из ордера в работу
         public bool TryTakeProduct() {
-            if (AmountTaken < TotalAmount) {
-                AmountTaken++;
-                return true;
+            lock (this) {
+                if (AmountTaken < TotalAmount) {
+                    AmountTaken++;
+
+                    return true;
+                }
+                return false;
             }
-            return false;
         }
 
         // Метод для подтверждения доставки товара
