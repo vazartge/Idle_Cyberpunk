@@ -36,6 +36,16 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         {
             CountOrderList = Orders.Count;
         }
+        public bool HasFreeCustomerSlot() {
+            return CustomerSlots.Any(slot => !slot.IsOccupied);
+        }
+        public int GetNumberOfFreeCustomerSlots() {
+            return CustomerSlots.Count(slot => !slot.IsOccupied);
+        }
+        public int GetNumberOfOccupiedCustomerSlots() {
+            return CustomerSlots.Count(slot => slot.IsOccupied);
+        }
+
         private void GetAllStoreSlots() {
             SellerSlots = GetComponentsInChildren<SellerSlot>().ToList();
             CustomerSlots = GetComponentsInChildren<CustomerSlot>().ToList();

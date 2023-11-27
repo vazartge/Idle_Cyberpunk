@@ -108,7 +108,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
                     if (_currentOrder != null) {
 
                         TargetDesktopSlot.Seller = this;
-                        CurrentSellerSlot.Seller = null;
+                        if(CurrentSellerSlot!=null) CurrentSellerSlot.Seller = null;
                         TargetCustomer = _currentOrder.Customer;
                         TargetCustomerSlot = TargetCustomer.CustomerSlot;
                         TargetSellerSlot = _store.GetSellerSlotByCustomerSlot(TargetCustomerSlot);
@@ -191,7 +191,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
             Debug.Log("Товар доставлен покупателю");
             _sellerState = SellerState.SearchingForCustomerState; // Возвращаемся к поиску нового покупателя
             // Продавец возвращается в ожидающий слот (если такой используется)
-            if (CurrentSellerSlot.Seller != this) CurrentSellerSlot.Seller = this;
+            if (CurrentSellerSlot != null && CurrentSellerSlot.Seller != this) CurrentSellerSlot.Seller = this;
         }
 
         private IEnumerator MoveToTargetWithSpeed(Vector3 target, SellerState sender) {

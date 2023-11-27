@@ -109,8 +109,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
         }
         private void MovingFromTradeRoutine() {
-            _store.CustomerLeftSlot(this);
             CustomerSlot.Customer = null;
+            _store.CustomerLeftSlot(this);
+           
             // Вычисляем расстояние и продолжительность движения
             float distance = Vector3.Distance(transform.position, _endPointTransform.position);
             float duration = distance / speed;
