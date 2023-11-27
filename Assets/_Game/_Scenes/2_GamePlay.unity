@@ -248,6 +248,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CustomerSlot (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 5461821284121993325, guid: a0f01f2a7cb22c047bb32800e1ccde92, type: 3}
+      propertyPath: _id
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8589223703259123694, guid: a0f01f2a7cb22c047bb32800e1ccde92, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1
@@ -349,6 +353,10 @@ PrefabInstance:
     - target: {fileID: 5028022429082971796, guid: af37cae8124d41247ba4ec136899ee12, type: 3}
       propertyPath: m_Name
       value: SellerSlot (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7238557037736475545, guid: af37cae8124d41247ba4ec136899ee12, type: 3}
+      propertyPath: _id
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -926,6 +934,9 @@ MonoBehaviour:
   CustomerEndTransform: {fileID: 2127609658}
   CustomerPrefab: {fileID: 3698890507568529808, guid: a0369aa23e567c64a86ff846c13f1a3b, type: 3}
   SellerPrefab: {fileID: 3698890507568529808, guid: 9ab6d206db7ffab47889fe878ff33699, type: 3}
+  _countCustomerForID: 0
+  _requiredNumberCustomersOnScene: 2
+  numberOrders: 2
 --- !u!4 &874941255 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8589223703259123694, guid: a0f01f2a7cb22c047bb32800e1ccde92, type: 3}
@@ -1145,6 +1156,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CustomerSlot (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 5461821284121993325, guid: a0f01f2a7cb22c047bb32800e1ccde92, type: 3}
+      propertyPath: _id
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8589223703259123694, guid: a0f01f2a7cb22c047bb32800e1ccde92, type: 3}
       propertyPath: m_LocalPosition.x
       value: -1
@@ -1243,7 +1258,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5686b880a3d31e54586fc79cb6296c26, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  GameMode: {fileID: 0}
   CountOrders: 0
+  CountOrderList: 0
 --- !u!1 &1357017746
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,6 +1431,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SellerSlot (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 7238557037736475545, guid: af37cae8124d41247ba4ec136899ee12, type: 3}
+      propertyPath: _id
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1520,6 +1541,10 @@ PrefabInstance:
     - target: {fileID: 2261327489330039384, guid: a0f01f2a7cb22c047bb32800e1ccde92, type: 3}
       propertyPath: m_Name
       value: CustomerSlot (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5461821284121993325, guid: a0f01f2a7cb22c047bb32800e1ccde92, type: 3}
+      propertyPath: _id
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8589223703259123694, guid: a0f01f2a7cb22c047bb32800e1ccde92, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1666,6 +1691,10 @@ PrefabInstance:
     - target: {fileID: 5028022429082971796, guid: af37cae8124d41247ba4ec136899ee12, type: 3}
       propertyPath: m_Name
       value: SellerSlot (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7238557037736475545, guid: af37cae8124d41247ba4ec136899ee12, type: 3}
+      propertyPath: _id
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -1,15 +1,23 @@
-﻿using Assets._Game._Scripts._6_Entities._Store._Slots;
-using Assets._Game._Scripts._6_Entities._Units._Base;
+﻿using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;
 
-public abstract class BaseSlot : MonoBehaviour, ISlot {
-    public int ID { get; private set; }
-    private IUnitGame _unit;
+namespace Assets._Game._Scripts._6_Entities._Store._Slots
+{
+    public abstract class BaseSlot : MonoBehaviour, ISlot {
+        public int ID
+        {
+            get => _id;
+            private set => _id = value;
+        }
 
-    public bool IsOccupied => _unit != null;
+        private IUnitGame _unit;
+        [SerializeField] int _id;
 
-    public IUnitGame Unit {
-        get => _unit;
-        set => _unit = value;
+        public bool IsOccupied => _unit != null;
+
+        public IUnitGame Unit {
+            get => _unit;
+            set => _unit = value;
+        }
     }
 }

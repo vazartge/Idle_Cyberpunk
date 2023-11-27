@@ -19,22 +19,25 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
             MovingToCustomerForDeliverState,
             DeliveredOrderState
         }
-        public float TimeTakingOrder { get; } = 2f;
+
+        public float TimeTakingOrder { get; } = 1f;
         // Параметр скорости движения продавца
         [SerializeField]
         private float _moveSpeed = 6f;
         private GameMode _gameMode;
         private Store _store;
 
-        private Customer _currentCustomer;
+
         private SellerState _sellerState = SellerState.SearchingForCustomerState;
         private Order _currentOrder;
         private int _currentOrderItemIndex; // Индекс текущего товара в заказе
         private bool _isCustomerAvailable;
-        private CustomerSlot _currentCustomerSlot;
-        private SellerSlot _currentSellerSlot;
-        private DesktopSlot _desktopSlot;
-
+        public Customer TargetCustomer;
+        public CustomerSlot TargetCustomerSlot;
+        public SellerSlot TargetSellerSlot;
+        public SellerSlot CurrentSellerSlot;
+        private DesktopSlot TargetDesktopSlot;
+        private float _timeCollectingProduct = 1f;
 
         public void Construct(GameMode gameMode, Store store) {
             _gameMode = gameMode;
@@ -62,7 +65,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
                     case SellerState.TakingOrderState:
                         yield return StartCoroutine(TakingOrderRoutine());
                         break;
-                   
+
                     case SellerState.MovingToDesktopState:
                         yield return StartCoroutine(MovingToDesktopRoutine());
                         break;
@@ -73,74 +76,81 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
                         yield return StartCoroutine(MovingToCustomerForDeliverRoutine());
                         break;
                     case SellerState.DeliveredOrderState:
-                        yield return StartCoroutine(DelivedOrderRoutine());
+                        yield return StartCoroutine(DeliveredOrderRoutine());
                         break;
                 }
             }
         }
 
         private IEnumerator SearchingForCustomerRoutine() {
-            yield return new WaitUntil(() => _store.IsCustomerAvailable
-                                             || _store.IsDesktopAvailable); // Ожидаем, пока флаг не станет true
-            if (_store.IsCustomerAvailable)
-            {
-                
-                _currentCustomerSlot = _store.GetWaitingCustomerSlot();
-                _currentCustomer = _currentCustomerSlot.Customer;
-                _currentSellerSlot = _store.GetSellerSlotByCustomerSlot(_currentCustomerSlot);
-                _currentSellerSlot.Seller = this;
-                // Переключение на следующее состояние
-                _sellerState = SellerState.MovingToCustomerForOrderState;
-                Debug.Log("New Customer");
+            while (true) {
 
-            }
+                yield return new WaitUntil(() => _store.IsCustomerAvailable
+                                                 || _store.IsDesktopAvailable); // Ожидаем, пока флаг не станет true
+                if (_store.IsCustomerAvailable) {
 
-            if (_store.IsDesktopAvailable) {
-                (_currentOrder, _desktopSlot) = _store.TryGetNewJobForSeller();
-                if (_currentOrder != null) {
-                    if (_currentOrder.TryTakeProduct())
-                    {
-                        _desktopSlot.Seller = this;
-                        _currentSellerSlot.Seller = null;
-                        _store.AvailableDesktopSlots();
+                    TargetCustomer = _store.GetWaitingCustomer();
+                    TargetCustomerSlot = TargetCustomer.CustomerSlot;
+                    TargetSellerSlot = _store.GetSellerSlotByCustomerSlot(TargetCustomerSlot);
+                    TargetSellerSlot.Seller = this;
+
+                    // Переключение на следующее состояние
+                    _sellerState = SellerState.MovingToCustomerForOrderState;
+                    Debug.Log($"{this.ID} + Получил данные нового покупателя {TargetCustomer.ID}");
+
+                    CurrentSellerSlot = TargetSellerSlot;
+
+                    break;
+                }
+
+                if (_store.IsDesktopAvailable) {
+                    (_currentOrder, TargetDesktopSlot) = _store.SellerTryGetNewJob();
+                    if (_currentOrder != null) {
+
+                        TargetDesktopSlot.Seller = this;
+                        CurrentSellerSlot.Seller = null;
+                        TargetCustomer = _currentOrder.Customer;
+                        TargetCustomerSlot = TargetCustomer.CustomerSlot;
+                        TargetSellerSlot = _store.GetSellerSlotByCustomerSlot(TargetCustomerSlot);
                         // Заказ найден, переключаемся на следующее состояние
                         _sellerState = SellerState.MovingToDesktopState;
                         Debug.Log("Заказ получен в работу");
-                    }
-                    else
-                    {
+                    } else {
                         _sellerState = SellerState.SearchingForCustomerState;
                     }
-                   
-                }
-            }
 
+                    break;
+                }
+                
+            }
         }
 
         private IEnumerator MovingToCustomerForOrderRoutine() {
 
             // Определите точку, к которой нужно переместиться
-            Vector3 customerPosition = _currentSellerSlot.transform.position;
+            Vector3 customerPosition = TargetSellerSlot.transform.position;
 
             // Запустите Dotween анимацию и ждите её завершения
             yield return MoveToTargetWithSpeed(customerPosition, SellerState.MovingToCustomerForOrderState);
-            Debug.Log("Продавец подошел к новому покупателю за заказом");
+            Debug.Log($"{this.ID} Продавец подошел к новому покупателю {TargetCustomer.ID} за заказом");
             _sellerState = SellerState.TakingOrderState;
+
         }
 
         private IEnumerator TakingOrderRoutine() {
+
             // Взятие заказа у покупателя
-            Debug.Log("Продавец берет заказ у нового покупателя");
+            Debug.Log($"{this.ID} Продавец берет заказ у нового покупателя {TargetCustomer.ID}");
             yield return new WaitForSeconds(TimeTakingOrder);
-            _store.AddNewOrder(_currentCustomer.TransferOrder());
+            TargetCustomer.TransferOrder();
             Debug.Log("Продавец заказ у нового покупателя в лист заказов");
             _sellerState = SellerState.SearchingForCustomerState;
 
         }
-       
+
         private IEnumerator MovingToDesktopRoutine() {
             // Определите позицию свободного стола
-            Vector3 tablePosition = _desktopSlot.transform.position;
+            Vector3 tablePosition = TargetDesktopSlot.transform.position;
 
             // Запустите Dotween анимацию и ждите её завершения
             yield return MoveToTargetWithSpeed(tablePosition, SellerState.MovingToDesktopState);
@@ -152,35 +162,48 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         private IEnumerator CollectingOrderRoutine() {
             // Сбор заказа
             Debug.Log("Собирает заказ за столом");
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(_timeCollectingProduct);
+            Debug.Log("Заказ собран");
+            TargetDesktopSlot.Seller = null;
+            _sellerState = SellerState.MovingToCustomerForDeliverState;
         }
         private IEnumerator MovingToCustomerForDeliverRoutine() {
+            //TargetSellerSlot = _store.GetSellerSlotByCustomerSlot(TargetCustomerSlot);
+
             // Определите точку, к которой нужно переместиться
-            Vector3 customerPosition = _currentCustomer.transform.position;
+            Vector3 customerPosition = TargetSellerSlot.transform.position;
+
 
             // Запустите Dotween анимацию и ждите её завершения
-            yield return null;// transform.DOMove(customerPosition, GetMoveDuration(customerPosition)).SetEase(Ease.Linear).WaitForCompletion();
+            yield return
+                MoveToTargetWithSpeed(customerPosition,
+                    SellerState
+                        .MovingToCustomerForDeliverState); //null;// transform.DOMove(customerPosition, GetMoveDuration(customerPosition)).SetEase(Ease.Linear).WaitForCompletion();
 
             // После достижения покупателя продолжаем следующую корутину
-            
+            _sellerState = SellerState.DeliveredOrderState;
         }
-        private IEnumerator DelivedOrderRoutine() {
+        private IEnumerator DeliveredOrderRoutine() {
             // Доставка заказа покупателю
-            // ...
-            yield return new WaitForSeconds(1f);
+            TargetCustomer.DeliveredProduct(_currentOrder);
+            _currentOrder = null;
+            yield return null;
+            Debug.Log("Товар доставлен покупателю");
             _sellerState = SellerState.SearchingForCustomerState; // Возвращаемся к поиску нового покупателя
+            // Продавец возвращается в ожидающий слот (если такой используется)
+            if (CurrentSellerSlot.Seller != this) CurrentSellerSlot.Seller = this;
         }
 
         private IEnumerator MoveToTargetWithSpeed(Vector3 target, SellerState sender) {
-            Debug.Log("Продавец начал движение");
+            Debug.Log($"{this.ID} Продавец начал движение");
             float distance = Vector3.Distance(transform.position, target);
             float duration = distance / _moveSpeed; // Рассчитываем продолжительность на основе скорости и расстояния
-            // Добавляем обработчик, который вызовется по завершении анимации
-            if (Vector3.Distance(transform.position, target) > 0.3f) {
+                                                    // Добавляем обработчик, который вызовется по завершении анимации
+            if (Vector3.Distance(transform.position, target) > 0.1f) {
                 yield return transform.DOMove(target, duration).SetEase(Ease.Linear).WaitForCompletion();
             }
 
         }
-       
+
     }
 }

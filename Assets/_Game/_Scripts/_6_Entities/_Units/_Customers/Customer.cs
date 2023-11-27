@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
@@ -11,51 +12,62 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
     public class Customer : UnitGame {
         private enum CustomerState {
+            None,
             MovingToTradeState,
             WaitSellerForOrderingState,
             WaitProductState,
             MovingFromTradeState,
         }
+
         private GameMode _gameMode;
         private Store _store;
-        private CustomerSlot _freeSlot;
-        private Order _order;
+        public CustomerSlot CustomerSlot;
+        public List<Order> Orders;
         private CustomerState _customerState;
-        public float speed = 2f; // Скорость перемещения в единицах в секунду
+        private float speed = 6f; // Скорость перемещения в единицах в секунду
+        private Transform _startPointTransform;
+        private Transform _endPointTransform;
 
-        public void Construct(GameMode gameMode, Store store) {
+        public void Construct(GameMode gameMode, Store store, Transform startPoint, Transform endPoint) {
             _gameMode = gameMode;
             _store = store;
+            _startPointTransform = startPoint;
+            _endPointTransform = endPoint;
         }
 
-        public void SetupCustomer(CustomerSlot freeSlot, Order order) {
-            _freeSlot = freeSlot;
-            _freeSlot.Customer = this;
-            _order = order;
-            StartCoroutine( MovingToTradeRoutine());
+        public void SetupCustomer(CustomerSlot freeSlot, List<Order> orders) {
+            CustomerSlot = freeSlot;
+            CustomerSlot.Customer = this;
+            Orders = orders;
+            UpdateStates(CustomerState.MovingToTradeState);
         }
 
-        private IEnumerator CustomerRoutine() {
-            while (true) {
-                switch (_customerState) {
-                    case CustomerState.MovingToTradeState:
-                        yield return StartCoroutine(MovingToTradeRoutine());
-                        break;
-                    case CustomerState.WaitSellerForOrderingState:
-                        break;
-                    case CustomerState.WaitProductState:
-                        break;
-                    case CustomerState.MovingFromTradeState:
-                        break;
-                    default:
-                        Debug.Log("Нет такого варианта действий Покупателя");
-                        break;
-                }
+        private void UpdateStates(CustomerState state) {
+            _customerState = state;
+            switch (_customerState) {
+                case CustomerState.None:
+
+                    break;
+                case CustomerState.MovingToTradeState:
+                    MovingToTradeRoutine();
+                    break;
+                case CustomerState.WaitSellerForOrderingState:
+                    break;
+                case CustomerState.WaitProductState:
+                    break;
+                case CustomerState.MovingFromTradeState:
+                    MovingFromTradeRoutine();
+                    break;
+                default:
+                    Debug.Log("Нет такого варианта действий Покупателя");
+                    break;
             }
+
         }
-        private IEnumerator MovingToTradeRoutine() {
+        private void MovingToTradeRoutine() {
+            Debug.Log($"{this.ID} идет к прилавку");
             // Вычисляем промежуточную точку на одной линии с прилавком, но по горизонтали от покупателя
-            Vector3 intermediatePoint = new Vector3(_freeSlot.transform.position.x, transform.position.y, transform.position.z);
+            Vector3 intermediatePoint = new Vector3(CustomerSlot.transform.position.x, transform.position.y, transform.position.z);
 
             // Сначала перемещаемся к промежуточной точке
             float horizontalDistance = Vector3.Distance(transform.position, intermediatePoint);
@@ -64,22 +76,60 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             sequence.Append(transform.DOMove(intermediatePoint, horizontalDuration).SetEase(Ease.Linear));
 
             // Затем перемещаемся от промежуточной точки к прилавку
-            float verticalDistance = Vector3.Distance(intermediatePoint, _freeSlot.transform.position);
+            float verticalDistance = Vector3.Distance(intermediatePoint, CustomerSlot.transform.position);
             float verticalDuration = verticalDistance / speed;
-            sequence.Append(transform.DOMove(_freeSlot.transform.position, verticalDuration).SetEase(Ease.Linear));
-            yield return null;
+            sequence.Append(transform.DOMove(CustomerSlot.transform.position, verticalDuration).SetEase(Ease.Linear));
+
             // Добавляем обработчик, который вызовется по завершении всей анимации
-            sequence.OnComplete(ReachedDestination);
+            sequence.OnComplete(ReachedDestinationToTrade);
         }
 
-        private void ReachedDestination() {
-            _store.CustomerIsReachedStore(this, _freeSlot);
+
+        private void ReachedDestinationToTrade() {
+            UpdateStates(CustomerState.WaitSellerForOrderingState);
+            _store.CustomerIsReachedStore(this, CustomerSlot);
             // Действия после достижения цели
-            Debug.Log("Достигнута точка назначения");
+
+            Debug.Log($"{this.ID}.Достигнута точка назначения");
         }
 
-        public Order TransferOrder() {
-            return _order;
+        public void TransferOrder() {
+            UpdateStates(CustomerState.WaitProductState);
+            _store.CustomerTransferedOrder(this);
+
+        }
+
+        public void DeliveredProduct(Order order) {
+            Orders.Remove(order);
+            _store.CustomerTakeProduct(this);
+            if (Orders.Count == 0) {
+                UpdateStates(CustomerState.MovingFromTradeState);
+            }
+
+
+        }
+        private void MovingFromTradeRoutine() {
+            _store.CustomerLeftSlot(this);
+            CustomerSlot.Customer = null;
+            // Вычисляем расстояние и продолжительность движения
+            float distance = Vector3.Distance(transform.position, _endPointTransform.position);
+            float duration = distance / speed;
+
+            // Создаем последовательность анимации
+            Sequence sequence = DOTween.Sequence();
+            sequence.Append(transform.DOMove(_endPointTransform.position, duration).SetEase(Ease.Linear));
+
+            // Добавляем обработчик, который вызовется по завершении всей анимации
+            sequence.OnComplete(ReachedDestinationFromTrade);
+        }
+
+
+        private void ReachedDestinationFromTrade() {
+            UpdateStates(CustomerState.None);
+            _gameMode.CustomerLeftScene(this);
+            // Действия после достижения цели
+
+            Debug.Log($"Покупатель {this.ID}Достигнута точка назначения");
         }
     }
 }
