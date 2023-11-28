@@ -136,7 +136,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
             foreach (var order in Orders) {
                 // Найти свободный DesktopSlot, который может обработать продукт этого заказа
-                suitableSlot = DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied && slot.AllowedProductType == order.Product.GetType());
+                suitableSlot = DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied && slot.AllowedProductType == order.ProductOrder.GetType());
 
                 if (suitableSlot != null) {
                     // Если подходящий слот найден, сохраняем ссылку на заказ

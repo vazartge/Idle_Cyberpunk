@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Assets._Game._Scripts._3_UI._UIUnits;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
@@ -18,6 +20,10 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             WaitProductState,
             MovingFromTradeState,
         }
+        public event Action OnUIChanged;
+        public UiCustomerView CustomerView;
+        public UiCustomerViewModel CustomerViewModel;
+
 
         private GameMode _gameMode;
         private Store _store;
@@ -28,6 +34,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         private Transform _startPointTransform;
         private Transform _endPointTransform;
 
+        public void Awake()
+        {
+            CustomerView = GetComponentInChildren<UiCustomerView>();
+            CustomerViewModel = new UiCustomerViewModel(this, CustomerView);
+        }
         public void Construct(GameMode gameMode, Store store, Transform startPoint, Transform endPoint) {
             _gameMode = gameMode;
             _store = store;
@@ -39,16 +50,20 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             CustomerSlot = freeSlot;
             CustomerSlot.Customer = this;
             Orders = orders;
+            
             UpdateStates(CustomerState.MovingToTradeState);
+            
         }
 
         private void UpdateStates(CustomerState state) {
+            
             _customerState = state;
             switch (_customerState) {
                 case CustomerState.None:
 
                     break;
                 case CustomerState.MovingToTradeState:
+                    
                     MovingToTradeRoutine();
                     break;
                 case CustomerState.WaitSellerForOrderingState:
@@ -56,6 +71,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
                 case CustomerState.WaitProductState:
                     break;
                 case CustomerState.MovingFromTradeState:
+                   
                     MovingFromTradeRoutine();
                     break;
                 default:
@@ -65,6 +81,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
         }
         private void MovingToTradeRoutine() {
+
             Debug.Log($"{this.ID} идет к прилавку");
             // Вычисляем промежуточную точку на одной линии с прилавком, но по горизонтали от покупателя
             Vector3 intermediatePoint = new Vector3(CustomerSlot.transform.position.x, transform.position.y, transform.position.z);
@@ -94,13 +111,15 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         }
 
         public void TransferOrder() {
+            OnUIChanged?.Invoke();
             UpdateStates(CustomerState.WaitProductState);
             _store.CustomerTransferedOrder(this);
-
+            OnUIChanged?.Invoke();
         }
 
         public void DeliveredProduct(Order order) {
             Orders.Remove(order);
+            OnUIChanged?.Invoke();
             _store.CustomerTakeProduct(this);
             if (Orders.Count == 0) {
                 UpdateStates(CustomerState.MovingFromTradeState);
@@ -132,5 +151,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
             Debug.Log($"Покупатель {this.ID}Достигнута точка назначения");
         }
+
+        
     }
 }

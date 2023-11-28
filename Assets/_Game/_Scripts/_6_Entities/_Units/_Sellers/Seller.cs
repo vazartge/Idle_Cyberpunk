@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
@@ -19,7 +20,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
             MovingToCustomerForDeliverState,
             DeliveredOrderState
         }
-
+        public event Action OnUIChangedProgress;
         public float TimeTakingOrder { get; } = 1f;
         // Параметр скорости движения продавца
         [SerializeField]
@@ -205,5 +206,6 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
         }
 
+       
     }
 }

@@ -6,7 +6,7 @@ namespace Assets._Game._Scripts._0.Data
     public class LevelDataSO : ScriptableObject {
         public LevelData[] levels;
     }
-
+    // Пример
     [System.Serializable]
     public class LevelData {
         public int level;

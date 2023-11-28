@@ -15,7 +15,7 @@ namespace Assets._Game._Scripts._6_Entities._Store._Slots
         }
 
         public IEnumerator ProcessOrder(Order order) {
-            if (order.Product.GetType() != AllowedProductType) {
+            if (order.ProductOrder.GetType() != AllowedProductType) {
                 yield break;
             }
 

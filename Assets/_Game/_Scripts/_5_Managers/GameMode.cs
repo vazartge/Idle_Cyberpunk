@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
-using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
 using Assets._Game._Scripts._6_Entities._Units._Sellers;
 using UnityEngine;
@@ -117,24 +116,9 @@ namespace Assets._Game._Scripts._5_Managers {
             if(RequiredNumberSellersOnScene >= _maxNuberSellers) return;
             RequiredNumberSellersOnScene++;
             InstantiateNewSeller();
-            // StartCoroutine(UpdateSellersOnScene());
+            
         }
-        // private IEnumerator UpdateSellersOnScene() {
-        //     Debug.Log($"CurrentActiveSellers = {CurrentActiveSellers}");
-        //     if (CurrentActiveSellers >= _maxNuberSellers) yield break;
-        //     while (CurrentActiveSellers < RequiredNumberSellersOnScene) {
-        //         // if (_customersPool.Count == 0) {
-        //         //     // Создаем нового покупателя, если в пуле нет доступных
-        //         //     InstantiateNewCustomer();
-        //         // }
-        //
-        //         // Получаем покупателя из пула и активируем его
-        //         InstantiateNewSeller();
-        //
-        //         // Задержка перед появлением следующего покупателя
-        //         yield return new WaitForSeconds(_timeRateGetCustomers);
-        //     }
-        // }
+        
         // Публичный метод для получения покупателя из пула
         public Customer GetCustomer() {
 

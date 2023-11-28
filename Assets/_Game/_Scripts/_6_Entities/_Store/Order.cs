@@ -1,13 +1,14 @@
 ﻿using System;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
+using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Store {
     public class Order {
         public int ID { get; }
         public Customer Customer { get; private set; }
-        public IProduct Product { get; private set; }
+        public IProduct ProductOrder { get; private set; }
         public bool IsOrderInStore { get; set; }
         public bool IsOrderInCollecting { get; set; }
        
@@ -16,10 +17,15 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         {
             ID = id;
             Customer = customer;
-            Product = product;
+            ProductOrder = product;
             
             Debug.Log($"{Customer.ID}.OrderID: {ID}");
             
+        }
+
+        public Type GetProductType()
+        {
+            return ProductOrder.GetType();
         }
 
 
