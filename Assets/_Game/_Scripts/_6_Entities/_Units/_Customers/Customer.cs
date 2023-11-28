@@ -8,6 +8,7 @@ using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Base;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
@@ -20,6 +21,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             WaitProductState,
             MovingFromTradeState,
         }
+       
         public event Action OnUIChanged;
         public UiCustomerView CustomerView;
         public UiCustomerViewModel CustomerViewModel;
@@ -37,7 +39,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         public void Awake()
         {
             CustomerView = GetComponentInChildren<UiCustomerView>();
-            CustomerViewModel = new UiCustomerViewModel(this, CustomerView);
+            CustomerViewModel  = new UiCustomerViewModel(this, CustomerView);
         }
         public void Construct(GameMode gameMode, Store store, Transform startPoint, Transform endPoint) {
             _gameMode = gameMode;
@@ -152,6 +154,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             Debug.Log($"Покупатель {this.ID}Достигнута точка назначения");
         }
 
-        
+        private void OnDestroy()
+        {
+            OnUIChanged = null;
+        }
     }
 }

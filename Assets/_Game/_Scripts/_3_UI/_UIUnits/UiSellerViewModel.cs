@@ -5,37 +5,47 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._3_UI._UIUnits
 {
-    class UiSellerViewModel : UIUnitViewModel
+    public class UiSellerViewModel : UIUnitViewModel
     {
         private Seller _sellerModel;
-        private UiSellerUnitView _sellerView;
+        private UiSellerView _sellerView;
 
-        public UiSellerViewModel(Seller seller, UiSellerUnitView view)
-        {
+        public UiSellerViewModel(Seller seller, UiSellerView view) {
             _sellerModel = seller;
             _sellerView = view;
 
             // Подписка на изменения в модели (например, на события изменения заказа)
             _sellerModel.OnUIChangedProgress += UpdateProgressView;
-            _sellerModel.OnUIChangedProgress += UpdateIconProductView;
+            _sellerModel.OnUIChangedShowProduct += UpdateIconShowProductView;
+            _sellerModel.OnUIChangedHideProduct += UpdateIconHideProductView;
         }
 
-
-        private void UpdateProgressView()
+       
+       
+        private void UpdateProgressView(float progress, bool isShow)
         {
-
+            _sellerView.UpdateSellerProgressUI(progress, isShow);
 
         }
+        private void UpdateIconHideProductView() {
+            _sellerView.UpdateSellerHideIconUI();
+        }
 
-        private void UpdateIconProductView()
+        private void UpdateIconShowProductView()
         {
             Sprite icon;
-            if (_sellerModel.TargetCustomer.Orders.Count != 0)
+            if (_sellerModel.CurrentOrder != null)
             {
                 // Получаем данные из модели и обновляем View
-                icon = ResManager.Instance.GetIconByProductType(_sellerModel.TargetCustomer.Orders[0]
-                    .GetProductType()); // Предполагаем, что метод GetIconByProductType возвращает Sprite
+                icon = ResManager.Instance.GetIconByProductType(_sellerModel.CurrentOrder.GetProductType()); // Предполагаем, что метод GetIconByProductType возвращает Sprite
             }
+            else
+            {
+                icon = null;
+            }
+            _sellerView.UpdateSellerShowIconUI(icon);
         }
+
+      
     }
 }

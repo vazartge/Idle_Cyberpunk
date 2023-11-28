@@ -11,11 +11,14 @@ namespace Assets._Game._Scripts._3_UI._UIUnits {
         public UiCustomerViewModel(Customer customer, UiCustomerView view) {
             _customerModel = customer;
             _customerView = view;
-
             // Подписка на изменения в модели (например, на события изменения заказа)
             _customerModel.OnUIChanged += UpdateView;
         }
 
+        private void OnEnable()
+        {
+            
+        }
         // Метод для обновления View
         private void UpdateView() {
             Sprite icon;
@@ -36,11 +39,7 @@ namespace Assets._Game._Scripts._3_UI._UIUnits {
             _customerView.UpdateCustomerUI(icon, quantity);
         }
 
-        private void OnDestroy()
-        {
-            // Отписка на изменения в модели (например, на события изменения заказа)
-            _customerModel.OnUIChanged -= UpdateView;
-        }
+     
         // Дополнительные методы для работы с моделью и View...
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.UI; // Для работы с элементами UI
 
 namespace Assets._Game._Scripts._3_UI._UIUnits {
     public class UiCustomerView : UiUnitView {
-        [SerializeField] private Image _productIcon; // Иконка товара
+        [SerializeField] private Image _productImage; // Иконка товара
         [SerializeField] private TMP_Text _productQuantity; // Количество товара
         [SerializeField] private Image _quantityImage;
         [SerializeField] private Canvas _canvas;
@@ -13,13 +13,10 @@ namespace Assets._Game._Scripts._3_UI._UIUnits {
         // {
         //     _canvas = GetComponentInChildren<Canvas>();
         // }
-        private void OnDisable()
-        {
-            _canvas.gameObject.SetActive(false);
-        }
+        
         // Метод для обновления UI на основе данных
         public void UpdateCustomerUI(Sprite icon, int quantity) {
-            Debug.Log($"quantity === {quantity}");
+            
             if (icon == null || quantity < 1)
             {
                 _canvas.gameObject.SetActive(false);
@@ -29,7 +26,7 @@ namespace Assets._Game._Scripts._3_UI._UIUnits {
             {
                 if (!_canvas.gameObject.activeSelf) _canvas.gameObject.SetActive(true);
             }
-            _productIcon.sprite = icon;
+            _productImage.sprite = icon;
 
             if (quantity < 2)
             {
@@ -50,6 +47,9 @@ namespace Assets._Game._Scripts._3_UI._UIUnits {
             }
 
             
+        }
+        private void OnDisable() {
+            _canvas.gameObject.SetActive(false);
         }
     }
 }

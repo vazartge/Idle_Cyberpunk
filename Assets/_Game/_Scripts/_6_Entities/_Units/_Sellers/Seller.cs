@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Assets._Game._Scripts._3_UI._UIUnits;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
@@ -20,7 +21,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
             MovingToCustomerForDeliverState,
             DeliveredOrderState
         }
-        public event Action OnUIChangedProgress;
+        public event Action<float, bool> OnUIChangedProgress;
+        public event Action OnUIChangedShowProduct;
+        public event Action OnUIChangedHideProduct;
+        public UiSellerView SellerView;
+        public UiSellerViewModel SellerViewModel;
         public float TimeTakingOrder { get; } = 1f;
         // Параметр скорости движения продавца
         [SerializeField]
@@ -30,7 +35,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
 
         private SellerState _sellerState = SellerState.SearchingForCustomerState;
-        private Order _currentOrder;
+        public  Order CurrentOrder;
         private int _currentOrderItemIndex; // Индекс текущего товара в заказе
         private bool _isCustomerAvailable;
         public Customer TargetCustomer;
@@ -40,6 +45,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         private DesktopSlot TargetDesktopSlot;
         private float _timeCollectingProduct = 1f;
 
+        public void Awake()
+        {
+            SellerView = GetComponentInChildren<UiSellerView>();
+            SellerViewModel = new UiSellerViewModel(this, SellerView);
+        }
         public void Construct(GameMode gameMode, Store store) {
             _gameMode = gameMode;
             _store = store;
@@ -105,12 +115,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
                 }
 
                 if (_store.IsDesktopAvailable) {
-                    (_currentOrder, TargetDesktopSlot) = _store.SellerTryGetNewJob();
-                    if (_currentOrder != null) {
+                    (CurrentOrder, TargetDesktopSlot) = _store.SellerTryGetNewJob();
+                    if (CurrentOrder != null) {
 
                         TargetDesktopSlot.Seller = this;
-                        if(CurrentSellerSlot!=null) CurrentSellerSlot.Seller = null;
-                        TargetCustomer = _currentOrder.Customer;
+                        if (CurrentSellerSlot!=null) CurrentSellerSlot.Seller = null;
+                        TargetCustomer = CurrentOrder.Customer;
                         TargetCustomerSlot = TargetCustomer.CustomerSlot;
                         TargetSellerSlot = _store.GetSellerSlotByCustomerSlot(TargetCustomerSlot);
                         // Заказ найден, переключаемся на следующее состояние
@@ -122,7 +132,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
                     break;
                 }
-                
+
             }
         }
 
@@ -138,16 +148,33 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
         }
 
+        // private IEnumerator TakingOrderRoutine() {
+        //
+        //     // Взятие заказа у покупателя
+        //     Debug.Log($"{this.ID} Продавец берет заказ у нового покупателя {TargetCustomer.ID}");
+        //     yield return new WaitForSeconds(TimeTakingOrder);
+        //     TargetCustomer.TransferOrder();
+        //     Debug.Log("Продавец заказ у нового покупателя в лист заказов");
+        //     _sellerState = SellerState.SearchingForCustomerState;
+        //
+        // }
         private IEnumerator TakingOrderRoutine() {
+            float elapsedTime = 0;
 
             // Взятие заказа у покупателя
             Debug.Log($"{this.ID} Продавец берет заказ у нового покупателя {TargetCustomer.ID}");
-            yield return new WaitForSeconds(TimeTakingOrder);
+            while (elapsedTime < TimeTakingOrder) {
+                elapsedTime += Time.deltaTime;
+                OnUIChangedProgress?.Invoke(elapsedTime / TimeTakingOrder, true);
+                yield return null;
+            }
+
             TargetCustomer.TransferOrder();
             Debug.Log("Продавец заказ у нового покупателя в лист заказов");
             _sellerState = SellerState.SearchingForCustomerState;
-
+            OnUIChangedProgress?.Invoke(TimeTakingOrder, false); // Убедитесь, что UI показывает полный прогресс после завершения
         }
+
 
         private IEnumerator MovingToDesktopRoutine() {
             // Определите позицию свободного стола
@@ -160,13 +187,28 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
         }
 
+        // private IEnumerator CollectingOrderRoutine() {
+        //     // Сбор заказа
+        //     Debug.Log("Собирает заказ за столом");
+        //     yield return new WaitForSeconds(_timeCollectingProduct);
+        //     Debug.Log("Заказ собран");
+        //     TargetDesktopSlot.Seller = null;
+        //     _sellerState = SellerState.MovingToCustomerForDeliverState;
+        // } 
         private IEnumerator CollectingOrderRoutine() {
+            float elapsedTime = 0;
             // Сбор заказа
             Debug.Log("Собирает заказ за столом");
-            yield return new WaitForSeconds(_timeCollectingProduct);
+            while (elapsedTime < _timeCollectingProduct) {
+                elapsedTime += Time.deltaTime;
+                OnUIChangedProgress?.Invoke(elapsedTime / _timeCollectingProduct, true);
+                yield return null;
+            }
             Debug.Log("Заказ собран");
             TargetDesktopSlot.Seller = null;
             _sellerState = SellerState.MovingToCustomerForDeliverState;
+            OnUIChangedProgress?.Invoke(_timeCollectingProduct, false); // Убедитесь, что UI показывает полный прогресс после завершения
+            OnUIChangedShowProduct?.Invoke();
         }
         private IEnumerator MovingToCustomerForDeliverRoutine() {
             //TargetSellerSlot = _store.GetSellerSlotByCustomerSlot(TargetCustomerSlot);
@@ -180,16 +222,17 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
                 MoveToTargetWithSpeed(customerPosition,
                     SellerState
                         .MovingToCustomerForDeliverState); //null;// transform.DOMove(customerPosition, GetMoveDuration(customerPosition)).SetEase(Ease.Linear).WaitForCompletion();
-
+            
             // После достижения покупателя продолжаем следующую корутину
             _sellerState = SellerState.DeliveredOrderState;
         }
         private IEnumerator DeliveredOrderRoutine() {
             // Доставка заказа покупателю
-            TargetCustomer.DeliveredProduct(_currentOrder);
-            _currentOrder = null;
+            TargetCustomer.DeliveredProduct(CurrentOrder);
+            CurrentOrder = null;
             yield return null;
             Debug.Log("Товар доставлен покупателю");
+            OnUIChangedHideProduct?.Invoke();
             _sellerState = SellerState.SearchingForCustomerState; // Возвращаемся к поиску нового покупателя
             // Продавец возвращается в ожидающий слот (если такой используется)
             if (CurrentSellerSlot != null && CurrentSellerSlot.Seller != this) CurrentSellerSlot.Seller = this;
@@ -206,6 +249,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
         }
 
-       
+        private void OnDestroy() {
+            OnUIChangedProgress = null;
+            OnUIChangedShowProduct= null;
+            OnUIChangedHideProduct= null;
+        }
+
     }
 }

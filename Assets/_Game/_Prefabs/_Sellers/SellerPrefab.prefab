@@ -17,7 +17,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &5675222037467080778
 RectTransform:
   m_ObjectHideFlags: 0
@@ -92,7 +92,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &4579927911850161229
 RectTransform:
   m_ObjectHideFlags: 0
@@ -197,6 +197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 
+  SellerView: {fileID: 0}
   _moveSpeed: 6
   TargetCustomer: {fileID: 0}
   TargetCustomerSlot: {fileID: 0}
@@ -357,7 +358,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5262934939084223609
 Transform:
   m_ObjectHideFlags: 0
@@ -386,6 +387,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7181be21adf39094d94bfa25fff283d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _productImage: {fileID: 4108886379462226645}
+  _progressImage: {fileID: 4563595445421947320}
+  _canvas: {fileID: 4310676683445614685}
 --- !u!1 &7683309772560943377
 GameObject:
   m_ObjectHideFlags: 0

@@ -416,7 +416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a91f2cca9b9e44d418089492ee3bf1f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _productIcon: {fileID: 6724015517785411124}
+  _productImage: {fileID: 6724015517785411124}
   _productQuantity: {fileID: 2617495803136635195}
   _quantityImage: {fileID: 6598444783543650112}
   _canvas: {fileID: 7176540193571733539}
