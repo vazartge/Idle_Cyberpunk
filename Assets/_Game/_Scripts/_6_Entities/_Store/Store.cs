@@ -15,7 +15,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public int CountOrders;
         public List<SellerSlot> SellerSlots { get; set; }
         public List<CustomerSlot> CustomerSlots { get; set; }
-        public List<DesktopSlot> DesktopSlots { get; set; }
+        [SerializeField] public List<DesktopSlot> DesktopSlots { get; set; }
         public  List<Order> Orders { get; set; }
         private Queue<Customer> _waitingOrderCustomer;
         public bool IsCustomerAvailable => _waitingOrderCustomer != null && _waitingOrderCustomer.Count > 0;
@@ -136,6 +136,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
             foreach (var order in Orders) {
                 // Найти свободный DesktopSlot, который может обработать продукт этого заказа
+               
                 suitableSlot = DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied && slot.AllowedProductType == order.ProductOrder.GetType());
 
                 if (suitableSlot != null) {

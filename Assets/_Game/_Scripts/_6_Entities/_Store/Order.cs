@@ -19,7 +19,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             Customer = customer;
             ProductOrder = product;
             
-            Debug.Log($"{Customer.ID}.OrderID: {ID}");
+            //Debug.Log($"{Customer.ID}.OrderID: {ID}");
             
         }
 

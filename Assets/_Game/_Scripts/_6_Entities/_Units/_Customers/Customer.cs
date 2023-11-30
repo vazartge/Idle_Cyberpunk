@@ -84,7 +84,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         }
         private void MovingToTradeRoutine() {
 
-            Debug.Log($"{this.ID} идет к прилавку");
+          //  Debug.Log($"{this.ID} идет к прилавку");
             // Вычисляем промежуточную точку на одной линии с прилавком, но по горизонтали от покупателя
             Vector3 intermediatePoint = new Vector3(CustomerSlot.transform.position.x, transform.position.y, transform.position.z);
 
@@ -109,7 +109,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             _store.CustomerIsReachedStore(this, CustomerSlot);
             // Действия после достижения цели
 
-            Debug.Log($"{this.ID}.Достигнута точка назначения");
+          //  Debug.Log($"{this.ID}.Достигнута точка назначения");
         }
 
         public void TransferOrder() {
@@ -151,7 +151,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             _gameMode.CustomerLeftScene(this);
             // Действия после достижения цели
 
-            Debug.Log($"Покупатель {this.ID}Достигнута точка назначения");
+           // Debug.Log($"Покупатель {this.ID}Достигнута точка назначения");
         }
 
         private void OnDestroy()

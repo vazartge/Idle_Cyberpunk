@@ -1,9 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Assets._Game._Scripts._2_Game;
+using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
+using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
+using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using Assets._Game._Scripts._6_Entities._Units._Sellers;
 using UnityEngine;
 
@@ -12,8 +15,10 @@ namespace Assets._Game._Scripts._5_Managers {
 
     public class GameMode : MonoBehaviour {
 
-
+        private DataMode _dataMode;
+        private UIMode _uiMode;
         public Store Store;
+        private InputControlService _inputControlService;
         public List<Customer> ActiveCustomers { get; set; }
         public List<Seller> Sellers { get; set; }
         public Transform SellerStartTransform;
@@ -22,7 +27,12 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject CustomerPrefab;
         public GameObject SellerPrefab;
         private Queue<Customer> _customersPool;
-        private Game _game;
+
+        [SerializeField] private GameObject _firstPrebuilderDesktopMechanicalEye;
+        [SerializeField] private GameObject _firstDesktopMechanicalEye;
+
+        [SerializeField] private GameObject _buttonAddCustomer;
+       // private Game _game;
 
 
         // Текущее количество активных покупателей на сцене
@@ -56,15 +66,20 @@ namespace Assets._Game._Scripts._5_Managers {
         [SerializeField] private int _requiredNumberSellersOnScene;
         [SerializeField] private int numberOrders = 1;
         private float _timeRateGetCustomers = 1f;
+        private bool _isConstructed;
+       
 
-
-        public void Construct(Game game) {
-            _game = game;
+        public void Construct(DataMode dataMode, UIMode uiMode) {
+            _dataMode = dataMode;
+            _uiMode = uiMode;
             BeginPlay();
             Debug.Log("GameMode Start");
+            _isConstructed = true;
         }
+      
 
         private void BeginPlay() {
+            _inputControlService = new InputControlService(this);
             Store = FindObjectOfType<Store>();
             ActiveCustomers = new List<Customer>();
             Sellers = new List<Seller>();
@@ -77,6 +92,12 @@ namespace Assets._Game._Scripts._5_Managers {
 
         }
 
+        private void Update()
+        {
+            if (!_isConstructed) return;
+            if (Game.Instance.IsPaused) return;
+            _inputControlService.UpdateInputControl();
+        }
 
         // private void CreateCustomers() {
         //     for (int i = 0; i < CountCustomersForPool; i++) {
@@ -186,8 +207,18 @@ namespace Assets._Game._Scripts._5_Managers {
             ActiveCustomers.Remove(customer);
 
         }
-        
 
 
+        public void OnButtonBuyDesktop(PrebuilderDesktop prebuilderDesktop)
+        {
+            var newDesktop = Instantiate(_firstDesktopMechanicalEye, prebuilderDesktop.gameObject.transform.position,
+                Quaternion.identity);
+            var newDesktopSlot = newDesktop.GetComponentInChildren<DesktopSlot>();
+            Destroy(prebuilderDesktop.gameObject);
+            Store.DesktopSlots.Add(newDesktopSlot);
+            _buttonAddCustomer.gameObject.SetActive(true);
+        }
+
+      
     }
 }
