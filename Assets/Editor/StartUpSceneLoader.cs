@@ -1,15 +1,15 @@
-// #if UNITY_EDITOR
-// using UnityEditor;
-// using UnityEditor.SceneManagement;
+#if UNITY_EDITOR
+using UnityEditor;
+using UnityEditor.SceneManagement;
+
+
 //
 //
-// //
-// //
-// // Запускает из любой сцены и обратно возвращает
-// //
-// //
-// [InitializeOnLoad]
-// public class StartUpSceneLoader {
+// Запускает из любой сцены и обратно возвращает
+//
+//
+[InitializeOnLoad]
+public class StartUpSceneLoader {
 //     
 //     private const string LastScenePrefKey = "LastOpenedScene";
 //
@@ -38,5 +38,5 @@
 //             }
 //         }
 //     }
-// }
-// #endif
+}
+#endif

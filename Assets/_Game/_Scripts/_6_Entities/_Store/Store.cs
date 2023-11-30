@@ -12,6 +12,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
     {
 
         public GameMode GameMode;
+        public StoreStats Stats;
         public int CountOrders;
         public List<SellerSlot> SellerSlots { get; set; }
         public List<CustomerSlot> CustomerSlots { get; set; }
@@ -30,6 +31,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         private void Start()
         {
             GameMode = FindObjectOfType<GameMode>();
+            Stats = new StoreStats(this, GameMode);
         }
 
         private void Update()

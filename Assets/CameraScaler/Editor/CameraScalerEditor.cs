@@ -14,7 +14,7 @@ namespace EmeraldPowder.CameraScaler
         private void OnEnable()
         {
             ReferenceResolution = serializedObject.FindProperty("ReferenceResolution");
-            Mode = serializedObject.FindProperty("Mode");
+            Mode = serializedObject.FindProperty("GameMode");
             MatchWidthOrHeight = serializedObject.FindProperty("MatchWidthOrHeight");
         }
 

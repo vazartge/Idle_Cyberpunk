@@ -1,23 +1,32 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
+using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using Assets._Game._Scripts._6_Entities._Units._Sellers;
+using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Assets._Game._Scripts._5_Managers {
    // public enum SideOfScreenEnum { left, right }
 
-    public class GameMode : MonoBehaviour {
-
+    public class GameMode : MonoBehaviour
+    {
+        public event Action OnChangedMoney;
+        public event Action OnChangedLevelPlayer;
         private DataMode _dataMode;
         private UIMode _uiMode;
         public Store Store;
+        public EconomyService Economy;
+        public MechanicalEyeUpgradeSO _mechanicalEyeUpgradeSo;
         private InputControlService _inputControlService;
         public List<Customer> ActiveCustomers { get; set; }
         public List<Seller> Sellers { get; set; }
@@ -59,6 +68,12 @@ namespace Assets._Game._Scripts._5_Managers {
         private int CurrentActiveSellers { get; set; }
         // Количество продавцов, которое надо создать при старте в пул
         private int CountSellersForPool { get; } = 1;
+
+        public UIMode UiMode
+        {
+            get => _uiMode;
+            set => _uiMode = value;
+        }
         // Требуемое количество покупателей на сцене
 
         private int _countSellerForID;
@@ -71,16 +86,22 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public void Construct(DataMode dataMode, UIMode uiMode) {
             _dataMode = dataMode;
-            _uiMode = uiMode;
+            UiMode = uiMode;
             BeginPlay();
             Debug.Log("GameMode Start");
             _isConstructed = true;
         }
-      
-
+        public void ChangedMoney() {
+            OnChangedMoney?.Invoke();
+        }
+        public void ChangeLevel() {
+            OnChangedLevelPlayer?.Invoke();
+        }
         private void BeginPlay() {
             _inputControlService = new InputControlService(this);
+           
             Store = FindObjectOfType<Store>();
+            Economy = new EconomyService(this, Store);
             ActiveCustomers = new List<Customer>();
             Sellers = new List<Seller>();
             _customersPool = new Queue<Customer>();
@@ -219,6 +240,13 @@ namespace Assets._Game._Scripts._5_Managers {
             _buttonAddCustomer.gameObject.SetActive(true);
         }
 
-      
+
+        public void OnButtonUpgradeDesktop(DesktopUnit desktopUnit)
+        {
+            Debug.Log("Try Upgrade desktop");
+        }
+
+
+       
     }
 }

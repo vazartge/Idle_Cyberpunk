@@ -1,4 +1,5 @@
 ﻿using System;
+using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
 using Unity.VisualScripting;
@@ -11,6 +12,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public IProduct ProductOrder { get; private set; }
         public bool IsOrderInStore { get; set; }
         public bool IsOrderInCollecting { get; set; }
+        public ProductType ProductType { get; set; }
        
 
         public Order(Customer customer, IProduct product, int id)

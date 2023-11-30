@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1045415154771368066}
   - component: {fileID: 8223957784889163039}
   - component: {fileID: 7944590291326467717}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -114,7 +114,7 @@ GameObject:
   - component: {fileID: 4889335867959860100}
   - component: {fileID: 5385846363192150297}
   - component: {fileID: 5505564189702409606}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: BuyButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -234,7 +234,7 @@ GameObject:
   - component: {fileID: 3728924704870790434}
   - component: {fileID: 7363209502774995351}
   - component: {fileID: 3330189223972170997}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -309,7 +309,7 @@ GameObject:
   - component: {fileID: 1257035584022082475}
   - component: {fileID: 2303244490893019111}
   - component: {fileID: 5799481014721700046}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Cost
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -443,7 +443,7 @@ GameObject:
   - component: {fileID: 3187658504812739172}
   - component: {fileID: 3917826624240119128}
   - component: {fileID: 8008543148234757781}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: TitleText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -577,7 +577,7 @@ GameObject:
   - component: {fileID: 8515681834921814188}
   - component: {fileID: 7716128046242823083}
   - component: {fileID: 2139963303288680923}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: ProductTypeText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -842,7 +842,7 @@ GameObject:
   - component: {fileID: 5540352772877878169}
   - component: {fileID: 7685467434844929618}
   - component: {fileID: 8376057372150615704}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: HorizontalGroup
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -915,7 +915,7 @@ GameObject:
   - component: {fileID: 8893207710401539957}
   - component: {fileID: 5590291344529662950}
   - component: {fileID: 6252018023149271278}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: Window
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1030,6 +1030,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: Prebuilder
   _gameMode: {fileID: 0}
+  _uiMode: {fileID: 0}
   _productType: 0
   _price: 0
   _view: {fileID: 0}
@@ -1043,7 +1044,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2817885240557522485}
   - component: {fileID: 3379119874988929893}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: UI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1078,4 +1079,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7cfb4b8f7f3521549a03d0ed1278cd59, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  uiWindow: {fileID: 6966561214278492940}
+  _uiWindow: {fileID: 312376895757640056}
