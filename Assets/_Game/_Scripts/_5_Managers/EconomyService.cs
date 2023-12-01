@@ -2,6 +2,7 @@
 using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
+using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers {
@@ -17,12 +18,43 @@ namespace Assets._Game._Scripts._5_Managers {
         public EconomyService(GameMode gameMode, Store store) {
             _gameMode = gameMode;
             Store = store;
-            _mechanicalEyeUpgradeSo = _gameMode._mechanicalEyeUpgradeSo;
+            _mechanicalEyeUpgradeSo = _gameMode.DataMode.MechanicalEyeUpgradeSo;
+        }
+        public bool TryBuyPrebuilder(PrebuilderDesktop prebuilderDesktop) {
+            ProductType productType = prebuilderDesktop.ProductType;
+            int cost = prebuilderDesktop.Cost;
+            if (cost <= Store.Stats.Money)
+            {
+                Store.Stats.RemoveMoney(cost);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public void BuyDesktop(DesktopUnit desktop)
+        public bool TryUpgradeDesktop(DesktopUnit desktop)
         {
-
+            int level =desktop.Level;
+            ProductType productType = desktop.ProductType;
+            int cost = _gameMode.DataMode.MechanicalEyeUpgradeSo.Upgrades[level].Cost;
+            if ( cost <= Store.Stats.Money)
+            {
+                Store.Stats.RemoveMoney(cost);
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public void SellProductByStore(DesktopUnit desktop) {
+            int level = desktop.Level;
+            ProductType productType = desktop.ProductType;
+            int income = _gameMode.DataMode.MechanicalEyeUpgradeSo.Upgrades[level - 1].IncomeMoney;
+            
+            Store.Stats.AddMoney(income);
         }
 
         public long SetCostBuyProductAndLevel(int level, ProductType productType)
@@ -58,5 +90,8 @@ namespace Assets._Game._Scripts._5_Managers {
 
             return cost;
         }
+
+
+     
     }
 }

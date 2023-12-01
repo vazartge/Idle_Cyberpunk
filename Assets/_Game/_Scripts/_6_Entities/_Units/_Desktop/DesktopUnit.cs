@@ -3,9 +3,7 @@ using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Desktop._Base;
-using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using UnityEngine;
-using static UnityEditor.Profiling.HierarchyFrameDataView;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
     public class DesktopUnit : DesktopUnitBase
@@ -16,6 +14,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] private ProductType _productType;
         public long Cost { get; set; }
         public int Level { get; set; } = 1;
+        public long Money => _gameMode.Economy.Money;
         [SerializeField] private Order _order;
         [SerializeField] private UIDesktopViewModel _viewModel;
         [SerializeField] private UIDesktopView _view;
@@ -27,17 +26,24 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             set => _gameMode = value;
         }
 
-        void Start()
+        public ProductType ProductType
+        {
+            get => _productType;
+            set => _productType = value;
+        }
+
+        void Awake()
         {
 
             GameMode = FindObjectOfType<GameMode>();
             _gameMode.OnChangedMoney += UpdateOnChangeMoney;
             _view = GetComponentInChildren<UIDesktopView>();
             _viewModel = new UIDesktopViewModel(this, _view);
+            ViewModel = _viewModel;
             _economy = _gameMode.Economy;
-            _view.Construct(_viewModel);
+            
 
-            switch (_productType)
+            switch (ProductType)
             {
                 case ProductType.MechanicalEyeProduct:
                     _order = new Order(null, new MechanicalEyeProduct(), 0);
@@ -60,23 +66,37 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
                     break;
             }
 
-            Cost = _economy.SetCostBuyProductAndLevel(Level, _order.ProductType);
+            //UpdateOnChangeMoney();
         }
 
-        private void UpdateOnChangeMoney()
+        private void SetCost()
         {
-            
+            Cost = _economy.SetCostBuyProductAndLevel(Level+1, _order.ProductType);
+
+        }
+
+        public void UpdateOnChangeMoney()
+        {
+            //if(_viewModel.IsOpenedWindow) return;
+            SetCost();
+            _viewModel.UpdateOnChangeMoney();
         }
 
         protected override void OnTouchAction()
         {
+            
 
-            _viewModel.ShowWindow();
+            // _viewModel.ShowWindow();
+            // UpdateOnChangeMoney();
+            
+
         }
 
         public void OnButtonUpgradeDesktop()
         {
-            GameMode.OnButtonUpgradeDesktop(this);
+
+            Level += GameMode.OnButtonUpgradeDesktop(this) ? 1 : 0;
+            UpdateOnChangeMoney();
         }
     }
 }

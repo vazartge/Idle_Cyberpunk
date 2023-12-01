@@ -10,7 +10,7 @@ namespace Assets._Game._Scripts._0.Data
         NeurochipProduct
     }
 
-    [CreateAssetMenu(fileName = "ResourceData", menuName = "Data/ResourceData", order = 1)]
+    [CreateAssetMenu(fileName = "ResourceData", menuName = "ResData/ResourceData", order = 1)]
     public class ResourceData : ScriptableObject
     {
        

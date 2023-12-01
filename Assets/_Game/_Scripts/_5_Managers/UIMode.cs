@@ -1,46 +1,105 @@
-using System;
-using Assets._Game._Scripts._2_Game;
-using Unity.VisualScripting;
+using System.Collections.Generic;
+using Assets._Game._Scripts._0.Data;
+using Assets._Game._Scripts._3_UI;
+using Assets._Game._Scripts._3_UI._UIUnits._Base;
+using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers {
-    public class UIMode : MonoBehaviour
-    {
+    public class UIMode : MonoBehaviour {
+        public EconomyService Economy {
+            get => _economy;
+            set => _economy = value;
+        }
 
-        
+        private UIHUDCanvas _hudCanvas;
+
         private DataMode _dataMode;
+
         private GameMode _gameMode;
 
-        public GameMode GameMode
-        {
+        private EconomyService _economy;
+
+        public Dictionary<ProductType, string> ProductTypeAndNameMap;
+
+        private UIUnitViewModel _currentUnitViewModel;
+
+
+        public GameMode GameMode {
             get => _gameMode;
             set => _gameMode = value;
+
         }
 
 
         public void Construct(DataMode dataMode, GameMode gameMode) {
+
+            ProductTypeAndNameMap = new Dictionary<ProductType, string>
+            {
+                {ProductType.MechanicalEyeProduct, "Механический глаз"},
+                // остальные заполнить
+            };
             _dataMode = dataMode;
             GameMode = gameMode;
-            GameMode.OnChangedMoney += GameModeOnOnChangedMoney;
-            GameMode.OnChangedLevelPlayer += GameModeOnOnChangedLevelPlayer;
+
+
+            _hudCanvas = GetComponent<UIHUDCanvas>();
+
             BeginPlay();
         }
 
-        private void GameModeOnOnChangedLevelPlayer()
-        {
+        private void BeginPlay() {
+            _economy = GameMode.Economy;
+            _hudCanvas.Construct(this);
+            GameMode.OnChangedMoney += UpdateOnChangedMoney;
+            GameMode.OnChangedLevelPlayer += UpdateOnChangedLevelPlayer;
+            UpdateOnChangedMoney();
+        }
+
+        public void OnAnyInputControllerEvent() {
 
         }
 
-        private void GameModeOnOnChangedMoney()
+        public void UpdateOnChangedLevelPlayer()
         {
             
         }
 
-        private void BeginPlay() {
+    
 
+        public void UpdateOnChangedMoney() {
+            _hudCanvas.UpdateUIHUD(_gameMode.Economy.Money);
         }
 
 
+        public string GetStringNameByProductType(ProductType productType) {
+            return ProductTypeAndNameMap.GetValueOrDefault(productType);
+        }
 
+        public void TouchInput(IUnitTouchable touchable, Canvas canvas) {
+            Debug.Log($"canvas == null   {canvas == null}");
+            if (touchable == null && _currentUnitViewModel!=null && canvas != null && _currentUnitViewModel.View.Canvas == canvas) {
+               // _currentUnitViewModel?.HideWindow();//вот это место закрывает мой ui текущего объекта
+               // _currentUnitViewModel = null;
+               Debug.Log("!!!!!!!!!!!!");
+                return;
+            }
+
+            //touchable.OnTouch();
+            if (touchable!=null) {
+                UnitGame touchUnitGame = touchable as UnitGame;
+                var viewModel = touchUnitGame.ViewModel;
+                if (viewModel != _currentUnitViewModel) {
+                    _currentUnitViewModel?.HideWindow();
+                    _currentUnitViewModel = viewModel;
+                    _currentUnitViewModel?.ShowWindow();
+                    return;
+                }
+            }
+          //  _currentUnitViewModel?.HideWindow();
+            _currentUnitViewModel = null;
+
+
+        }
     }
 }

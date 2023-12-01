@@ -11,9 +11,25 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         [SerializeField] private UIMode _uiMode;
         [SerializeField] private ProductType _productType;
         [SerializeField] private int _price;
+        [SerializeField] private int _cost;
+
         [SerializeField] private Order _order;
         [SerializeField] private UIPrebuilderViewModel _viewModel;
         [SerializeField] private UIPrebuilderView _view;
+
+
+        public int Cost
+        {
+            get => _cost;
+            set => _cost = value;
+        }
+
+        public ProductType ProductType
+        {
+            get => _productType;
+            set => _productType = value;
+        }
+
         // Use this for initialization
         void Start()
         {
@@ -23,10 +39,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             _viewModel = new UIPrebuilderViewModel(this, _view);
             _view.Construct(_viewModel);
 
-            switch (_productType)
+            switch (ProductType)
             {
                 case ProductType.MechanicalEyeProduct:
                     _order = new Order(null, new MechanicalEyeProduct(), 0);
+                    Cost = _gameMode.DataMode.MechanicalEyeUpgradeSo.Upgrades[0].Cost;
                     break;
                 case ProductType.RoboticArmProduct:
                     _order = new Order(null, new RoboticArmProduct(), 0);
@@ -53,6 +70,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         {
             _gameMode.OnButtonBuyDesktop(this);
         }
+
        
     }
 }

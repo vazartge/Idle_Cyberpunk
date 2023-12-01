@@ -1,4 +1,6 @@
 ﻿using Assets._Game._Scripts._3_UI._UIUnits._Base;
+using TMPro;
+using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
 {
@@ -6,6 +8,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
     {
         private PrebuilderDesktop _prebuilderDesktop;
         private UIPrebuilderView _view;
+       
         public UIPrebuilderViewModel(PrebuilderDesktop prebuilderDesktop, UIPrebuilderView view) {
             _prebuilderDesktop=prebuilderDesktop;
             _view = view;
@@ -14,7 +17,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
 
         public void ShowWindow()
         {
-            _view.ShowWindow();
+            _view.ShowWindow(_prebuilderDesktop.Cost);
         }
 
         public void OnButtonBuyDesktop()

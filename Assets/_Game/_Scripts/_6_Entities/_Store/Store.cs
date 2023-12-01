@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
+using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -19,25 +21,25 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         [SerializeField] public List<DesktopSlot> DesktopSlots { get; set; }
         public  List<Order> Orders { get; set; }
         private Queue<Customer> _waitingOrderCustomer;
+        private List< DesktopUnit> _desktopsList;
         public bool IsCustomerAvailable => _waitingOrderCustomer != null && _waitingOrderCustomer.Count > 0;
         public bool IsDesktopAvailable => DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied);
-        [SerializeField] private int CountOrderList;
-
+        //[SerializeField] private int CountOrderList;
+       
         
         private void Awake() {
+            Stats = new StoreStats(this, GameMode);
+            _desktopsList = new List<DesktopUnit>();
             GetAllStoreSlots();
         }
 
         private void Start()
         {
             GameMode = FindObjectOfType<GameMode>();
-            Stats = new StoreStats(this, GameMode);
+            
         }
 
-        private void Update()
-        {
-            CountOrderList = Orders.Count;
-        }
+       
         public bool HasFreeCustomerSlot() {
             return CustomerSlots.Any(slot => !slot.IsOccupied);
         }
@@ -158,8 +160,19 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             return (null, null);
         }
 
+        // Доделать для разных продуктов
+        public void DeliveredForSellProductSuccess(Order order)
+        {
+            ProductType typeProduct = order.ProductType;
+            var desktop = _desktopsList.FirstOrDefault(desktops => desktops.ProductType == typeProduct);
+            // взять  тип продукта и выбрать нужный уровень стола в массиве - сдклать метод
+            GameMode.Economy.SellProductByStore(desktop);
 
+        }
 
-
+        public void AddDesktop(GameObject newDesktop)
+        {
+            _desktopsList.Add(newDesktop.GetComponentInChildren<DesktopUnit>());
+        }
     }
 }

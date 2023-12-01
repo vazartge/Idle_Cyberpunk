@@ -240,10 +240,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         private IEnumerator DeliveredOrderRoutine() {
             // Доставка заказа покупателю
             TargetCustomer.DeliveredProduct(CurrentOrder);
+            _store.DeliveredForSellProductSuccess(CurrentOrder);
             CurrentOrder = null;
             yield return null;
            // Debug.Log("Товар доставлен покупателю");
             OnUIChangedHideProduct?.Invoke();
+            
             _sellerState = SellerState.SearchingForCustomerState; // Возвращаемся к поиску нового покупателя
             // Продавец возвращается в ожидающий слот (если такой используется)
             if (CurrentSellerSlot != null && CurrentSellerSlot.Seller != this) CurrentSellerSlot.Seller = this;

@@ -15,6 +15,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             _store = store;
             _gameMode = gameMode;
             _gameMode.ChangedMoney();
+            _gameMode.InitializedStoreStats();
         }
 
         public bool AddMoney(long amount)

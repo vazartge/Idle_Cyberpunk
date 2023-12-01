@@ -3,7 +3,7 @@
 namespace Assets._Game._Scripts._0.Data
 {
     [System.Serializable]
-    public class ProductDataForUpgrade {
+    public class MachanicalEyeDataForUpgrade {
 
         [SerializeField] private int _stars;
         public int Stars { get => _stars; set => _stars = value; }

@@ -27,7 +27,7 @@ namespace Assets._Game._Scripts._2_Game {
             DataMode = FindObjectOfType<DataMode>();
             GameMode.Construct(DataMode, UiMode);
             DataMode.Construct(GameMode, UiMode);
-            UiMode.Construct(DataMode, GameMode);
+            
             OnStartNewScene();
         }
 

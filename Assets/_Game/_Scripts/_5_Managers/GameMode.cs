@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._6_Entities._Store;
@@ -11,22 +10,21 @@ using Assets._Game._Scripts._6_Entities._Units._Customers;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using Assets._Game._Scripts._6_Entities._Units._Sellers;
-using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Assets._Game._Scripts._5_Managers {
-   // public enum SideOfScreenEnum { left, right }
+    // public enum SideOfScreenEnum { left, right }
 
-    public class GameMode : MonoBehaviour
-    {
+    public class GameMode : MonoBehaviour {
         public event Action OnChangedMoney;
         public event Action OnChangedLevelPlayer;
-        private DataMode _dataMode;
+        public DataMode DataMode;
         private UIMode _uiMode;
         public Store Store;
         public EconomyService Economy;
-        public MechanicalEyeUpgradeSO _mechanicalEyeUpgradeSo;
+        public Camera UiCamera;
+        
         private InputControlService _inputControlService;
         public List<Customer> ActiveCustomers { get; set; }
         public List<Seller> Sellers { get; set; }
@@ -41,7 +39,7 @@ namespace Assets._Game._Scripts._5_Managers {
         [SerializeField] private GameObject _firstDesktopMechanicalEye;
 
         [SerializeField] private GameObject _buttonAddCustomer;
-       // private Game _game;
+        // private Game _game;
 
 
         // Текущее количество активных покупателей на сцене
@@ -69,8 +67,7 @@ namespace Assets._Game._Scripts._5_Managers {
         // Количество продавцов, которое надо создать при старте в пул
         private int CountSellersForPool { get; } = 1;
 
-        public UIMode UiMode
-        {
+        public UIMode UiMode {
             get => _uiMode;
             set => _uiMode = value;
         }
@@ -81,41 +78,56 @@ namespace Assets._Game._Scripts._5_Managers {
         [SerializeField] private int _requiredNumberSellersOnScene;
         [SerializeField] private int numberOrders = 1;
         private float _timeRateGetCustomers = 1f;
-        private bool _isConstructed;
-       
+        private bool _isInitialized;
+
 
         public void Construct(DataMode dataMode, UIMode uiMode) {
-            _dataMode = dataMode;
+            DataMode = dataMode;
             UiMode = uiMode;
-            BeginPlay();
-            Debug.Log("GameMode Start");
-            _isConstructed = true;
-        }
-        public void ChangedMoney() {
-            OnChangedMoney?.Invoke();
-        }
-        public void ChangeLevel() {
-            OnChangedLevelPlayer?.Invoke();
-        }
-        private void BeginPlay() {
-            _inputControlService = new InputControlService(this);
-           
             Store = FindObjectOfType<Store>();
-            Economy = new EconomyService(this, Store);
             ActiveCustomers = new List<Customer>();
             Sellers = new List<Seller>();
             _customersPool = new Queue<Customer>();
+            StartCoroutine(UpdateCustomersOnScene());
+            Economy = new EconomyService(this, Store);
+            _inputControlService = new InputControlService(this);
+            UiMode.Construct(DataMode, this);
+
+
+        }
+        public void InitializedStoreStats() {
+            InitializeUI();
+            Debug.Log("GameMode Start");
+        }
+        private void InitializeUI() {
+
+
+            
 
             //CreateCustomers();
             // CreateSellers();
             //InstantiateNewSeller();
-            StartCoroutine(UpdateCustomersOnScene());
 
+            OnChangedMoney?.Invoke();
+            _isInitialized = true;
         }
 
-        private void Update()
+        public void ChangedMoney() {
+            OnChangedMoney?.Invoke();
+            UiMode?.UpdateOnChangedMoney();
+        }
+        public void ChangeLevel() {
+            OnChangedLevelPlayer?.Invoke();
+            UiMode?.UpdateOnChangedLevelPlayer();
+        }
+
+        public void OnAnyInputControllerEvent()
         {
-            if (!_isConstructed) return;
+            UiMode?.OnAnyInputControllerEvent();
+        }
+
+        private void Update() {
+            if (!_isInitialized) return;
             if (Game.Instance.IsPaused) return;
             _inputControlService.UpdateInputControl();
         }
@@ -153,14 +165,13 @@ namespace Assets._Game._Scripts._5_Managers {
             return obj;
         }
 
-        public void NewSellerButton()
-        {
-            if(RequiredNumberSellersOnScene >= _maxNuberSellers) return;
+        public void NewSellerButton() {
+            if (RequiredNumberSellersOnScene >= _maxNuberSellers) return;
             RequiredNumberSellersOnScene++;
             InstantiateNewSeller();
-            
+
         }
-        
+
         // Публичный метод для получения покупателя из пула
         public Customer GetCustomer() {
 
@@ -190,17 +201,17 @@ namespace Assets._Game._Scripts._5_Managers {
         }
         public void CustomerLeftScene(Customer customer) {
             ReturnCustomerToPool(customer);
-           // StartCoroutine(UpdateCustomersOnScene());
+            // StartCoroutine(UpdateCustomersOnScene());
         }
         public void NewCustomerButton() {
-            if(RequiredNumberCustomersOnScene >=_maxNuberCustomers) return;
+            if (RequiredNumberCustomersOnScene >=_maxNuberCustomers) return;
             RequiredNumberCustomersOnScene++;
             StartCoroutine(UpdateCustomersOnScene());
         }
         private IEnumerator UpdateCustomersOnScene() {
             Debug.Log($"CurrentActiveCustomers = {CurrentActiveCustomers}");
             //if (RequiredNumberCustomersOnScene == 0) yield break;
-          //  if (!Store.HasFreeCustomerSlot()/*CurrentActiveCustomers >= _maxNuberCustomers*/) yield break;
+            //  if (!Store.HasFreeCustomerSlot()/*CurrentActiveCustomers >= _maxNuberCustomers*/) yield break;
             while (Store.GetNumberOfOccupiedCustomerSlots() < RequiredNumberCustomersOnScene &&  Store.HasFreeCustomerSlot()) {
                 if (_customersPool.Count == 0) {
                     // Создаем нового покупателя, если в пуле нет доступных
@@ -230,23 +241,33 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
 
-        public void OnButtonBuyDesktop(PrebuilderDesktop prebuilderDesktop)
-        {
-            var newDesktop = Instantiate(_firstDesktopMechanicalEye, prebuilderDesktop.gameObject.transform.position,
-                Quaternion.identity);
-            var newDesktopSlot = newDesktop.GetComponentInChildren<DesktopSlot>();
-            Destroy(prebuilderDesktop.gameObject);
-            Store.DesktopSlots.Add(newDesktopSlot);
-            _buttonAddCustomer.gameObject.SetActive(true);
+        public bool OnButtonBuyDesktop(PrebuilderDesktop prebuilderDesktop) {
+            if (Economy.TryBuyPrebuilder(prebuilderDesktop))
+            {
+                var newDesktop = Instantiate(_firstDesktopMechanicalEye, prebuilderDesktop.gameObject.transform.position,
+                    Quaternion.identity);
+                var newDesktopSlot = newDesktop.GetComponentInChildren<DesktopSlot>();
+                Destroy(prebuilderDesktop.gameObject);
+                Store.AddDesktop(newDesktop);
+                Store.DesktopSlots.Add(newDesktopSlot);
+                _buttonAddCustomer.gameObject.SetActive(true);
+                return true;
+            }
+
+            return false;
         }
 
 
-        public void OnButtonUpgradeDesktop(DesktopUnit desktopUnit)
-        {
-            Debug.Log("Try Upgrade desktop");
+        public bool OnButtonUpgradeDesktop(DesktopUnit desktopUnit) {
+            return Economy.TryUpgradeDesktop(desktopUnit);
+
+        }
+
+        private void OnDestroy() {
+            OnChangedMoney = null;
+            OnChangedLevelPlayer = null;
         }
 
 
-       
     }
 }
