@@ -7,7 +7,7 @@ namespace Assets._Game._Scripts._2_Game {
         public static Game Instance;
         public GameMode GameMode;
         public UIMode UiMode;
-        public DataMode DataMode;
+        public DataMode_ DataMode;
         public bool IsPaused { get; set; }
 
         private void Awake() {
@@ -22,11 +22,13 @@ namespace Assets._Game._Scripts._2_Game {
         }
         public void Construct()
         {
+           
             GameMode = FindObjectOfType<GameMode>();
             UiMode = FindObjectOfType<UIMode>();
-            DataMode = FindObjectOfType<DataMode>();
-            GameMode.Construct(DataMode, UiMode);
+            DataMode = FindObjectOfType<DataMode_>();
             DataMode.Construct(GameMode, UiMode);
+            GameMode.Construct(DataMode, UiMode);
+           
             
             OnStartNewScene();
         }

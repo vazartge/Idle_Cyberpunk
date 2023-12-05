@@ -1,4 +1,5 @@
-﻿using Assets._Game._Scripts._6_Entities._Units._Base;
+﻿using Assets._Game._Scripts._5_Managers;
+using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Store._Slots
@@ -10,8 +11,7 @@ namespace Assets._Game._Scripts._6_Entities._Store._Slots
             private set => _id = value;
         }
 
-        private IUnitGame _unit;
-        [SerializeField] int _id;
+        public virtual ProductType ProductType { get; set; }
 
         public bool IsOccupied => _unit != null;
 
@@ -19,5 +19,10 @@ namespace Assets._Game._Scripts._6_Entities._Store._Slots
             get => _unit;
             set => _unit = value;
         }
+
+        [SerializeField]protected ProductType _productType;
+        
+        [SerializeField] int _id;
+        private IUnitGame _unit;
     }
 }

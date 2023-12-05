@@ -31,11 +31,12 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             Stats = new StoreStats(this, GameMode);
             _desktopsList = new List<DesktopUnit>();
             GetAllStoreSlots();
+            GameMode = FindObjectOfType<GameMode>();
         }
 
         private void Start()
         {
-            GameMode = FindObjectOfType<GameMode>();
+            
             
         }
 
@@ -141,7 +142,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             foreach (var order in Orders) {
                 // Найти свободный DesktopSlot, который может обработать продукт этого заказа
                
-                suitableSlot = DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied && slot.AllowedProductType == order.ProductOrder.GetType());
+                suitableSlot = DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied && slot.ProductType == order.ProductType);
 
                 if (suitableSlot != null) {
                     // Если подходящий слот найден, сохраняем ссылку на заказ

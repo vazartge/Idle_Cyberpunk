@@ -31,10 +31,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
         public void UpdateOnChangeMoney()
         {
             _productName = _uiMode.GetStringNameByProductType(_desktopModel.ProductType);
-            _incomeValue = _desktopModel.GameMode.DataMode.MechanicalEyeUpgradeSo.Upgrades[_desktopModel.Level - 1].IncomeMoney;
+            _incomeValue = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType)
+                .Upgrades[_desktopModel.Level].IncomeMoney;
             _progressStarsValue = CalculateProgressToNextStar();
             View.UpdateOnChangeMoney(_desktopModel.Cost, _desktopModel.Level, _desktopModel.Money
-                , _productName, _incomeValue, _desktopModel.GameMode.DataMode.MechanicalEyeUpgradeSo.Upgrades[_desktopModel.Level-1].Stars, _progressStarsValue);
+                , _productName, _incomeValue, _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType).Upgrades[_desktopModel.Level-1].Stars, _progressStarsValue);
 
         }
 
@@ -66,7 +67,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 
         public float CalculateProgressToNextStar() {
             var currentLevel = _desktopModel.Level;
-            var upgradesData = _desktopModel.GameMode.DataMode.MechanicalEyeUpgradeSo.Upgrades;
+            var upgradesData = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType).Upgrades;
 
             // Находим текущее улучшение и следующее улучшение по звездам
             var currentUpgrade = upgradesData.FirstOrDefault(upgrade => upgrade.Level == currentLevel);

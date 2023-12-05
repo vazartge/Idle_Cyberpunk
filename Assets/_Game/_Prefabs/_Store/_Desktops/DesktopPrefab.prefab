@@ -219,7 +219,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 20
+  m_SortingOrder: 50
   m_Sprite: {fileID: 21300000, guid: 3c0afbf3fd59d374696a3c66f069e596, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 7908378423488579361}
   - component: {fileID: 138140985839730835}
   m_Layer: 0
-  m_Name: DesktopMechanicalEye
+  m_Name: DesktopPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -439,13 +439,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1432547884348984942}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f723b583fdf16c942961a1b68e2e57fc, type: 3}
+  m_Script: {fileID: 11500000, guid: 9df976c974bf7d64db40c623de1450dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ID: 
   _gameMode: {fileID: 0}
   _productType: 0
   _view: {fileID: 1400092126675542471}
+  _spriteIconProductType: {fileID: 4411511907515979894}
 --- !u!1 &1822129442337803036
 GameObject:
   m_ObjectHideFlags: 0
@@ -1444,7 +1445,7 @@ GameObject:
   - component: {fileID: 6055833535533993346}
   - component: {fileID: 1784987962040816904}
   m_Layer: 0
-  m_Name: MechanicalEyeDesktopSlot
+  m_Name: DesktopSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1526,9 +1527,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4363812195097768747}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e17a1031f86dec4fa3680efe29d7d8c, type: 3}
+  m_Script: {fileID: 11500000, guid: e1f4982153bde76498bd65b1dce5193a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _productType: 0
   _id: 0
 --- !u!1 &5289533209914829806
 GameObject:

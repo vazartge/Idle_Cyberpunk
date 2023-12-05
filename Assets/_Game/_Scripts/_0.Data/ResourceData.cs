@@ -3,14 +3,9 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._0.Data
 {
-    public enum ProductType {
-        MechanicalEyeProduct,
-        RoboticArmProduct,
-        IronHeartProduct,
-        NeurochipProduct
-    }
+    
 
-    [CreateAssetMenu(fileName = "ResourceData", menuName = "ResData/ResourceData", order = 1)]
+    [CreateAssetMenu(fileName = "ResourceData", menuName = "ResData/ResourceData")]
     public class ResourceData : ScriptableObject
     {
        

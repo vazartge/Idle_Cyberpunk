@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-namespace Assets._Game._Scripts._0.Data
+namespace Assets._Game._Scripts._0.Data._Base
 {
     [System.Serializable]
-    public class MachanicalEyeDataForUpgrade {
-
+    public abstract class BaseDataForUpgrade
+    {
         [SerializeField] private int _stars;
         public int Stars { get => _stars; set => _stars = value; }
         [SerializeField] private int _level;
@@ -17,6 +17,5 @@ namespace Assets._Game._Scripts._0.Data
         public int OpeningAtLevel { get => _openingAtLevel; set => _openingAtLevel = value; }
         [SerializeField] private string _events;
         public string Events { get => _events; set => _events = value; }
-       
     }
 }

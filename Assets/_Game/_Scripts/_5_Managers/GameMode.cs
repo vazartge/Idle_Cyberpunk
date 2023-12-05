@@ -6,6 +6,7 @@ using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
+using Assets._Game._Scripts._6_Entities._Units._Base;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
@@ -13,18 +14,20 @@ using Assets._Game._Scripts._6_Entities._Units._Sellers;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+
 namespace Assets._Game._Scripts._5_Managers {
     // public enum SideOfScreenEnum { left, right }
 
     public class GameMode : MonoBehaviour {
+        private int _countOpenedPrebuilder = 0;
         public event Action OnChangedMoney;
         public event Action OnChangedLevelPlayer;
-        public DataMode DataMode;
+        public DataMode_ _dataMode;
         private UIMode _uiMode;
         public Store Store;
         public EconomyService Economy;
         public Camera UiCamera;
-        
+
         private InputControlService _inputControlService;
         public List<Customer> ActiveCustomers { get; set; }
         public List<Seller> Sellers { get; set; }
@@ -35,8 +38,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject SellerPrefab;
         private Queue<Customer> _customersPool;
 
-        [SerializeField] private GameObject _firstPrebuilderDesktopMechanicalEye;
-        [SerializeField] private GameObject _firstDesktopMechanicalEye;
+        [SerializeField] private GameObject[] _prebuildersGO;
 
         [SerializeField] private GameObject _buttonAddCustomer;
         // private Game _game;
@@ -71,6 +73,11 @@ namespace Assets._Game._Scripts._5_Managers {
             get => _uiMode;
             set => _uiMode = value;
         }
+
+        public DataMode_ DataMode {
+            get => _dataMode;
+            set => _dataMode = value;
+        }
         // Требуемое количество покупателей на сцене
 
         private int _countSellerForID;
@@ -81,13 +88,14 @@ namespace Assets._Game._Scripts._5_Managers {
         private bool _isInitialized;
 
 
-        public void Construct(DataMode dataMode, UIMode uiMode) {
+        public void Construct(DataMode_ dataMode, UIMode uiMode) {
             DataMode = dataMode;
             UiMode = uiMode;
             Store = FindObjectOfType<Store>();
             ActiveCustomers = new List<Customer>();
             Sellers = new List<Seller>();
             _customersPool = new Queue<Customer>();
+
             StartCoroutine(UpdateCustomersOnScene());
             Economy = new EconomyService(this, Store);
             _inputControlService = new InputControlService(this);
@@ -102,27 +110,49 @@ namespace Assets._Game._Scripts._5_Managers {
         private void InitializeUI() {
 
 
-            
+
 
             //CreateCustomers();
             // CreateSellers();
             //InstantiateNewSeller();
 
             OnChangedMoney?.Invoke();
+            StartCoroutine(InitializeUnitsPrebuldersOnScene(_countOpenedPrebuilder));
+
             _isInitialized = true;
+
+        }
+
+        public IEnumerator InitializeUnitsPrebuldersOnScene(int countOpenedPrebuilder) {
+            yield return new WaitForSeconds(2f);
+
+
+            Debug.Log(gameObject.name);
+            foreach (var pre in _prebuildersGO)
+            { 
+                var pref = pre.GetComponent<PrebuilderDesktop>();
+            pref.Construct(this, DataMode);
+            pref.IsActive = true;
+            pre.SetActive(true);
+                
+            }
+           
+
+
         }
 
         public void ChangedMoney() {
             OnChangedMoney?.Invoke();
+            CheckPrebuilders();
             UiMode?.UpdateOnChangedMoney();
         }
         public void ChangeLevel() {
             OnChangedLevelPlayer?.Invoke();
+            CheckPrebuilders();
             UiMode?.UpdateOnChangedLevelPlayer();
         }
 
-        public void OnAnyInputControllerEvent()
-        {
+        public void OnAnyInputControllerEvent() {
             UiMode?.OnAnyInputControllerEvent();
         }
 
@@ -187,10 +217,39 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         private List<Order> CreateOrders(Customer customer, IProduct product, int number) {
+            var countActive = 0;
             var orders = new List<Order>();
             for (int i = 0; i < number; i++) {
-                orders.Add(new Order(customer, product, Store.GetOrderId()));
-                Debug.Log($"Order  {i} ");
+                foreach (var obj in _prebuildersGO) {
+                    if (obj.GetComponent<PrebuilderDesktop>().IsActive) {
+                        countActive++;
+                    }
+                }
+
+                if (countActive < 2) {
+                    orders.Add(new Order(customer, product, Store.GetOrderId(), ProductType.MechanicalEyeProduct));
+                } else {
+                    if (countActive < 3) {
+                        orders.Add(new Order(customer, product, Store.GetOrderId(), ProductType.RoboticArmProduct));
+                    }
+                    else
+                    {
+                        if (countActive < 4)
+                        {
+                            orders.Add(new Order(customer, product, Store.GetOrderId(), ProductType.IronHeartProduct));
+                        }
+                        else
+                        {
+                            if (countActive < 5)
+                            {
+                                orders.Add(new Order(customer, product, Store.GetOrderId(), ProductType.NeurochipProduct));
+                            }
+                        }
+                    }
+
+                }
+
+
 
             }
             return orders;
@@ -242,19 +301,33 @@ namespace Assets._Game._Scripts._5_Managers {
 
 
         public bool OnButtonBuyDesktop(PrebuilderDesktop prebuilderDesktop) {
-            if (Economy.TryBuyPrebuilder(prebuilderDesktop))
-            {
-                var newDesktop = Instantiate(_firstDesktopMechanicalEye, prebuilderDesktop.gameObject.transform.position,
-                    Quaternion.identity);
-                var newDesktopSlot = newDesktop.GetComponentInChildren<DesktopSlot>();
-                Destroy(prebuilderDesktop.gameObject);
-                Store.AddDesktop(newDesktop);
-                Store.DesktopSlots.Add(newDesktopSlot);
-                _buttonAddCustomer.gameObject.SetActive(true);
-                return true;
+            if (Economy.TryBuyPrebuilder(prebuilderDesktop)) {
+                return CreateDesktopFromPrebuilder(prebuilderDesktop);
             }
 
+
             return false;
+        }
+
+        private void CheckPrebuilders() {
+            if (_prebuildersGO[_countOpenedPrebuilder] == null && _countOpenedPrebuilder<=_prebuildersGO.Length) {
+                InitializeUnitsPrebuldersOnScene(_countOpenedPrebuilder);
+            }
+        }
+
+        private bool CreateDesktopFromPrebuilder(PrebuilderDesktop prebuilderDesktop) {
+            var newDesktop = Instantiate(DataMode.GetPrefabForDesktop()
+                , prebuilderDesktop.gameObject.transform.position,
+                Quaternion.identity);
+            newDesktop.GetComponent<DesktopUnit>().Construct(this, prebuilderDesktop.ProductType);
+            var newDesktopSlot = newDesktop.GetComponentInChildren<DesktopSlot>();
+            newDesktopSlot.ProductType = prebuilderDesktop.ProductType;
+
+            prebuilderDesktop.gameObject.SetActive(false);
+            Store.AddDesktop(newDesktop);
+            Store.DesktopSlots.Add(newDesktopSlot);
+            _buttonAddCustomer.gameObject.SetActive(true);
+            return true;
         }
 
 

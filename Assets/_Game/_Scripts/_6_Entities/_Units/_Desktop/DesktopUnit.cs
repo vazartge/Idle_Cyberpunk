@@ -6,7 +6,7 @@ using Assets._Game._Scripts._6_Entities._Units._Desktop._Base;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
-    public class DesktopUnit : DesktopUnitBase
+    public class DesktopUnit : DesktopBaseUnitBase
     {
         
         [SerializeField] private GameMode _gameMode;
@@ -14,11 +14,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] private ProductType _productType;
         public long Cost { get; set; }
         public int Level { get; set; } = 1;
-        public long Money => _gameMode.Economy.Money;
+        public long Money => GameMode.Economy.Money;
         [SerializeField] private Order _order;
         [SerializeField] private UIDesktopViewModel _viewModel;
         [SerializeField] private UIDesktopView _view;
         private EconomyService _economy;
+        [SerializeField] private SpriteRenderer _spriteIconProductType;
 
         public GameMode GameMode
         {
@@ -32,46 +33,49 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             set => _productType = value;
         }
 
-        void Awake()
+        public void Construct(GameMode gameMod, ProductType type)
         {
 
-            GameMode = FindObjectOfType<GameMode>();
+            GameMode =gameMod;
+            ProductType = type;
             _gameMode.OnChangedMoney += UpdateOnChangeMoney;
             _view = GetComponentInChildren<UIDesktopView>();
             _viewModel = new UIDesktopViewModel(this, _view);
             ViewModel = _viewModel;
             _economy = _gameMode.Economy;
             
+            _spriteIconProductType.sprite = GameMode.DataMode.GetIconByProductType(ProductType);
 
-            switch (ProductType)
-            {
-                case ProductType.MechanicalEyeProduct:
-                    _order = new Order(null, new MechanicalEyeProduct(), 0);
-                    _order.ProductType = ProductType.MechanicalEyeProduct;
-                    break;
-                case ProductType.RoboticArmProduct:
-                    _order = new Order(null, new RoboticArmProduct(), 0);
-                    _order.ProductType = ProductType.RoboticArmProduct;
-                    break;
-                case ProductType.IronHeartProduct:
-                    _order = new Order(null, new IronHeartProduct(), 0);
-                    _order.ProductType = ProductType.IronHeartProduct;
-                    break;
-                case ProductType.NeurochipProduct:
-                    _order = new Order(null, new NeurochipProduct(), 0);
-                    _order.ProductType = ProductType.MechanicalEyeProduct;
-                    break;
-                default:
-                    Debug.Log("Нет такого продукта!");
-                    break;
-            }
+
+            // switch (ProductType)
+            // {
+            //     case ProductType.MechanicalEyeProduct:
+            //         _order = new Order(null, new MechanicalEyeProduct(), 0);
+            //         _order.ProductType = ProductType.MechanicalEyeProduct;
+            //         break;
+            //     case ProductType.RoboticArmProduct:
+            //         _order = new Order(null, new RoboticArmProduct(), 0);
+            //         _order.ProductType = ProductType.RoboticArmProduct;
+            //         break;
+            //     case ProductType.IronHeartProduct:
+            //         _order = new Order(null, new IronHeartProduct(), 0);
+            //         _order.ProductType = ProductType.IronHeartProduct;
+            //         break;
+            //     case ProductType.NeurochipProduct:
+            //         _order = new Order(null, new NeurochipProduct(), 0);
+            //         _order.ProductType = ProductType.MechanicalEyeProduct;
+            //         break;
+            //     default:
+            //         Debug.Log("Нет такого продукта!");
+            //         break;
+            // }
 
             //UpdateOnChangeMoney();
         }
 
         private void SetCost()
         {
-            Cost = _economy.SetCostBuyProductAndLevel(Level+1, _order.ProductType);
+            Cost = _economy.SetCostBuyProductAndLevel(Level+1, ProductType);
 
         }
 

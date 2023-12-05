@@ -13,7 +13,7 @@ using UnityEngine.Events;
 namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
 
-    public class Customer : UnitGame {
+    public class Customer : BaseUnitGame {
         private enum CustomerState {
             None,
             MovingToTradeState,

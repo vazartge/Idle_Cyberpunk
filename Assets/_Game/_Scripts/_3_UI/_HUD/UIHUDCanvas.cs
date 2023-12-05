@@ -3,7 +3,7 @@ using Assets._Game._Scripts._5_Managers;
 using TMPro;
 using UnityEngine;
 
-namespace Assets._Game._Scripts._3_UI
+namespace Assets._Game._Scripts._3_UI._HUD
 {
     public class UIHUDCanvas : MonoBehaviour
     {

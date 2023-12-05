@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
-    public class Seller : UnitGame {
+    public class Seller : BaseUnitGame {
         private enum SellerState {
             SearchingForCustomerState,
             MovingToCustomerForOrderState,

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6706086822095306183}
   - component: {fileID: 2382740314328486223}
   m_Layer: 0
-  m_Name: MechanicalEyeDesktopSlot
+  m_Name: DesktopSlot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,7 +94,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 4365921408917092843}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8e17a1031f86dec4fa3680efe29d7d8c, type: 3}
+  m_Script: {fileID: 11500000, guid: e1f4982153bde76498bd65b1dce5193a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  assemblyTime: 5
+  _productType: 0
+  _id: 0

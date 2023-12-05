@@ -25,6 +25,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
             _cost.text = NumberFormatterService.FormatNumber(cost);
         }
 
+        public void HideWindow()
+        {
+            _uiWindow.SetActive(false);
+        }
+
         public void OnButtonBuy()
         {
             

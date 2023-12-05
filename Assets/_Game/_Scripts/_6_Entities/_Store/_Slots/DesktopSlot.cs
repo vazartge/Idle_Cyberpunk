@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Units._Sellers;
 using UnityEngine;
 
@@ -7,7 +8,8 @@ namespace Assets._Game._Scripts._6_Entities._Store._Slots
 {
     public class DesktopSlot : BaseSlot {
         private float assemblyTime = 5.0f; // Время сбора заказа
-        public virtual Type AllowedProductType { get; }
+        //public virtual Type AllowedProductType { get; }
+        
 
         public Seller Seller {
             get => Unit as Seller;
@@ -15,7 +17,7 @@ namespace Assets._Game._Scripts._6_Entities._Store._Slots
         }
 
         public IEnumerator ProcessOrder(Order order) {
-            if (order.ProductOrder.GetType() != AllowedProductType) {
+            if (order.ProductType != ProductType) {
                 yield break;
             }
 

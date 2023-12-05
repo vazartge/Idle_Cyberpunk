@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._3_UI;
+using Assets._Game._Scripts._3_UI._HUD;
 using Assets._Game._Scripts._3_UI._UIUnits._Base;
 using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;
@@ -14,7 +15,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         private UIHUDCanvas _hudCanvas;
 
-        private DataMode _dataMode;
+        private DataMode_ _dataMode;
 
         private GameMode _gameMode;
 
@@ -32,7 +33,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
 
-        public void Construct(DataMode dataMode, GameMode gameMode) {
+        public void Construct(DataMode_ dataMode, GameMode gameMode) {
 
             ProductTypeAndNameMap = new Dictionary<ProductType, string>
             {
@@ -87,8 +88,8 @@ namespace Assets._Game._Scripts._5_Managers {
 
             //touchable.OnTouch();
             if (touchable!=null) {
-                UnitGame touchUnitGame = touchable as UnitGame;
-                var viewModel = touchUnitGame.ViewModel;
+                BaseUnitGame touchBaseUnitGame = touchable as BaseUnitGame;
+                var viewModel = touchBaseUnitGame.ViewModel;
                 if (viewModel != _currentUnitViewModel) {
                     _currentUnitViewModel?.HideWindow();
                     _currentUnitViewModel = viewModel;
