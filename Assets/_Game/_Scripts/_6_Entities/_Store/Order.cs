@@ -10,17 +10,17 @@ namespace Assets._Game._Scripts._6_Entities._Store {
     public class Order {
         public int ID { get; }
         public Customer Customer { get; private set; }
-        public IProduct ProductOrder { get; private set; }
+        //public IProduct ProductOrder { get; private set; }
         public bool IsOrderInStore { get; set; }
         public bool IsOrderInCollecting { get; set; }
         public ProductType ProductType { get; set; }
        
 
-        public Order(Customer customer, IProduct product, int id, ProductType productType)
+        public Order(Customer customer, ProductType productType,  int id)
         {
             ID = id;
             Customer = customer;
-            ProductOrder = product;
+            
             ProductType = productType;
             //Debug.Log($"{Customer.ID}.OrderID: {ID}");
             

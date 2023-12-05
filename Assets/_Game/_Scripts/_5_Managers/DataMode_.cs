@@ -5,14 +5,14 @@ using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._0.Data._Base;
 using Assets._Game._Scripts._0.Data._DataForUpgrade;
 using UnityEngine;
-
+public enum ProductType {
+    MechanicalEyeProduct,
+    RoboticArmProduct,
+    IronHeartProduct,
+    NeurochipProduct
+}
 namespace Assets._Game._Scripts._5_Managers {
-    public enum ProductType {
-        MechanicalEyeProduct,
-        RoboticArmProduct,
-        IronHeartProduct,
-        NeurochipProduct
-    }
+    
     public class DataMode_ : MonoBehaviour {
         [SerializeField] public ResourceData ResData;
          public Dictionary<ProductType, BaseUpgradeSO> _dataForUpgradeDesktopsMap;

@@ -50,6 +50,38 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public int GetNumberOfOccupiedCustomerSlots() {
             return CustomerSlots.Count(slot => slot.IsOccupied);
         }
+        public int GetOrderCountByProductType(ProductType productType) {
+            return Orders.Count(order => order.ProductType == productType);
+        }
+        public Dictionary<ProductType, int> GetOrderCountsByProductType() {
+            return Orders
+                .GroupBy(order => order.ProductType) // Группировка по типу продукта
+                .ToDictionary(group => group.Key, group => group.Count()); // Преобразование в словарь
+        }
+
+        public List<ProductType> GetAvailableProductTypes() {
+            return DesktopSlots
+                .Where(slot => slot.IsOccupied)
+                .Select(slot => slot.ProductType)
+                .Distinct()
+                .ToList();
+        }
+        public List<ProductType> GetAvailableProductTypesWithDesks() {
+            return DesktopSlots
+                .Where(slot => !slot.IsOccupied) // Фильтр свободных слотов
+                .Select(slot => slot.ProductType) // Выбираем типы продуктов
+                .Distinct() // Убираем дубликаты
+                .ToList();
+        }
+
+
+        public ProductType GetAlternativeProductType(List<ProductType> excludedTypes) {
+            // Возвращаем случайный тип продукта, который не находится в списке исключенных
+            var availableTypes = Enum.GetValues(typeof(ProductType)).Cast<ProductType>()
+                .Except(excludedTypes)
+                .ToArray();
+            return availableTypes[Random.Range(0, availableTypes.Length)];
+        }
 
         private void GetAllStoreSlots() {
             SellerSlots = GetComponentsInChildren<SellerSlot>().ToList();
@@ -175,5 +207,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         {
             _desktopsList.Add(newDesktop.GetComponentInChildren<DesktopUnit>());
         }
+
+       
     }
 }

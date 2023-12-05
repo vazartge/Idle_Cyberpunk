@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._6_Entities._Store;
@@ -27,7 +28,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public Store Store;
         public EconomyService Economy;
         public Camera UiCamera;
-
+        private ProductRandomizerService _productRandomizerService;
         private InputControlService _inputControlService;
         public List<Customer> ActiveCustomers { get; set; }
         public List<Seller> Sellers { get; set; }
@@ -86,12 +87,16 @@ namespace Assets._Game._Scripts._5_Managers {
         [SerializeField] private int numberOrders = 1;
         private float _timeRateGetCustomers = 1f;
         private bool _isInitialized;
+        private int _idOrder;
+        private int GameLevel=1;
 
 
         public void Construct(DataMode_ dataMode, UIMode uiMode) {
             DataMode = dataMode;
             UiMode = uiMode;
             Store = FindObjectOfType<Store>();
+            _productRandomizerService = new ProductRandomizerService();
+
             ActiveCustomers = new List<Customer>();
             Sellers = new List<Seller>();
             _customersPool = new Queue<Customer>();
@@ -124,19 +129,18 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         public IEnumerator InitializeUnitsPrebuldersOnScene(int countOpenedPrebuilder) {
-            yield return new WaitForSeconds(2f);
+            yield return new WaitForSeconds(0.1f);
 
 
             Debug.Log(gameObject.name);
-            foreach (var pre in _prebuildersGO)
-            { 
-                var pref = pre.GetComponent<PrebuilderDesktop>();
-            pref.Construct(this, DataMode);
-            pref.IsActive = true;
-            pre.SetActive(true);
-                
+            foreach (var prebuilderGO in _prebuildersGO) {
+                var prebuilderDesktop = prebuilderGO.GetComponent<PrebuilderDesktop>();
+                prebuilderDesktop.Construct(this, DataMode);
+                prebuilderDesktop.IsActive = true;
+                prebuilderGO.SetActive(true);
+
             }
-           
+
 
 
         }
@@ -204,56 +208,66 @@ namespace Assets._Game._Scripts._5_Managers {
 
         // Публичный метод для получения покупателя из пула
         public Customer GetCustomer() {
-
-            Customer customer = _customersPool.Dequeue(); // Получаем покупателя из пула
-            customer.gameObject.SetActive(true); // Активируем покупателя
+            Customer customer = _customersPool.Dequeue();
+            customer.gameObject.SetActive(true);
             var freeSlot = Store.GetFreeCustomerSlot();
 
-            var orders = CreateOrders(customer, new MechanicalEyeProduct(), Random.Range(1, 4));
+            int maxProductsPerCustomer = GetMaxProductsPerCustomer(GameLevel);
+            int maxOrderCount = Sellers.Count * 3;
+
+            // Получаем типы продуктов, для которых есть свободные столы
+            var availableProductTypesWithDesks = Store.GetAvailableProductTypesWithDesks();
+
+            // Фильтруем доступные типы продуктов на основе текущего количества заказов
+            var orderCounts = Store.GetOrderCountsByProductType();
+            var eligibleProductTypes = availableProductTypesWithDesks
+                .Where(type => !orderCounts.ContainsKey(type) || orderCounts[type] < maxOrderCount)
+                .ToList();
+
+            // Выбираем случайный тип продукта из подходящих
+            ProductType selectedType;
+            if (eligibleProductTypes.Any()) {
+                selectedType = _productRandomizerService.GetRandomProductType(eligibleProductTypes);
+            } else {
+                // Все типы продуктов либо достигли максимума, либо для них нет свободных столов
+                selectedType = Store.GetAlternativeProductType(new List<ProductType>());
+            }
+
+            // Создаем заказы
+            var orders = CreateOrders(customer, selectedType, maxProductsPerCustomer);
             customer.SetupCustomer(freeSlot, orders);
             CurrentActiveCustomers++;
             return customer;
-
         }
 
-        private List<Order> CreateOrders(Customer customer, IProduct product, int number) {
-            var countActive = 0;
-            var orders = new List<Order>();
-            for (int i = 0; i < number; i++) {
-                foreach (var obj in _prebuildersGO) {
-                    if (obj.GetComponent<PrebuilderDesktop>().IsActive) {
-                        countActive++;
-                    }
-                }
 
-                if (countActive < 2) {
-                    orders.Add(new Order(customer, product, Store.GetOrderId(), ProductType.MechanicalEyeProduct));
-                } else {
-                    if (countActive < 3) {
-                        orders.Add(new Order(customer, product, Store.GetOrderId(), ProductType.RoboticArmProduct));
-                    }
-                    else
-                    {
-                        if (countActive < 4)
-                        {
-                            orders.Add(new Order(customer, product, Store.GetOrderId(), ProductType.IronHeartProduct));
-                        }
-                        else
-                        {
-                            if (countActive < 5)
-                            {
-                                orders.Add(new Order(customer, product, Store.GetOrderId(), ProductType.NeurochipProduct));
-                            }
-                        }
-                    }
+        private int GetMaxProductsPerCustomer(int gameLevel) {
+            // Здесь должна быть логика, определяющая максимальное количество продуктов в заказе на основе уровня игры
+            // Например, можно использовать простой switch или словарь, если логика более сложная
+            switch (gameLevel) {
+                case 1:
+                    return 2;
+                case 2:
+                    return 2;
+                case 3:
+                    return 3;
+                case 4:
+                    return 3;
+                default:
+                    return 2; // Если уровень не определен, вернем значение по умолчанию
+            }
+        }
 
-                }
-
-
-
+        private List<Order> CreateOrders(Customer customer, ProductType typeProduct, int count) {
+            List<Order> orders = new List<Order>();
+            for (int i = 0; i < count; i++) {
+                _idOrder++;
+                orders.Add(new Order(customer, typeProduct, _idOrder));
             }
             return orders;
         }
+
+
         public void CustomerLeftTradeSlot() {
 
             StartCoroutine(UpdateCustomersOnScene());
