@@ -63,20 +63,20 @@ namespace Assets._Game._Scripts._4_Services
                 position = screenPosition
             };
 
-            // Список для хранения результатов raycast
-            List<RaycastResult> results = new List<RaycastResult>();
-            EventSystem.current.RaycastAll(pointerData, results);
-
-            Canvas canvas = null;
-            foreach (var result in results) {
-                if (result.gameObject.GetComponent<Canvas>() != null) {
-                    canvas = result.gameObject.GetComponent<Canvas>();
-                    break;
-                }
-            }
+            // // Список для хранения результатов raycast
+            // List<RaycastResult> results = new List<RaycastResult>();
+            // EventSystem.current.RaycastAll(pointerData, results);
+            //
+            // Canvas canvas = null;
+            // foreach (var result in results) {
+            //     if (result.gameObject.GetComponent<Canvas>() != null) {
+            //         canvas = result.gameObject.GetComponent<Canvas>();
+            //         break;
+            //     }
+            // }
 
             // Если canvas не найден, проверяем объекты на сцене
-            if (canvas == null) {
+         //   if (canvas == null) {
                 Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
                 RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
                 IUnitTouchable touchable = null;
@@ -86,11 +86,11 @@ namespace Assets._Game._Scripts._4_Services
                         touchable.OnTouch();
                     }
                 }
-                _gameMode.UiMode.TouchInput(touchable, null);
-            } else {
-                // Если canvas найден, обрабатываем нажатие на UI
-                _gameMode.UiMode.TouchInput(null, canvas);
-            }
+                _gameMode.UiMode.TouchInput(touchable/*, null*/);
+            // } else {
+            //     // Если canvas найден, обрабатываем нажатие на UI
+            //     _gameMode.UiMode.TouchInput(null, canvas);
+            // }
         }
 
 

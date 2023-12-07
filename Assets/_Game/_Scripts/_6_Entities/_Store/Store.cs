@@ -59,16 +59,9 @@ namespace Assets._Game._Scripts._6_Entities._Store {
                 .ToDictionary(group => group.Key, group => group.Count()); // Преобразование в словарь
         }
 
-        public List<ProductType> GetAvailableProductTypes() {
-            return DesktopSlots
-                .Where(slot => slot.IsOccupied)
-                .Select(slot => slot.ProductType)
-                .Distinct()
-                .ToList();
-        }
+      
         public List<ProductType> GetAvailableProductTypesWithDesks() {
             return DesktopSlots
-                .Where(slot => !slot.IsOccupied) // Фильтр свободных слотов
                 .Select(slot => slot.ProductType) // Выбираем типы продуктов
                 .Distinct() // Убираем дубликаты
                 .ToList();

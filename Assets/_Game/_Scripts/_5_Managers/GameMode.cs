@@ -12,6 +12,7 @@ using Assets._Game._Scripts._6_Entities._Units._Customers;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using Assets._Game._Scripts._6_Entities._Units._Sellers;
+using Unity.Mathematics;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -20,6 +21,7 @@ namespace Assets._Game._Scripts._5_Managers {
     // public enum SideOfScreenEnum { left, right }
 
     public class GameMode : MonoBehaviour {
+
         private int _countOpenedPrebuilder = 0;
         public event Action OnChangedMoney;
         public event Action OnChangedLevelPlayer;
@@ -38,7 +40,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject CustomerPrefab;
         public GameObject SellerPrefab;
         private Queue<Customer> _customersPool;
-
+        private Dictionary<int, int> maxProductsPerCustomer;
         [SerializeField] private GameObject[] _prebuildersGO;
 
         [SerializeField] private GameObject _buttonAddCustomer;
@@ -94,6 +96,14 @@ namespace Assets._Game._Scripts._5_Managers {
         public void Construct(DataMode_ dataMode, UIMode uiMode) {
             DataMode = dataMode;
             UiMode = uiMode;
+            maxProductsPerCustomer = new Dictionary<int, int>
+            {
+                { 1, 2 },
+                { 2, 2 },
+                { 3, 3 },
+                { 4, 3 }
+            };
+
             Store = FindObjectOfType<Store>();
             _productRandomizerService = new ProductRandomizerService();
 
@@ -230,7 +240,8 @@ namespace Assets._Game._Scripts._5_Managers {
                 selectedType = _productRandomizerService.GetRandomProductType(eligibleProductTypes);
             } else {
                 // Все типы продуктов либо достигли максимума, либо для них нет свободных столов
-                selectedType = Store.GetAlternativeProductType(new List<ProductType>());
+                //selectedType = Store.GetAlternativeProductType(new List<ProductType>());
+                selectedType = _productRandomizerService.GetRandomProductType(availableProductTypesWithDesks);
             }
 
             // Создаем заказы
@@ -244,17 +255,14 @@ namespace Assets._Game._Scripts._5_Managers {
         private int GetMaxProductsPerCustomer(int gameLevel) {
             // Здесь должна быть логика, определяющая максимальное количество продуктов в заказе на основе уровня игры
             // Например, можно использовать простой switch или словарь, если логика более сложная
-            switch (gameLevel) {
-                case 1:
-                    return 2;
-                case 2:
-                    return 2;
-                case 3:
-                    return 3;
-                case 4:
-                    return 3;
-                default:
-                    return 2; // Если уровень не определен, вернем значение по умолчанию
+            // Получаем максимальное количество товаров для уровня
+            if (maxProductsPerCustomer.TryGetValue(gameLevel, out int maxProducts)) {
+                // Возвращаем случайное число от 1 до максимального количества товаров включительно
+                return Random.Range(1, maxProducts + 1);
+            } else {
+                // Если уровень не найден, возвращаем значение по умолчанию, например, случайное от 1 до 2
+                Debug.LogError("Нет такого значения в словаре");
+                return 1;
             }
         }
 

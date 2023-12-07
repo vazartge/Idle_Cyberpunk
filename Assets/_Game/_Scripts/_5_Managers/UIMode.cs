@@ -77,14 +77,14 @@ namespace Assets._Game._Scripts._5_Managers {
             return ProductTypeAndNameMap.GetValueOrDefault(productType);
         }
 
-        public void TouchInput(IUnitTouchable touchable, Canvas canvas) {
-            Debug.Log($"canvas == null   {canvas == null}");
-            if (touchable == null && _currentUnitViewModel!=null && canvas != null && _currentUnitViewModel.View.Canvas == canvas) {
-               // _currentUnitViewModel?.HideWindow();//вот это место закрывает мой ui текущего объекта
-               // _currentUnitViewModel = null;
-               Debug.Log("!!!!!!!!!!!!");
-                return;
-            }
+        public void TouchInput(IUnitTouchable touchable/*, Canvas canvas)*/) {
+            // Debug.Log($"canvas == null   {canvas == null}");
+            // if (touchable == null && _currentUnitViewModel!=null && canvas != null && _currentUnitViewModel.View.Canvas == canvas) {
+            //    // _currentUnitViewModel?.HideWindow();//вот это место закрывает мой ui текущего объекта
+            //    // _currentUnitViewModel = null;
+            //    Debug.Log("!!!!!!!!!!!!");
+            //     return;
+            // }
 
             //touchable.OnTouch();
             if (touchable!=null) {
