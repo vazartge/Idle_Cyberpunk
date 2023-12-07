@@ -19,7 +19,7 @@ namespace Assets._Game._Scripts._3_UI._HUD
 
         public void UpdateUIHUD(long money)
         {
-            Debug.Log(money);
+        //    Debug.Log(money);
             _moneyText.text = NumberFormatterService.FormatNumber(money);
             
         }

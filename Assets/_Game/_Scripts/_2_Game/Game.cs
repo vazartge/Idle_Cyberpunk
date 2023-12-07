@@ -9,6 +9,11 @@ namespace Assets._Game._Scripts._2_Game {
         public UIMode UiMode;
         public DataMode_ DataMode;
         public bool IsPaused { get; set; }
+        public int GameLevel {
+            get => _gameLevel;
+            set => _gameLevel = value;
+        }
+        [SerializeField] private int _gameLevel = 1;
 
         private void Awake() {
             Instance = this;

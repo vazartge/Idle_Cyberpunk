@@ -446,7 +446,9 @@ MonoBehaviour:
   _gameMode: {fileID: 0}
   _productType: 0
   _view: {fileID: 1400092126675542471}
+  _additionalDesktopGO: {fileID: 0}
   _spriteIconProductType: {fileID: 4411511907515979894}
+  _isAdditionalDesktop: 0
 --- !u!1 &1822129442337803036
 GameObject:
   m_ObjectHideFlags: 0

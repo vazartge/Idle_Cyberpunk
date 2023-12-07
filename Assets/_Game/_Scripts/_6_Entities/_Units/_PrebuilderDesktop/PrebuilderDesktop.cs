@@ -47,28 +47,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             _view.Construct(_viewModel);
             
             Cost = _gameMode.DataMode.GetProductUpgradeSO(ProductType).Upgrades[0].Cost; 
-            // switch (ProductType)
-            // {
-            //     case ProductType.MechanicalEyeProduct:
-            //         _order = new Order(null, new MechanicalEyeProduct(), 0, ProductType.MechanicalEyeProduct);
-            //         Cost = Game.Instance.DataMode._mechanicalEyeUpgradeSo.Upgrades[0].Cost;
-            //         break;
-            //     case ProductType.RoboticArmProduct:
-            //         _order = new Order(null, new RoboticArmProduct(), 0, ProductType.RoboticArmProduct);
-            //         Cost = Game.Instance.DataMode._roboticArmUpgradeSO.Upgrades[0].Cost;
-            //         break;
-            //     case ProductType.IronHeartProduct:
-            //         Cost = Game.Instance.DataMode._ironHeartUpgradeSO.Upgrades[0].Cost;
-            //         _order = new Order(null, new IronHeartProduct(), 0, ProductType.IronHeartProduct);
-            //         break;
-            //     case ProductType.NeurochipProduct:
-            //         Cost = Game.Instance.DataMode._neurochipUpgradeSo.Upgrades[0].Cost;
-            //         _order = new Order(null, new NeurochipProduct(), 0, ProductType.NeurochipProduct);
-            //         break;
-            //     default:
-            //         Debug.Log("Нет такого продукта!");
-            //         break;
-            // }
+           
 
         }
         protected override void OnTouchAction()

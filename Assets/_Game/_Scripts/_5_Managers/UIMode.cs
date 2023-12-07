@@ -8,9 +8,9 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers {
     public class UIMode : MonoBehaviour {
-        public EconomyService Economy {
-            get => _economy;
-            set => _economy = value;
+        public EconomyAndUpgradeService EconomyAndUpgrade {
+            get => _economyAndUpgrade;
+            set => _economyAndUpgrade = value;
         }
 
         private UIHUDCanvas _hudCanvas;
@@ -19,7 +19,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         private GameMode _gameMode;
 
-        private EconomyService _economy;
+        private EconomyAndUpgradeService _economyAndUpgrade;
 
         public Dictionary<ProductType, string> ProductTypeAndNameMap;
 
@@ -50,11 +50,11 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         private void BeginPlay() {
-            _economy = GameMode.Economy;
+            _economyAndUpgrade = GameMode.EconomyAndUpgrade;
             _hudCanvas.Construct(this);
-            GameMode.OnChangedMoney += UpdateOnChangedMoney;
-            GameMode.OnChangedLevelPlayer += UpdateOnChangedLevelPlayer;
-            UpdateOnChangedMoney();
+            GameMode.OnChangedStatsOrMoney += UpdateOnChangedStatsOrMoney;
+           // GameMode.OnChangedLevelPlayer += UpdateOnChangedLevelPlayer;
+            UpdateOnChangedStatsOrMoney();
         }
 
         public void OnAnyInputControllerEvent() {
@@ -68,8 +68,8 @@ namespace Assets._Game._Scripts._5_Managers {
 
     
 
-        public void UpdateOnChangedMoney() {
-            _hudCanvas.UpdateUIHUD(_gameMode.Economy.Money);
+        public void UpdateOnChangedStatsOrMoney() {
+            _hudCanvas.UpdateUIHUD(_gameMode.EconomyAndUpgrade.Money);
         }
 
 

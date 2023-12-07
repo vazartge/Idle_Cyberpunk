@@ -48,7 +48,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
         {
            // if(IsOpenedWindow) return;
             View.ShowWindow();
-            _desktopModel.UpdateOnChangeMoney();
+            _desktopModel.UpdateOnChangeStatsOrMoney();
            // IsOpenedWindow = true;
             
         }
@@ -90,7 +90,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
             int completedLevels = currentLevel - upgradesData[firstLevelWithCurrentStar].Level;
             float progress = completedLevels / (float)levelsToNextStar;
 
-            Debug.Log($"Прогресс до следующей звезды: {progress} (Текущий уровень: {currentLevel}, Уровни до след. звезды: {levelsToNextStar}, Пройдено уровней: {completedLevels})");
+          //  Debug.Log($"Прогресс до следующей звезды: {progress} (Текущий уровень: {currentLevel}, Уровни до след. звезды: {levelsToNextStar}, Пройдено уровней: {completedLevels})");
             return progress;
         }
 

@@ -1,21 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._0.Data._Base;
 using Assets._Game._Scripts._0.Data._DataForUpgrade;
 using UnityEngine;
-public enum ProductType {
-    MechanicalEyeProduct,
-    RoboticArmProduct,
-    IronHeartProduct,
-    NeurochipProduct
-}
-namespace Assets._Game._Scripts._5_Managers {
-    
+
+namespace Assets._Game._Scripts._5_Managers
+{
+    public enum ProductType {
+        MechanicalEyeProduct,
+        RoboticArmProduct,
+        IronHeartProduct,
+        NeurochipProduct
+    }
+
     public class DataMode_ : MonoBehaviour {
         [SerializeField] public ResourceData ResData;
-         public Dictionary<ProductType, BaseUpgradeSO> _dataForUpgradeDesktopsMap;
+        public Dictionary<ProductType, BaseUpgradeSO> _dataForUpgradeDesktopsMap;
         [SerializeField] public IronHeartUpgradeSO _ironHeartUpgradeSO;
         [SerializeField] public MechanicalEyeUpgradeSO _mechanicalEyeUpgradeSo;
         [SerializeField] public NeurochipUpgradeSO _neurochipUpgradeSo;
@@ -79,5 +80,3 @@ namespace Assets._Game._Scripts._5_Managers {
         }
     }
 }
-
-

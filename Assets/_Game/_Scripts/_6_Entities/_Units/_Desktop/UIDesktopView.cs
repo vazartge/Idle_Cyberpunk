@@ -46,7 +46,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         }
 
         public void UpdateOnChangeMoney(long сost, int level, long money, string productName, int incomeValue, int starsAmount, float progressStarIndicator) {
-            Debug.Log($"Прогресс индикатора: {progressStarIndicator}");
+           // Debug.Log($"Прогресс индикатора: {progressStarIndicator}");
             // Заполнение текста уровня
             _textLevel.text = (level+1).ToString();
             // Заполнение текста продукта

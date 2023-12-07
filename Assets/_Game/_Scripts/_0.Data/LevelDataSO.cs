@@ -2,7 +2,7 @@
 
 namespace Assets._Game._Scripts._0.Data
 {
-    [CreateAssetMenu(fileName = "LevelData", menuName = "Game ResData/Level ResData")]
+    [CreateAssetMenu(fileName = "LevelData", menuName = "Game ResData/LevelStore ResData")]
     public class LevelDataSO : ScriptableObject {
         public LevelData[] levels;
     }

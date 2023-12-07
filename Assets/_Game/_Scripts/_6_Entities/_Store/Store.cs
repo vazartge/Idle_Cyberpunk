@@ -192,11 +192,11 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             ProductType typeProduct = order.ProductType;
             var desktop = _desktopsList.FirstOrDefault(desktops => desktops.ProductType == typeProduct);
             // взять  тип продукта и выбрать нужный уровень стола в массиве - сдклать метод
-            GameMode.Economy.SellProductByStore(desktop);
+            GameMode.EconomyAndUpgrade.SellProductByStore(desktop);
 
         }
 
-        public void AddDesktop(GameObject newDesktop)
+        public void AddDesktop(DesktopUnit newDesktop)
         {
             _desktopsList.Add(newDesktop.GetComponentInChildren<DesktopUnit>());
         }
