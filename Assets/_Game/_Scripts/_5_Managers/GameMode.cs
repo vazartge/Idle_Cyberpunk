@@ -25,8 +25,7 @@ namespace Assets._Game._Scripts._5_Managers {
         // Changed Stats
         public event Action OnChangedStatsOrMoney;
         //  public event Action OnChangedLevelPlayer;
-        public int GameLevel
-        {
+        public int GameLevel {
             get => Game.Instance.GameLevel;
             set => Game.Instance.GameLevel = value;
         }
@@ -338,46 +337,49 @@ namespace Assets._Game._Scripts._5_Managers {
                 , prebuilderDesktop.gameObject.transform.position,
                 Quaternion.identity);
             var desktop = newDesktopObj.GetComponentInChildren<DesktopUnit>();
-            SetupDesktopAndSlot(prebuilderDesktop.ProductType, desktop, newDesktopObj);
+            SetupNewDesktopAndSlot(prebuilderDesktop.ProductType, desktop, newDesktopObj, null);
             prebuilderDesktop.gameObject.SetActive(false);
             _buttonAddCustomer.gameObject.SetActive(true);
             return true;
         }
-        
+
 
         #endregion
 
         #region Desktops  
-        private void SetupDesktopAndSlot(ProductType type, DesktopUnit newDesktop,
-            GameObject newDesktopObj)
-        {
-            newDesktop.Construct(this, type);
+        private void SetupNewDesktopAndSlot(ProductType type, DesktopUnit newDesktop,
+            GameObject newDesktopObj, DesktopUnit desktopMain) {
+
+            newDesktop.Construct(this, type, desktopMain);
+
+
             var newDesktopSlot = newDesktopObj.GetComponentInChildren<DesktopSlot>();
             newDesktopSlot.ProductType = type;
-            
             Store.AddDesktop(newDesktop);
             Store.DesktopSlots.Add(newDesktopSlot);
             newDesktopObj.SetActive(true);
         }
         public void NeedOpenAdditionalDesktop(DesktopUnit desktop) {
-            OpenAdditionalDesktop(desktop);
+            CreateAdditionalDesktop(desktop);
         }
 
-        private void OpenAdditionalDesktop(DesktopUnit desktop)
-        {
-            if (!desktop.IsAdditionalDesktop)
-            {
-                var newDesktopGO = desktop.GetAdditionalDesktopGO();
-                if (!newDesktopGO.activeSelf)
-                {
-                    var newDesktop = desktop.GetAdditionalDesktopScript();
-                    if (newDesktop != null)
-                    {
-                        SetupDesktopAndSlot(desktop.ProductType, newDesktop, newDesktopGO);
-                    }
-                }
+        private void CreateAdditionalDesktop(DesktopUnit desktopMain) {
+            var newDesktopGO = Instantiate(DataMode.GetPrefabForDesktop()); // Создаем новый объект стола
+            var newDesktop = newDesktopGO.GetComponent<DesktopUnit>();
+            newDesktop.IsAdditionalDesktop = true;
+            // Рассчитываем позицию для нового стола
+            var spriteRenderer = desktopMain.GetComponentInChildren<DesktopUnitMainSpriteRenderer>().GetComponent<SpriteRenderer>(); // Получаем компонент SpriteRenderer основного стола
+            if (spriteRenderer != null) {
+                var spriteWidth = spriteRenderer.bounds.size.x; // Получаем ширину спрайта
+                var newPosition = desktopMain.transform.position + new Vector3(spriteWidth, 0, 0); // Сдвигаем новый стол на ширину спрайта вправо
+                newDesktopGO.transform.position = newPosition; // Устанавливаем позицию для нового стола
             }
+
+            SetupNewDesktopAndSlot(desktopMain.ProductType, newDesktop, newDesktopGO, desktopMain);
+            desktopMain.AddReferenceOnAdditionalDesktop(newDesktop);
         }
+
+      
 
         #endregion
 

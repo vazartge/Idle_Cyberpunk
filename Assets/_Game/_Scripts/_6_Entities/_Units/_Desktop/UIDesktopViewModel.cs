@@ -8,13 +8,14 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 {
     public class UIDesktopViewModel: UIUnitViewModel  
     {
-        private  DesktopUnit _desktopModel;
+        public  DesktopUnit _desktopModel;
        
         private UIMode _uiMode;
         private string _productName;
         private int _incomeValue;
         private float _progressStarsValue;
         private bool _windowOpenedByTouch;
+        private int _maxStars;
 
        
 
@@ -23,7 +24,8 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
             _desktopModel = desktopModelUnit;
             View = view;
             _uiMode = _desktopModel.GameMode.UiMode;
-            View.Construct(this);
+            _maxStars = _desktopModel.GameMode.DataMode.GetMaxStarsForProductType(_desktopModel.ProductType);
+            View.Construct(this, _maxStars);
             View.Canvas.worldCamera = _desktopModel.GameMode.UiCamera;
         }
 

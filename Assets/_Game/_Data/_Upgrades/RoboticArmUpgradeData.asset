@@ -15,103 +15,601 @@ MonoBehaviour:
   _upgrades:
   - _stars: 0
     _level: 1
-    _cost: 10
-    _incomeMoney: 3
-    _openingAtLevel: 1
+    _cost: 25
+    _incomeMoney: 5
+    _openingAtLevel: 2
     _events: 
   - _stars: 0
     _level: 2
-    _cost: 3
-    _incomeMoney: 4
-    _openingAtLevel: 1
+    _cost: 8
+    _incomeMoney: 6
+    _openingAtLevel: 2
     _events: 
   - _stars: 0
     _level: 3
-    _cost: 4
-    _incomeMoney: 5
-    _openingAtLevel: 1
+    _cost: 10
+    _incomeMoney: 7
+    _openingAtLevel: 2
     _events: 
   - _stars: 0
     _level: 4
-    _cost: 6
-    _incomeMoney: 6
-    _openingAtLevel: 1
+    _cost: 13
+    _incomeMoney: 8
+    _openingAtLevel: 2
     _events: 
   - _stars: 0
     _level: 5
-    _cost: 8
-    _incomeMoney: 7
-    _openingAtLevel: 1
+    _cost: 17
+    _incomeMoney: 9
+    _openingAtLevel: 2
     _events: 
   - _stars: 0
     _level: 6
-    _cost: 11
-    _incomeMoney: 8
-    _openingAtLevel: 1
+    _cost: 22
+    _incomeMoney: 10
+    _openingAtLevel: 2
     _events: 
   - _stars: 0
     _level: 7
-    _cost: 14
-    _incomeMoney: 9
-    _openingAtLevel: 1
+    _cost: 28
+    _incomeMoney: 11
+    _openingAtLevel: 2
     _events: 
   - _stars: 0
     _level: 8
-    _cost: 18
-    _incomeMoney: 10
-    _openingAtLevel: 1
+    _cost: 35
+    _incomeMoney: 12
+    _openingAtLevel: 2
     _events: 
   - _stars: 0
     _level: 9
-    _cost: 23
-    _incomeMoney: 11
-    _openingAtLevel: 1
+    _cost: 44
+    _incomeMoney: 13
+    _openingAtLevel: 2
     _events: 
   - _stars: 0
     _level: 10
-    _cost: 29
-    _incomeMoney: 12
-    _openingAtLevel: 1
+    _cost: 55
+    _incomeMoney: 15
+    _openingAtLevel: 2
     _events: 
   - _stars: 1
     _level: 11
-    _cost: 37
-    _incomeMoney: 27
-    _openingAtLevel: 1
+    _cost: 69
+    _incomeMoney: 38
+    _openingAtLevel: 2
     _events: Additional table opens
   - _stars: 1
     _level: 12
-    _cost: 47
-    _incomeMoney: 30
-    _openingAtLevel: 1
+    _cost: 87
+    _incomeMoney: 42
+    _openingAtLevel: 2
     _events: 
   - _stars: 1
     _level: 13
-    _cost: 60
-    _incomeMoney: 33
-    _openingAtLevel: 1
+    _cost: 109
+    _incomeMoney: 46
+    _openingAtLevel: 2
     _events: 
   - _stars: 1
     _level: 14
-    _cost: 76
-    _incomeMoney: 36
-    _openingAtLevel: 1
+    _cost: 137
+    _incomeMoney: 50
+    _openingAtLevel: 2
     _events: 
   - _stars: 1
     _level: 15
-    _cost: 96
-    _incomeMoney: 39
-    _openingAtLevel: 1
+    _cost: 172
+    _incomeMoney: 54
+    _openingAtLevel: 2
     _events: 
   - _stars: 1
     _level: 16
-    _cost: 121
-    _incomeMoney: 43
-    _openingAtLevel: 1
+    _cost: 215
+    _incomeMoney: 59
+    _openingAtLevel: 2
     _events: 
   - _stars: 1
     _level: 17
-    _cost: 153
-    _incomeMoney: 47
-    _openingAtLevel: 1
+    _cost: 269
+    _incomeMoney: 64
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 1
+    _level: 18
+    _cost: 337
+    _incomeMoney: 70
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 1
+    _level: 19
+    _cost: 422
+    _incomeMoney: 76
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 1
+    _level: 20
+    _cost: 528
+    _incomeMoney: 213
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 1
+    _level: 21
+    _cost: 660
+    _incomeMoney: 231
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 1
+    _level: 22
+    _cost: 825
+    _incomeMoney: 250
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 1
+    _level: 23
+    _cost: 1030
+    _incomeMoney: 270
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 1
+    _level: 24
+    _cost: 1290
+    _incomeMoney: 292
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 25
+    _cost: 1610
+    _incomeMoney: 537
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 26
+    _cost: 1930
+    _incomeMoney: 644
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 27
+    _cost: 2320
+    _incomeMoney: 774
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 28
+    _cost: 2780
+    _incomeMoney: 927
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 29
+    _cost: 3340
+    _incomeMoney: 1110
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 30
+    _cost: 4010
+    _incomeMoney: 1340
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 31
+    _cost: 4810
+    _incomeMoney: 1600
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 32
+    _cost: 5770
+    _incomeMoney: 1920
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 33
+    _cost: 6920
+    _incomeMoney: 2310
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 34
+    _cost: 8300
+    _incomeMoney: 2770
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 35
+    _cost: 9960
+    _incomeMoney: 3320
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 36
+    _cost: 12000
+    _incomeMoney: 4000
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 37
+    _cost: 14400
+    _incomeMoney: 4800
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 38
+    _cost: 17300
+    _incomeMoney: 5770
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 39
+    _cost: 20800
+    _incomeMoney: 6930
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 40
+    _cost: 25000
+    _incomeMoney: 8330
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 41
+    _cost: 30000
+    _incomeMoney: 10000
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 42
+    _cost: 36000
+    _incomeMoney: 12000
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 43
+    _cost: 43200
+    _incomeMoney: 14400
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 44
+    _cost: 51800
+    _incomeMoney: 17300
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 45
+    _cost: 62200
+    _incomeMoney: 20700
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 46
+    _cost: 74600
+    _incomeMoney: 24900
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 47
+    _cost: 89500
+    _incomeMoney: 29800
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 48
+    _cost: 107000
+    _incomeMoney: 35700
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 2
+    _level: 49
+    _cost: 128000
+    _incomeMoney: 42700
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 3
+    _level: 50
+    _cost: 154000
+    _incomeMoney: 51300
+    _openingAtLevel: 2
+    _events: 
+  - _stars: 3
+    _level: 51
+    _cost: 185000
+    _incomeMoney: 61700
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 52
+    _cost: 202000
+    _incomeMoney: 67300
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 53
+    _cost: 220000
+    _incomeMoney: 73300
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 54
+    _cost: 240000
+    _incomeMoney: 80000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 55
+    _cost: 262000
+    _incomeMoney: 87300
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 56
+    _cost: 286000
+    _incomeMoney: 95300
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 57
+    _cost: 312000
+    _incomeMoney: 104000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 58
+    _cost: 340000
+    _incomeMoney: 113000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 59
+    _cost: 371000
+    _incomeMoney: 124000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 60
+    _cost: 404000
+    _incomeMoney: 135000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 61
+    _cost: 440000
+    _incomeMoney: 147000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 62
+    _cost: 480000
+    _incomeMoney: 160000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 63
+    _cost: 523000
+    _incomeMoney: 174000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 64
+    _cost: 570000
+    _incomeMoney: 178000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 65
+    _cost: 621000
+    _incomeMoney: 194000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 66
+    _cost: 677000
+    _incomeMoney: 212000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 67
+    _cost: 738000
+    _incomeMoney: 231000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 68
+    _cost: 804000
+    _incomeMoney: 251000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 69
+    _cost: 876000
+    _incomeMoney: 274000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 70
+    _cost: 955000
+    _incomeMoney: 298000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 71
+    _cost: 1040000
+    _incomeMoney: 325000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 72
+    _cost: 1130000
+    _incomeMoney: 332000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 73
+    _cost: 1230000
+    _incomeMoney: 362000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 3
+    _level: 74
+    _cost: 1340000
+    _incomeMoney: 394000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 4
+    _level: 75
+    _cost: 1460000
+    _incomeMoney: 429000
+    _openingAtLevel: 3
+    _events: 
+  - _stars: 4
+    _level: 76
+    _cost: 1590000
+    _incomeMoney: 468000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 77
+    _cost: 1730000
+    _incomeMoney: 509000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 78
+    _cost: 1890000
+    _incomeMoney: 525000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 79
+    _cost: 1930000
+    _incomeMoney: 536000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 80
+    _cost: 1970000
+    _incomeMoney: 547000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 81
+    _cost: 2010000
+    _incomeMoney: 558000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 82
+    _cost: 2050000
+    _incomeMoney: 569000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 83
+    _cost: 2090000
+    _incomeMoney: 581000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 84
+    _cost: 2130000
+    _incomeMoney: 576000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 85
+    _cost: 2170000
+    _incomeMoney: 586000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 86
+    _cost: 2210000
+    _incomeMoney: 597000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 87
+    _cost: 2250000
+    _incomeMoney: 608000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 88
+    _cost: 2300000
+    _incomeMoney: 622000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 89
+    _cost: 2350000
+    _incomeMoney: 635000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 90
+    _cost: 2400000
+    _incomeMoney: 649000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 91
+    _cost: 2450000
+    _incomeMoney: 662000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 92
+    _cost: 2500000
+    _incomeMoney: 676000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 93
+    _cost: 2550000
+    _incomeMoney: 689000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 94
+    _cost: 2600000
+    _incomeMoney: 703000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 95
+    _cost: 2650000
+    _incomeMoney: 716000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 96
+    _cost: 2700000
+    _incomeMoney: 730000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 97
+    _cost: 2750000
+    _incomeMoney: 743000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 98
+    _cost: 2810000
+    _incomeMoney: 759000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 4
+    _level: 99
+    _cost: 2870000
+    _incomeMoney: 776000
+    _openingAtLevel: 4
+    _events: 
+  - _stars: 5
+    _level: 100
+    _cost: 2930000
+    _incomeMoney: 792000
+    _openingAtLevel: 4
     _events: 

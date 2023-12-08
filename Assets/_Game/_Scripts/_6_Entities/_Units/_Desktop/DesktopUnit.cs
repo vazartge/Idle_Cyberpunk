@@ -47,11 +47,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
         private EconomyAndUpgradeService _economyAndUpgrade;
         private DesktopUnit _additionalDesktop;
+        private DesktopUnit _mainDesktop;
         private long _cost;
         private int _level = 1;
 
 
-        public void Construct(GameMode gameMod, ProductType type) {
+        public void Construct(GameMode gameMod, ProductType type, DesktopUnit desktopMain) {
 
             GameMode =gameMod;
             ProductType = type;
@@ -62,13 +63,17 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             _economyAndUpgrade = _gameMode.EconomyAndUpgrade;
 
             _spriteIconProductType.sprite = GameMode.DataMode.GetIconByProductType(ProductType);
-            if (!_isAdditionalDesktop)
+            if (_isAdditionalDesktop)
             {
-                _additionalDesktop = _additionalDesktopGO.GetComponent<DesktopUnit>();
+                _mainDesktop = desktopMain;
+                _viewModel = new UIDesktopViewModel(desktopMain, _view);
             }
             
+            
         }
-
+        public void AddReferenceOnAdditionalDesktop(DesktopUnit newDesktop) {
+            _additionalDesktop = newDesktop;
+        }
 
         public void UpdateOnChangeStatsOrMoney() {
             //if(_viewModel.IsOpenedWindow) return;
@@ -88,11 +93,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             //UpdateOnChangeStatsOrMoney();
         }
        
-        public GameObject GetAdditionalDesktopGO()
-        {
-            return _additionalDesktopGO;
-        }
-
+      
         public DesktopUnit GetAdditionalDesktopScript() {
             return _additionalDesktop;
         }

@@ -7,7 +7,7 @@ namespace Assets.CameraScaler
     public class CameraScaler : MonoBehaviour
     {
         [Tooltip("Set this to the resolution you have set in Game View, or resolution you usually test you game with")]
-        public Vector2 ReferenceResolution = new Vector2(720, 1280);
+        public Vector2 ReferenceResolution = new Vector2(1080, 1920);
 
         public WorkingMode Mode = WorkingMode.ConstantWidth;
         public float MatchWidthOrHeight = 0.5f;
