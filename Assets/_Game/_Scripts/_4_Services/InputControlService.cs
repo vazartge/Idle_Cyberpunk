@@ -58,11 +58,22 @@ namespace Assets._Game._Scripts._4_Services
         }
 
         private void ProcessInput(Vector2 screenPosition) {
-            // Подготовка данных для raycast
-            PointerEventData pointerData = new PointerEventData(EventSystem.current) {
-                position = screenPosition
-            };
+            // // Подготовка данных для raycast
+            // PointerEventData pointerData = new PointerEventData(EventSystem.current) {
+            //     position = screenPosition
+            // };
+            // Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
+            // RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
+            // IUnitTouchable touchable = null;
+            // if (hit.collider != null) {
+            //     touchable = hit.collider.gameObject.GetComponentInParent<IUnitTouchable>();
+            //     if (touchable != null) {
+            //         touchable.OnTouch();
+            //     }
+            // }
 
+
+            //----------------------------------------
             // // Список для хранения результатов raycast
             // List<RaycastResult> results = new List<RaycastResult>();
             // EventSystem.current.RaycastAll(pointerData, results);
@@ -76,17 +87,9 @@ namespace Assets._Game._Scripts._4_Services
             // }
 
             // Если canvas не найден, проверяем объекты на сцене
-         //   if (canvas == null) {
-                Vector3 worldPosition = Camera.main.ScreenToWorldPoint(screenPosition);
-                RaycastHit2D hit = Physics2D.Raycast(worldPosition, Vector2.zero);
-                IUnitTouchable touchable = null;
-                if (hit.collider != null) {
-                    touchable = hit.collider.gameObject.GetComponentInParent<IUnitTouchable>();
-                    if (touchable != null) {
-                        touchable.OnTouch();
-                    }
-                }
-                _gameMode.UiMode.TouchInput(touchable/*, null*/);
+            //   if (canvas == null) {
+
+            // _gameMode.UiMode.TouchInput(touchable/*, null*/);
             // } else {
             //     // Если canvas найден, обрабатываем нажатие на UI
             //     _gameMode.UiMode.TouchInput(null, canvas);

@@ -4,10 +4,10 @@ namespace Assets._Game._Scripts._6_Entities._Store {
     public class StoreStats {
         private GameMode _gameMode;
         private Store _store;
-        private long _money = 1000;
         private int _levelStore =1;
 
-        public long Money => _money;
+        public long Money { get; private set; } = 1000;
+
         public int LevelStore => _levelStore;
 
         public StoreStats(Store store, GameMode gameMode)
@@ -20,16 +20,16 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
         public bool AddMoney(long amount)
         {
-            _money += amount;
+            Money += amount;
             _gameMode.ChangedStatsOrMoney();
             return true;
         }
 
         public bool RemoveMoney(long amount)
         {
-            if (_money >= 0)
+            if (Money >= 0)
             {
-                _money -= amount;
+                Money -= amount;
                 _gameMode.ChangedStatsOrMoney();
                 return true;
             }

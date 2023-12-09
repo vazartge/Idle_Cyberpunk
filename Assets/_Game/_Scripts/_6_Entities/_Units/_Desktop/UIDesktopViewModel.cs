@@ -9,7 +9,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
     public class UIDesktopViewModel: UIUnitViewModel  
     {
         public  DesktopUnit _desktopModel;
-       
+        private UIDesktopView _view;
+        public UiUnitView View=>_view;
+        
         private UIMode _uiMode;
         private string _productName;
         private int _incomeValue;
@@ -22,11 +24,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
         public UIDesktopViewModel(DesktopUnit desktopModelUnit, UIDesktopView view)
         {
             _desktopModel = desktopModelUnit;
-            View = view;
+            _view = view;
             _uiMode = _desktopModel.GameMode.UiMode;
             _maxStars = _desktopModel.GameMode.DataMode.GetMaxStarsForProductType(_desktopModel.ProductType);
-            View.Construct(this, _maxStars);
-            View.Canvas.worldCamera = _desktopModel.GameMode.UiCamera;
+            _view.Construct(this, _maxStars);
+            _view.Canvas.worldCamera = _desktopModel.GameMode.UiCamera;
         }
 
        
@@ -36,7 +38,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
             _incomeValue = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType)
                 .Upgrades[_desktopModel.Level].IncomeMoney;
             _progressStarsValue = CalculateProgressToNextStar();
-            View.UpdateOnChangeMoney(_desktopModel.Cost, _desktopModel.Level, _desktopModel.Money
+            _view.UpdateOnChangeMoney(_desktopModel.Cost, _desktopModel.Level, _desktopModel.Money
                 , _productName, _incomeValue, _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType).Upgrades[_desktopModel.Level-1].Stars, _progressStarsValue);
 
         }
@@ -48,19 +50,23 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 
         public override void ShowWindow()
         {
-           // if(IsOpenedWindow) return;
-            View.ShowWindow();
+            // if(IsOpenedWindow) return;
+            _uiMode.SetCurrentViewModel(this);
+            _view.ShowWindow();
             _desktopModel.UpdateOnChangeStatsOrMoney();
-           // IsOpenedWindow = true;
-            
-        }
+           
+            // IsOpenedWindow = true;
 
-        public override void HideWindow()
-        {
-           // if (!IsOpenedWindow) return;
-            View.HideWindow();
-            //IsOpenedWindow = false;
         }
+        public override void HideWindow() {
+            _view.HideWindow();
+        }
+        // public override void HideWindow()
+        // {
+        //    // if (!IsOpenedWindow) return;
+        //     View.HideWindow();
+        //     //IsOpenedWindow = false;
+        // }
 
         public void OnButtonUpgrade()
         {

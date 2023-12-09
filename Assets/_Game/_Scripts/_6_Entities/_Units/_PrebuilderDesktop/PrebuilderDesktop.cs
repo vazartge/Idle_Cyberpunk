@@ -5,6 +5,7 @@ using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
     public class PrebuilderDesktop : BaseUnitGame {
@@ -17,6 +18,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         [SerializeField] private Order _order;
         [SerializeField] private UIPrebuilderViewModel _viewModel;
         [SerializeField] private UIPrebuilderView _view;
+        
         private DataMode_ _dataMode;
         public bool IsActive { get; set;}
 
@@ -32,6 +34,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             set => _productType = value;
         }
 
+        public GameMode GameMode
+        {
+            get => _gameMode;
+            set => _gameMode = value;
+        }
+
         private void Awake()
         {
             _view = GetComponentInChildren<UIPrebuilderView>();
@@ -40,25 +48,22 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         public override void Construct(GameMode gameMode, DataMode_ dataMode)
         {
 
-            _gameMode =gameMode;
+            GameMode =gameMode;
             _dataMode = dataMode;
             _view = GetComponentInChildren<UIPrebuilderView>();
             _viewModel = new UIPrebuilderViewModel(this, _view);
+            ViewModel = _viewModel;
             _view.Construct(_viewModel);
             
-            Cost = _gameMode.DataMode.GetProductUpgradeSO(ProductType).Upgrades[0].Cost; 
+            Cost = GameMode.DataMode.GetProductUpgradeSO(ProductType).Upgrades[0].Cost; 
            
 
         }
-        protected override void OnTouchAction()
-        {
-           
-            _viewModel.ShowWindow();
-        }
 
+        
         public void OnButtonBuyDesktop()
         {
-            _gameMode.OnButtonBuyDesktop(this);
+            GameMode.OnButtonBuyDesktop(this);
         }
 
        
