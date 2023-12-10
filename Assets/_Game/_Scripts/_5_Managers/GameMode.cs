@@ -182,7 +182,7 @@ namespace Assets._Game._Scripts._5_Managers {
         private void Update() {
             if (!_isInitialized) return;
             if (Game.Instance.IsPaused) return;
-            _inputControlService.UpdateInputControl();
+            //_inputControlService.UpdateInputControl();
         }
         #endregion
 

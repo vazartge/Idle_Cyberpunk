@@ -2835,13 +2835,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ResData: {fileID: 11400000, guid: e5b528a76f49af045ae33aab3658e153, type: 2}
-  ironHeartUpgradeSO: {fileID: 11400000, guid: 257b960421b48874cbdbdf5d44dce516, type: 2}
-  mechanicalEyeUpgradeSo: {fileID: 11400000, guid: a480a3a6eb0f3e64f954e30514a5a349, type: 2}
-  neurochipUpgradeSo: {fileID: 11400000, guid: 1c9810a8a51edf14f8fbe55708e5a1a3, type: 2}
-  roboticArmUpgradeSO: {fileID: 11400000, guid: fa9ddf62aeee09e4fa467b6305876e41, type: 2}
-  desktopPrefab: {fileID: 1432547884348984942, guid: 71ddebea52261bd4f8d4bf959e998ed9, type: 3}
-  prebuilderDesktopPrefab: {fileID: 7680442967510830823, guid: 97c06ce1b33965d459f0525ab37a9c48, type: 3}
-  starForTooltipPrafab: {fileID: 3788537711294052164, guid: 4644222ef81c4e44d9a7028062106cc4, type: 3}
+  _levelsUpgrades: {fileID: 11400000, guid: 148bbba99ce1d38479f7ea9e29d04c70, type: 2}
+  _ironHeartUpgradeSO: {fileID: 11400000, guid: 257b960421b48874cbdbdf5d44dce516, type: 2}
+  _mechanicalEyeUpgradeSo: {fileID: 11400000, guid: a480a3a6eb0f3e64f954e30514a5a349, type: 2}
+  _neurochipUpgradeSo: {fileID: 11400000, guid: 1c9810a8a51edf14f8fbe55708e5a1a3, type: 2}
+  _roboticArmUpgradeSO: {fileID: 11400000, guid: fa9ddf62aeee09e4fa467b6305876e41, type: 2}
+  _desktopPrefab: {fileID: 1432547884348984942, guid: 71ddebea52261bd4f8d4bf959e998ed9, type: 3}
+  _prebuilderDesktopPrefab: {fileID: 7680442967510830823, guid: 97c06ce1b33965d459f0525ab37a9c48, type: 3}
+  _starForTooltipPrafab: {fileID: 3788537711294052164, guid: 4644222ef81c4e44d9a7028062106cc4, type: 3}
   _gameMode: {fileID: 706245972}
   _uiMode: {fileID: 1890621578}
 --- !u!4 &861557613

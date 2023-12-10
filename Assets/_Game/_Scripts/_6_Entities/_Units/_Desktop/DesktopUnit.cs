@@ -1,9 +1,7 @@
-﻿using Assets._Game._Scripts._2_Game;
-using Assets._Game._Scripts._5_Managers;
+﻿using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Units._Desktop._Base;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
     public class DesktopUnit : DesktopBaseUnitBase {

@@ -1,11 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class testClick : MonoBehaviour
+namespace Assets
 {
-    public void OnClick()
+    public class testClick : MonoBehaviour
     {
-        Debug.Log("Click");
+        public void OnClick()
+        {
+            Debug.Log("Click");
+        }
     }
 }
