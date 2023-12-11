@@ -38,7 +38,7 @@ namespace Assets.TextMesh_Pro.Examples___Extras.Scripts
 
             m_Canvas = gameObject.GetComponentInParent<Canvas>();
 
-            // Get a reference to the camera if Canvas Render GameMode is not ScreenSpace Overlay.
+            // Get a reference to the camera if Canvas Render _gameMode is not ScreenSpace Overlay.
             if (m_Canvas.renderMode == RenderMode.ScreenSpaceOverlay)
                 m_Camera = null;
             else

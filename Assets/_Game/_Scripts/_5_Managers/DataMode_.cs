@@ -5,7 +5,7 @@ using Assets._Game._Scripts._0.Data._Base;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using Assets._Game._Scripts._0.Data._DataForUpgrade;
 using Assets._Game._Scripts._2_Game;
-
+using Assets._Game._Scripts._6_Entities._Store;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers {
@@ -55,7 +55,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public GameObject PrefabsForCreateDesktop => _desktopPrefab;
         public GameObject PreafabsForCreatePrebuilderDesktop => _prebuilderDesktopPrefab;
-        public int GameLevel => Game.Instance.GameLevel;
+        public int GameLevel => _gameMode.GameLevel;
         public List<LevelInfo> Levels => _levels;
 
 
@@ -85,7 +85,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public void Construct(GameMode gameMode, UIMode uiMode) {
             _gameMode = gameMode;
             _uiMode = uiMode;
-            Debug.Log(_levelsUpgrades.LevelUpgrades[1].Buyers[0]);
+           
 
         }
 
@@ -126,5 +126,20 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject GetPrefabForDesktop() {
             return PrefabsForCreateDesktop;
         }
+        // Другие методы класса DataMode_...
+
+        // В классе DataMode_
+
+        public LevelUpgrade GetLevelUpgradeForLevel(int level) {
+            if (_levelsUpgrades.LevelUpgrades.TryGetValue(level, out var levelUpgrade)) {
+                // Возвращаем копию данных LevelUpgrade для данного уровня
+                return new LevelUpgrade(levelUpgrade);
+            } else {
+                Debug.LogError("Level data not found for level " + level);
+                return null;
+            }
+        }
+
+
     }
 }

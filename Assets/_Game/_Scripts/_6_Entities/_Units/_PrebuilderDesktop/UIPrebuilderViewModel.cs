@@ -23,7 +23,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
         public override void ShowWindow()
         {
             var cost = _prebuilderDesktop.Cost;
-            var enough = _prebuilderDesktop.GameMode.Store.Stats.Money >= cost;
+            var enough = _prebuilderDesktop.GameMode.EconomyAndUpgrade.Coins >= cost;
             _prebuilderDesktop.GameMode.UiMode.SetCurrentViewModel(this);
             _view.ShowWindow(cost, enough);
         }

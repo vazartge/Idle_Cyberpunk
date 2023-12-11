@@ -28,7 +28,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             set => _level = value;
         }
 
-        public long Money => GameMode.EconomyAndUpgrade.Money;
+        public long Money => GameMode.EconomyAndUpgrade.Coins;
 
         public bool IsAdditionalDesktop {
             get => _isAdditionalDesktop;

@@ -3,8 +3,9 @@ using UnityEngine;
 
 
 
-namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade
-{
+namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade{
+
+
     [CreateAssetMenu(fileName = "LevelsUpgradesSO", menuName = "Game/LevelsUpgradesSO")]
     public class LevelsUpgradesSO : ScriptableObject
     {
@@ -16,105 +17,105 @@ namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade
 
             {
                 1, new LevelUpgrade(
-                    new List<UpgradeOption>
+                    new List<UpgradeCustomer>
                     {
-                        new UpgradeOption(2, 0), // Изначально
-                        new UpgradeOption(3, 20),
-                        new UpgradeOption(4, 250)
+                        new UpgradeCustomer("Второй покупатель", 2, 0, false), // Изначально
+                        new UpgradeCustomer("Третий покупатель",3, 20, false),
+                        new UpgradeCustomer("Четвертый покупатель", 4, 250, false)
                     },
-                    new List<UpgradeOption>
-                    {
-                        new UpgradeOption(1, 0), // Изначально
-                        new UpgradeOption(2, 35)
+                    new List<UpgradeSeller>
+                    {   
+                        new UpgradeSeller("Первый продавец", 1, 0, false), // Изначально
+                        new UpgradeSeller("Второй продавец", 2, 35, false)
                     },
-                    new ProductBoost(1.3f, 350), // на 30% быстрее
+                    new ProductBoost("Ускорение производства 30%", 1.3f, 350, false), // на 30% быстрее
 
-                    new SpeedBoost(1.2f, 500) // на 20% быстрее
+                    new SpeedBoost("Ускорение перемещения продавцов на 20%", 1.2f, 500, false) // на 20% быстрее
                 )
             },
             {
                 2, new LevelUpgrade(
-                    new List<UpgradeOption>
+                    new List<UpgradeCustomer>
 
                     {
-                        new UpgradeOption(2, 0),
-                        new UpgradeOption(3, 20),
-                        new UpgradeOption(4, 250),
-                        new UpgradeOption(5, 2500),
-                        new UpgradeOption(6, 5000)
+                        new UpgradeCustomer("Второй покупатель", 2, 0, false),
+                        new UpgradeCustomer("Третий покупатель", 3, 20, false),
+                        new UpgradeCustomer("Четвертый покупатель", 4, 250, false),
+                        new UpgradeCustomer("Пятый покупатель", 5, 2500, false),
+                        new UpgradeCustomer("Шестой покупатель", 6, 5000, false)
                     },
 
-                    new List<UpgradeOption>
+                    new List<UpgradeSeller>
                     {
-                        new UpgradeOption(1, 0),
-                        new UpgradeOption(2, 35),
-                        new UpgradeOption(3, 500),
-                        new UpgradeOption(4, 1000)
+                        new UpgradeSeller("Первый продавец", 1, 0, false),
+                        new UpgradeSeller("Второй продавец", 2, 35, false),
+                        new UpgradeSeller("Третий продавец", 3, 500, false),
+                        new UpgradeSeller("Четвертый продавец", 4, 1000, false)
                     },
-                    new ProductBoost(1.3f, 3500),
+                    new ProductBoost("Ускорение производства 30%", 1.3f, 3500, false),
 
-                    new SpeedBoost(1.2f, 5000)
+                    new SpeedBoost("Ускорение перемещения продавцов на 20%", 1.2f, 5000, false)
                 )
             },
             {
                 3, new LevelUpgrade(
 
-                    new List<UpgradeOption>
+                    new List<UpgradeCustomer>
                     {
-                        new UpgradeOption(2, 0),
-                        new UpgradeOption(3, 20),
-                        new UpgradeOption(4, 250),
-                        new UpgradeOption(5, 2500),
-                        new UpgradeOption(6, 5000),
-                        new UpgradeOption(7, 10000),
-                        new UpgradeOption(8, 50000)
+                        new UpgradeCustomer("Второй покупатель", 2, 0, false),
+                        new UpgradeCustomer("Третий покупатель", 3, 20, false),
+                        new UpgradeCustomer("Четвертый покупатель", 4, 250, false),
+                        new UpgradeCustomer("Пятый покупатель", 5, 2500, false),
+                        new UpgradeCustomer("Шестой покупатель", 6, 5000, false),
+                        new UpgradeCustomer("Седьмой покупатель", 7, 10000, false),
+                        new UpgradeCustomer("Восьмой покупатель",8, 50000, false)
                     },
 
-                    new List<UpgradeOption>
+                    new List<UpgradeSeller>
                     {
-                        new UpgradeOption(1, 0),
-                        new UpgradeOption(2, 35),
-                        new UpgradeOption(3, 500),
-                        new UpgradeOption(4, 1000),
-                        new UpgradeOption(5, 5000),
-                        new UpgradeOption(6, 10000)
+                        new UpgradeSeller("Второй продавец", 1, 0, false),
+                        new UpgradeSeller("Третий продавец", 2, 35, false),
+                        new UpgradeSeller("Четвертый продавец", 3, 500, false),
+                        new UpgradeSeller("Пятый продавец", 4, 1000, false),
+                        new UpgradeSeller("Шестой продавец", 5, 5000, false),
+                        new UpgradeSeller("Седьмой продавец", 6, 10000, false)
                     },
-                    new ProductBoost(1.3f, 10500),
+                    new ProductBoost("Ускорение производства 30%", 1.3f, 10500, false),
 
-                    new SpeedBoost(1.2f, 15000)
+                    new SpeedBoost("Ускорение перемещения продавцов на 20%", 1.2f, 15000, false)
                 )
             },
 
             {
                 4, new LevelUpgrade(
 
-                    new List<UpgradeOption>
+                    new List<UpgradeCustomer>
                     {
-                        new UpgradeOption(2, 0),
-                        new UpgradeOption(3, 20),
-                        new UpgradeOption(4, 250),
-                        new UpgradeOption(5, 2500),
-                        new UpgradeOption(6, 5000),
-                        new UpgradeOption(7, 10000),
-                        new UpgradeOption(8, 50000),
-                        new UpgradeOption(9, 100000),
-                        new UpgradeOption(10, 500000)
+                        new UpgradeCustomer("Второй покупатель",2, 0, false),
+                        new UpgradeCustomer("Третий покупатель",3, 20, false),
+                        new UpgradeCustomer("Четвертый покупатель", 4, 250, false),
+                        new UpgradeCustomer("Пятый покупатель", 5, 2500, false),
+                        new UpgradeCustomer("Шестой покупатель", 6, 5000, false),
+                        new UpgradeCustomer("Седьмой покупатель", 7, 10000, false),
+                        new UpgradeCustomer("Восьмой покупатель", 8, 50000, false),
+                        new UpgradeCustomer("Девятый покупатель", 9, 100000, false),
+                        new UpgradeCustomer("Десятый покупатель", 10, 500000, false)
                     },
 
-                    new List<UpgradeOption>
+                    new List<UpgradeSeller>
                     {
-                        new UpgradeOption(1, 0),
-                        new UpgradeOption(2, 35),
-                        new UpgradeOption(3, 500),
-                        new UpgradeOption(4, 1000),
-                        new UpgradeOption(5, 5000),
-                        new UpgradeOption(6, 10000),
-                        new UpgradeOption(7, 50000),
-                        new UpgradeOption(8, 100000)
+                        new UpgradeSeller("Перый продавец", 1, 0, false),
+                        new UpgradeSeller("Второй продавец", 2, 35, false),
+                        new UpgradeSeller("Третий продавец", 3, 500, false),
+                        new UpgradeSeller("Четвертый продавец", 4, 1000, false),
+                        new UpgradeSeller("Пятый продавец  ", 5, 5000, false),
+                        new UpgradeSeller("Шестой продавец", 6, 10000, false),
+                        new UpgradeSeller("Седьмой продавец", 7, 50000, false),
+                        new UpgradeSeller("Восьмой продавец", 8, 100000, false)
                     },
-                    new ProductBoost(1.3f, 50000),
+                    new ProductBoost("Ускорение производства 30%", 1.3f, 50000, false),
 
-                    new SpeedBoost(1.2f, 55000)
+                    new SpeedBoost("Ускорение перемещения продавцов на 20%", 1.2f, 55000, false)
                 )
             },
         };

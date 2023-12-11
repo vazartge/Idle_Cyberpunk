@@ -1,49 +1,82 @@
-﻿using Assets._Game._Scripts._5_Managers;
+﻿using System;
+using System.Collections.Generic;
+using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
+using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Store {
-    public class StoreStats {
-        private GameMode _gameMode;
-        private Store _store;
-        private int _levelStore =1;
+    [Serializable]
+    public class StoreStats
+    {
 
-        public long Money { get; private set; } = 1000;
+        [SerializeField] private long coins = 1000;
+        [SerializeField] private int levelGame = 1;
+        [SerializeField] private float speedMoveCustomer = 5f;
+        [SerializeField] private float speedMoveSeller = 5f;
+        [SerializeField] private float productionSpeed = 2f;
+        [SerializeField] private float takingOrder = 2f;
 
-        public int LevelStore => _levelStore;
+        [SerializeField] private LevelUpgrade levelUpgrade = new LevelUpgrade(
 
-        public StoreStats(Store store, GameMode gameMode)
+            new LevelUpgrade(
+                new List<UpgradeCustomer>
+                {
+                    new UpgradeCustomer("Второй покупатель", 2, 0, false), // Изначально
+                    new UpgradeCustomer("Третий покупатель", 3, 20, false),
+                    new UpgradeCustomer("Четвертый покупатель", 4, 250, false)
+                },
+                new List<UpgradeSeller>
+                {
+                    new UpgradeSeller("Первый продавец", 1, 0, false), // Изначально
+                    new UpgradeSeller("Второй продавец", 2, 35, false)
+                },
+                new ProductBoost("Ускорение производства 30%", 1.3f, 350, false), // на 30% быстрее
+
+                new SpeedBoost("Ускорение перемещения продавцов на 20%", 1.2f, 500, false) // на 20% быстрее
+            ));
+
+
+    
+
+    public long Coins
         {
-            _store = store;
-            _gameMode = gameMode;
-            _gameMode.ChangedStatsOrMoney();
-            _gameMode.InitializedStoreStats();
+            get => coins;
+            set => coins = value;
         }
 
-        public bool AddMoney(long amount)
+        public int LevelGame
         {
-            Money += amount;
-            _gameMode.ChangedStatsOrMoney();
-            return true;
+            get => levelGame;
+            set => levelGame = value;
         }
 
-        public bool RemoveMoney(long amount)
+        public float SpeedMoveCustomer
         {
-            if (Money >= 0)
-            {
-                Money -= amount;
-                _gameMode.ChangedStatsOrMoney();
-                return true;
-            }
-            return false;
+            get => speedMoveCustomer;
+            set => speedMoveCustomer = value;
         }
 
-        public bool AddLevelStore()
+        public float SpeedMoveSeller
         {
-            // _gameMode.ChangeLevel();
-
-            _gameMode.ChangedStatsOrMoney();
-            return true;
+            get => speedMoveSeller;
+            set => speedMoveSeller = value;
         }
 
+        public float ProductionSpeed
+        {
+            get => productionSpeed;
+            set => productionSpeed = value;
+        }
 
+        public float TakingOrder
+        {
+            get => takingOrder;
+            set => takingOrder = value;
+        }
+
+        public LevelUpgrade LevelUpgrade
+        {
+            get => levelUpgrade;
+            set => levelUpgrade = value;
+        }
     }
 }

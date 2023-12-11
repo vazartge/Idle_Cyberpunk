@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
@@ -15,7 +14,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
         public GameMode GameMode;
         public StoreStats Stats;
-        public int CountOrders;
+        
         public List<SellerSlot> SellerSlots { get; set; }
         public List<CustomerSlot> CustomerSlots { get; set; }
         [SerializeField] public List<DesktopSlot> DesktopSlots { get; set; }
@@ -28,19 +27,17 @@ namespace Assets._Game._Scripts._6_Entities._Store {
        
         
         private void Awake() {
-            Stats = new StoreStats(this, GameMode);
+           
             _desktopsList = new List<DesktopUnit>();
             GetAllStoreSlots();
             GameMode = FindObjectOfType<GameMode>();
         }
 
-        private void Start()
-        {
-            
-            
+        public void Construct(StoreStats storeStats) {
+            Stats = storeStats;
         }
 
-       
+
         public bool HasFreeCustomerSlot() {
             return CustomerSlots.Any(slot => !slot.IsOccupied);
         }
@@ -99,10 +96,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             return freeSlots[randomIndex];
         }
 
-        public int GetOrderId()
-        {
-            return ++CountOrders;
-        }
+        
 
         private void AddToWaitingCustomersQueue(Customer customer) {
             _waitingOrderCustomer.Enqueue(customer);
@@ -200,6 +194,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         {
             _desktopsList.Add(newDesktop.GetComponentInChildren<DesktopUnit>());
         }
+
 
        
     }

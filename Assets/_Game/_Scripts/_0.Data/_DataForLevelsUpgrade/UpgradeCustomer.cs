@@ -1,22 +1,21 @@
 ﻿namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade {
-    public class SpeedBoost: IUpgradeItem {
-
+    [System.Serializable]
+    public class UpgradeCustomer : IUpgradeItem {
         public string Name { get; set; }
-        public float SpeedMultiplier { get; set; }
+        public int Amount { get; set; }
         public int Price { get; set; }
         public bool IsPurchased { get; set; }
-
-        public SpeedBoost(string name ,float speedMultiplier, int price, bool isPurchased) {
+        public UpgradeCustomer(string name, int amount, int price, bool isPurchased) {
             Name = name;
-            SpeedMultiplier = speedMultiplier;
+            Amount = amount;
             Price = price;
             IsPurchased = isPurchased;
+
         }
 
-        // Конструктор копирования
-        public SpeedBoost(SpeedBoost other) {
+        public UpgradeCustomer(UpgradeCustomer other) {
             Name = other.Name;
-            SpeedMultiplier = other.SpeedMultiplier;
+            Amount = other.Amount;
             Price = other.Price;
             IsPurchased = other.IsPurchased;
         }

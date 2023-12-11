@@ -3,7 +3,6 @@ using Assets._Game._Scripts._3_UI._UIUnits._Base;
 using Assets._Game._Scripts._5_Managers;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static UnityEditor.Profiling.HierarchyFrameDataView;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Base {
     public abstract class BaseUnitGame : MonoBehaviour, IUnitGame/*, IUnitTouchable*/{

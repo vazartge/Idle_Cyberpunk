@@ -129,7 +129,7 @@ namespace Assets.CameraScaler
 
                     break;
                 default:
-                    Debug.LogError("Incorrect CameraScaler.GameMode: " + Mode);
+                    Debug.LogError("Incorrect CameraScaler._gameMode: " + Mode);
                     break;
             }
         }
@@ -179,7 +179,7 @@ namespace Assets.CameraScaler
 
                     break;
                 default:
-                    Debug.LogError("Incorrect CameraScaler.GameMode: " + Mode);
+                    Debug.LogError("Incorrect CameraScaler._gameMode: " + Mode);
                     break;
             }
         }

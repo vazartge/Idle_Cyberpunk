@@ -25,15 +25,14 @@ namespace Assets._Game._Scripts._5_Managers {
         // Changed Stats
         public event Action OnChangedStatsOrMoney;
         //  public event Action OnChangedLevelPlayer;
-        public int GameLevel {
-            get => Game.Instance.GameLevel;
-            set => Game.Instance.GameLevel = value;
-        }
+        public int GameLevel => Store.Stats.LevelGame;
+           
         private bool _isInitialized;
         private int _idOrder;
 
         [Header("Refererences")]
         public Store Store;
+        public long Coins=> Store.Stats.Coins;
         public EconomyAndUpgradeService EconomyAndUpgrade;
         public Camera UiCamera;
         public UIMode UiMode {
@@ -99,12 +98,13 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject CustomerPrefab;
         public List<Seller> Sellers { get; set; }
 
+        public GameObject ButtonForNextLevel;
 
         #endregion
 
         #region Initialization
 
-        public void Construct(DataMode_ dataMode, UIMode uiMode) {
+        public void Construct(DataMode_ dataMode, UIMode uiMode, StoreStats storeStats) {
             DataMode = dataMode;
             UiMode = uiMode;
             maxProductsPerCustomer = new Dictionary<int, int>
@@ -117,7 +117,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
             Store = FindObjectOfType<Store>();
             _productRandomizerService = new ProductRandomizerService();
-
+            Store.Construct(storeStats);
             ActiveCustomers = new List<Customer>();
             Sellers = new List<Seller>();
             _customersPool = new Queue<Customer>();
@@ -130,7 +130,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
         public void InitializedStoreStats() {
             InitializeUI();
-            Debug.Log("GameMode Start");
+            Debug.Log("_gameMode Start");
         }
         private void InitializeUI() {
 
@@ -172,7 +172,7 @@ namespace Assets._Game._Scripts._5_Managers {
         //    // OnChangedLevelPlayer?.Invoke();
         //     OnChangedStatsOrMoney?.Invoke();
         //     CheckPrebuilders();
-        //     UiMode?.UpdateOnChangedLevelPlayer();
+        //     _uiMode?.UpdateOnChangedLevelPlayer();
         // }
 
         public void OnAnyInputControllerEvent() {
@@ -182,8 +182,15 @@ namespace Assets._Game._Scripts._5_Managers {
         private void Update() {
             if (!_isInitialized) return;
             if (Game.Instance.IsPaused) return;
+            if (CanUpgradeLevel())
+            {
+                ShowButtonNextLevel();
+            }
             //_inputControlService.UpdateInputControl();
         }
+
+       
+
         #endregion
 
         #region Factory
@@ -434,9 +441,51 @@ namespace Assets._Game._Scripts._5_Managers {
 
         #endregion
 
-        public void AddMoney()
+        public void AddMoney() /// Удалить!!!!!!!!!!!!!!!!!!!!!!!!!
         {
-            EconomyAndUpgrade.Store.Stats.AddMoney(1000);
+            EconomyAndUpgrade.AddMoney(1000);
         }
+
+
+        public void AddSeller()
+        {
+            NewSellerButton();
+        }
+
+        public void AddCustomer()
+        {
+            NewCustomerButton();
+        }
+        public bool CanUpgradeLevel() {
+            int nextLevel = Store.Stats.LevelGame + 1;
+            long cost = 0;
+
+            switch (nextLevel) {
+                case 2:
+                    cost = 2000;
+                    break;
+                case 3:
+                    cost = 200000;
+                    break;
+                case 4:
+                    cost = 3000000;
+                    break;
+                default:
+                    // Если уровень не определен, возвращаем false.
+                    return false;
+            }
+
+            return Coins >= cost;
+        }
+        private void ShowButtonNextLevel() {
+            ButtonForNextLevel.SetActive(true);
+        }
+
+        public void OnNextLevelButton()
+        {
+            Store.Stats.LevelGame++;
+            Game.Instance.NextLevelStart();
+        }
+
     }
 }

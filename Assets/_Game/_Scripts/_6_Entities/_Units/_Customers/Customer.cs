@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using Assets._Game._Scripts._3_UI._UIUnits;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Base;
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
@@ -32,7 +29,8 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         public CustomerSlot CustomerSlot;
         public List<Order> Orders;
         private CustomerState _customerState;
-        private float speed = 6f; // Скорость перемещения в единицах в секунду
+
+        private float speed => _store.Stats.SpeedMoveCustomer; // Скорость перемещения в единицах в секунду
         private Transform _startPointTransform;
         private Transform _endPointTransform;
 

@@ -3,14 +3,24 @@ using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using System;
+using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers
 {
     public class EconomyAndUpgradeService
     {
-        public long Money => Store.Stats.Money;
-        public int Level => Store.Stats.LevelStore;
+        public long Coins
+        {
+            get => Store.Stats.Coins;
+            set => Store.Stats.Coins = value;
+        }
+
+        public int LevelGame
+        {
+            get => Store.Stats.LevelGame;
+            set => Store.Stats.LevelGame = value;
+        }
 
         public GameMode GameMode
         {
@@ -28,16 +38,17 @@ namespace Assets._Game._Scripts._5_Managers
         {
             GameMode = gameMode;
             Store = store;
-
+            //_gameMode.ChangedStatsOrMoney();
+            _gameMode.InitializedStoreStats();
         }
 
         public bool TryBuyPrebuilder(PrebuilderDesktop prebuilderDesktop)
         {
             ProductType productType = prebuilderDesktop.ProductType;
             int cost = prebuilderDesktop.Cost;
-            if (cost <= Store.Stats.Money)
+            if (cost <= Coins)
             {
-                Store.Stats.RemoveMoney(cost);
+                RemoveMoney(cost);
                 return true;
             }
             else
@@ -51,11 +62,11 @@ namespace Assets._Game._Scripts._5_Managers
             int level = desktop.Level;
             ProductType productType = desktop.ProductType;
             int cost = GameMode.DataMode.GetProductUpgradeSO(productType).Upgrades[level].Cost;
-            if (cost <= Store.Stats.Money)
+            if (cost <= Coins)
             {
                 desktop.UpgradeLevelUp();
                 CheckDesktopAfterUpgrade(desktop);
-                Store.Stats.RemoveMoney(cost);
+                RemoveMoney(cost);
                 return true;
             }
             else
@@ -70,7 +81,7 @@ namespace Assets._Game._Scripts._5_Managers
             ProductType productType = desktop.ProductType;
             int income = GameMode.DataMode.GetProductUpgradeSO(productType).Upgrades[level].IncomeMoney;
 
-            Store.Stats.AddMoney(income);
+            AddMoney(income);
         }
 
         public long SetCostBuyProductAndLevel(int level, ProductType productType)
@@ -97,5 +108,62 @@ namespace Assets._Game._Scripts._5_Managers
 
 
         }
+        public bool AddMoney(long amount) {
+            Coins += amount;
+            _gameMode.ChangedStatsOrMoney();
+            return true;
+        }
+
+        public bool RemoveMoney(long amount) {
+            if (Coins >= 0) {
+                Coins -= amount;
+                _gameMode.ChangedStatsOrMoney();
+                return true;
+            }
+            return false;
+        }
+
+        public bool AddLevelGame() {
+            // _gameMode.ChangeLevel();
+
+            _gameMode.ChangedStatsOrMoney();
+            return true;
+        }
+
+        public void OnBuyUpgradeSeller(UpgradeSeller upgradeSeller)
+        {
+            if (upgradeSeller.Price <= Coins)
+            {
+                RemoveMoney(upgradeSeller.Price);
+                upgradeSeller.IsPurchased = true;
+                GameMode.AddSeller();
+            }
+        }
+        public void OnBuyUpgradeCustomer(UpgradeCustomer upgradeCustomer)
+        {
+            if (upgradeCustomer.Price <= Coins) {
+                RemoveMoney(upgradeCustomer.Price);
+                upgradeCustomer.IsPurchased = true;
+                GameMode.AddCustomer();
+            }
+        }
+        public void OnBuyUpgradeProductionBoost(ProductBoost productBoost)
+        {
+            if (productBoost.Price <= Coins) {
+                RemoveMoney(productBoost.Price);
+                productBoost.IsPurchased = true;
+                Store.Stats.ProductionSpeed *= productBoost.ProductMultiplier;
+            }
+        }
+
+        public void OnBuyUpgradeSpeedBoost(SpeedBoost speedBoost) {
+            if (speedBoost.Price <= Coins) {
+                RemoveMoney(speedBoost.Price);
+                speedBoost.IsPurchased = true;
+                Store.Stats.SpeedMoveSeller *= speedBoost.SpeedMultiplier;
+            }
+        }
+
+      
     }
 }

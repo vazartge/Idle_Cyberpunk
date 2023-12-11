@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using Assets._Game._Scripts._3_UI._UIUnits;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
@@ -27,20 +26,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         public UiSellerView SellerView;
         public UiSellerViewModel SellerViewModel;
 
-        public float TimeTakingOrder
-        {
-            get => _timeTakingOrder; 
-            set => _timeTakingOrder = value;
-        }
-
-        public float TimeCollectingProduct {
-            get => _timeCollectingProduct;
-            set => _timeCollectingProduct = value;
-        }
-        private float _timeTakingOrder = 2f;
-        private float _timeCollectingProduct = 5f;
-        // Параметр скорости движения продавца
-        [SerializeField] private float _moveSpeed = 6f;
+        private float timeTakingOrder => _store.Stats.TakingOrder;
+        private float productionSpeed => _store.Stats.ProductionSpeed;
+       private float moveSpeed => _store.Stats.SpeedMoveSeller;
         private GameMode _gameMode;
         private Store _store;
 
@@ -163,7 +151,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         //
         //     // Взятие заказа у покупателя
         //     Debug.Log($"{this.ID} Продавец берет заказ у нового покупателя {TargetCustomer.ID}");
-        //     yield return new WaitForSeconds(TimeTakingOrder);
+        //     yield return new WaitForSeconds(timeTakingOrder);
         //     TargetCustomer.TransferOrder();
         //     Debug.Log("Продавец заказ у нового покупателя в лист заказов");
         //     _sellerState = SellerState.SearchingForCustomerState;
@@ -174,16 +162,16 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
             // Взятие заказа у покупателя
          //   Debug.Log($"{this.ID} Продавец берет заказ у нового покупателя {TargetCustomer.ID}");
-            while (elapsedTime < TimeTakingOrder) {
+            while (elapsedTime < timeTakingOrder) {
                 elapsedTime += Time.deltaTime;
-                OnUIChangedProgress?.Invoke(elapsedTime / TimeTakingOrder, true);
+                OnUIChangedProgress?.Invoke(elapsedTime / timeTakingOrder, true);
                 yield return null;
             }
 
             TargetCustomer.TransferOrder();
           //  Debug.Log("Продавец заказ у нового покупателя в лист заказов");
             _sellerState = SellerState.SearchingForCustomerState;
-            OnUIChangedProgress?.Invoke(TimeTakingOrder, false); // Убедитесь, что UI показывает полный прогресс после завершения
+            OnUIChangedProgress?.Invoke(timeTakingOrder, false); // Убедитесь, что UI показывает полный прогресс после завершения
         }
 
 
@@ -201,7 +189,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         // private IEnumerator CollectingOrderRoutine() {
         //     // Сбор заказа
         //     Debug.Log("Собирает заказ за столом");
-        //     yield return new WaitForSeconds(_timeCollectingProduct);
+        //     yield return new WaitForSeconds(_timeProductionSpeed);
         //     Debug.Log("Заказ собран");
         //     TargetDesktopSlot.Seller = null;
         //     _sellerState = SellerState.MovingToCustomerForDeliverState;
@@ -210,15 +198,15 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
             float elapsedTime = 0;
             // Сбор заказа
            // Debug.Log("Собирает заказ за столом");
-            while (elapsedTime < TimeCollectingProduct) {
+            while (elapsedTime < productionSpeed) {
                 elapsedTime += Time.deltaTime;
-                OnUIChangedProgress?.Invoke(elapsedTime / TimeCollectingProduct, true);
+                OnUIChangedProgress?.Invoke(elapsedTime / productionSpeed, true);
                 yield return null;
             }
            // Debug.Log("Заказ собран");
             TargetDesktopSlot.Seller = null;
             _sellerState = SellerState.MovingToCustomerForDeliverState;
-            OnUIChangedProgress?.Invoke(TimeCollectingProduct, false); // Убедитесь, что UI показывает полный прогресс после завершения
+            OnUIChangedProgress?.Invoke(productionSpeed, false); // Убедитесь, что UI показывает полный прогресс после завершения
             OnUIChangedShowProduct?.Invoke();
         }
         private IEnumerator MovingToCustomerForDeliverRoutine() {
@@ -254,7 +242,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         private IEnumerator MoveToTargetWithSpeed(Vector3 target, SellerState sender) {
             //Debug.Log($"{this.ID} Продавец начал движение");
             float distance = Vector3.Distance(transform.position, target);
-            float duration = distance / _moveSpeed; // Рассчитываем продолжительность на основе скорости и расстояния
+            float duration = distance / moveSpeed; // Рассчитываем продолжительность на основе скорости и расстояния
                                                     // Добавляем обработчик, который вызовется по завершении анимации
             if (Vector3.Distance(transform.position, target) > 0.1f) {
                 yield return transform.DOMove(target, duration).SetEase(Ease.Linear).WaitForCompletion();
