@@ -5,6 +5,10 @@
         public int Amount { get; set; }
         public int Price { get; set; }
         public bool IsPurchased { get; set; }
+        public UpgradeCustomer() {
+            // Конструктор по умолчанию
+        }
+
         public UpgradeCustomer(string name, int amount, int price, bool isPurchased) {
             Name = name;
             Amount = amount;

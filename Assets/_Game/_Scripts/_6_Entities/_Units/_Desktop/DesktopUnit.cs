@@ -48,10 +48,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] private int _level = 1;
         [SerializeField] private ProductType _productType;
         [SerializeField] private SpriteRenderer _spriteIconProductType;
+        
         private GameMode _gameMode;
-        //[SerializeField] private UIMode _uiMode;
+        //[SerializeField] private UIMode UiMode;
         private Order _order;
-        private UIDesktopViewModel _viewModel;
+        private DesktopViewModel _viewModel;
         private UIDesktopView _view;
         // [SerializeField] private GameObject _additionalDesktopGO;
 
@@ -68,7 +69,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             GameMode = gameMode;
             
             _view = GetComponentInChildren<UIDesktopView>();
-            _viewModel = new UIDesktopViewModel(this, _view);
+            _viewModel = new DesktopViewModel(this, _view);
             ViewModel = _viewModel;
             _economyAndUpgrade = _gameMode.EconomyAndUpgrade;
             _spriteIconProductType.sprite = GameMode.DataMode.GetIconByProductType(ProductType);
@@ -82,7 +83,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             IsAdditionalDesktop = true;
             _mainDesktop.IsAdditionalDesktop = IsAdditionalDesktop;
             _view = GetComponentInChildren<UIDesktopView>();
-            _viewModel = new UIDesktopViewModel(_mainDesktop, _view); 
+            _viewModel = new DesktopViewModel(_mainDesktop, _view); 
             ViewModel = _viewModel;
            // _gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
             _spriteIconProductType.sprite = _mainDesktop._spriteIconProductType.sprite;

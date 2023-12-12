@@ -6,6 +6,11 @@
         public int Amount { get; set; }
         public int Price { get; set; }
         public bool IsPurchased { get; set; }
+
+        public UpgradeSeller()
+        {
+
+        }
         public UpgradeSeller(string name, int amount, int price, bool isPurchased)
         {
             Name = name;

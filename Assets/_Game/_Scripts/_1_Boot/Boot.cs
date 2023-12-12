@@ -19,7 +19,7 @@ namespace Assets._Game._Scripts._1_Boot
         public void Initialize()
         {
             // Инициализационная логика здесь
-            Debug.Log("Boot sequence initialized zenject.");
+           
 
         }
     }

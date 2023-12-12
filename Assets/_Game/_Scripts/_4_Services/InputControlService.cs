@@ -89,10 +89,10 @@ namespace Assets._Game._Scripts._4_Services
             // Если canvas не найден, проверяем объекты на сцене
             //   if (canvas == null) {
 
-            // _gameMode._uiMode.TouchInput(touchable/*, null*/);
+            // _gameMode.UiMode.TouchInput(touchable/*, null*/);
             // } else {
             //     // Если canvas найден, обрабатываем нажатие на UI
-            //     _gameMode._uiMode.TouchInput(null, canvas);
+            //     _gameMode.UiMode.TouchInput(null, canvas);
             // }
         }
 

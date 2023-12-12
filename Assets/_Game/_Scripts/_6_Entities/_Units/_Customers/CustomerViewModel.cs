@@ -6,11 +6,11 @@ using UnityEngine;
 // Предполагаем, что здесь находится класс Customer
 
 namespace Assets._Game._Scripts._6_Entities._Units._Customers {
-    public class UiCustomerViewModel : UIUnitViewModel {
+    public class CustomerViewModel : UnitViewModel {
         private Customer _customerModel; // Модель данных покупателя
         private UiCustomerView _customerView; // View для отображения данных покупателя
 
-        public UiCustomerViewModel(Customer customer, UiCustomerView view) {
+        public CustomerViewModel(Customer customer, UiCustomerView view) {
             _customerModel = customer;
             _customerView = view;
             // Подписка на изменения в модели (например, на события изменения заказа)

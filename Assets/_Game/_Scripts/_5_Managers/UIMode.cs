@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using Assets._Game._Scripts._3_UI._HUD;
+using Assets._Game._Scripts._3_UI._HUD._WindowUpggrade;
 using Assets._Game._Scripts._3_UI._UIUnits._Base;
 using Assets._Game._Scripts._3_UI._UpgradeButton;
 using Assets._Game._Scripts._6_Entities._Store;
@@ -24,20 +25,25 @@ namespace Assets._Game._Scripts._5_Managers {
 
 
         [SerializeField] private Transform upgradeButtonsContainer; // Родительский элемент для кнопок
-        public GameObject UpgradeWindow;
+        public GameObject UpgradeWindowGO;
+        private UIWindowUpgradeView _upgradeWindowView;
         public GameObject UpgradeButtonPrefab;
         private UpgradeButton[] _upgradeButtons;
         public Dictionary<ProductType, string> ProductTypeAndNameMap;
 
-        private UIUnitViewModel _currentUnitViewModel;
+        private UnitViewModel _currentUnitViewModel;
         [SerializeField] private GameObject _closeWindowsButton;
-
+        private IUiUnitView _currentUiUnitView;
         public GameMode GameMode {
             get => _gameMode;
             set => _gameMode = value;
 
         }
 
+        private void Awake()
+        {
+            _upgradeWindowView = UpgradeWindowGO.GetComponent<UIWindowUpgradeView>();
+        }
         private void InitializeUpgradeButtons() {
             // Инициализация массива кнопок
             _upgradeButtons = new UpgradeButton[20];
@@ -54,6 +60,9 @@ namespace Assets._Game._Scripts._5_Managers {
             ProductTypeAndNameMap = new Dictionary<ProductType, string>
             {
                 {ProductType.MechanicalEyeProduct, "Механический глаз"},
+                {ProductType.RoboticArmProduct, "Роботизированная рука"},
+                {ProductType.IronHeartProduct, "Железное сердце"},
+                {ProductType.NeurochipProduct, "Нейрочип"},
                 // остальные заполнить
             };
             _dataMode = dataMode;
@@ -75,37 +84,59 @@ namespace Assets._Game._Scripts._5_Managers {
 
         }
 
-        public void SetCurrentViewModel(UIUnitViewModel viewModel) {
-            
-            if (_currentUnitViewModel != null ) {
-                _currentUnitViewModel.HideWindow();
-            }
-            _closeWindowsButton.SetActive(true);
-            // Задаем новый _currentUnitViewModel
-            _currentUnitViewModel = viewModel;
-
-            // // Если viewModel не null, показываем окно
-            // if (viewModel != null) {
-            //     viewModel.ShowWindow();
-            // }
-        }
-
-        public void OnClosedAllWindowsButton()
-        {
+        public void OpenNewView(IUiUnitView view) {
+            // Закрываем текущее окно UnitViewModel, если оно открыто
             if (_currentUnitViewModel != null) {
                 _currentUnitViewModel.HideWindow();
+                _currentUnitViewModel = null; // Обнуляем текущий ViewModel, так как он закрыт
             }
+
+            // Закрываем текущее окно IUiUnitView, если оно открыто
+            if (_currentUiUnitView != null && _currentUiUnitView != view) {
+                _currentUiUnitView.HideWindow();
+            }
+
+            // Устанавливаем новое текущее окно
+            _currentUiUnitView = view;
+
+            // Показываем новое окно, если view не null
+            if (view != null) {
+                view.ShowWindow();
+                _closeWindowsButton.SetActive(true); // Активируем кнопку закрытия окон
+            }
+        }
+
+
+        public void OpenNewViewModel(UnitViewModel viewModel) {
+            // Проверяем, отличается ли новый viewModel от текущего
+            if (_currentUnitViewModel != viewModel) {
+                if (_currentUnitViewModel != null) {
+                    _currentUnitViewModel.HideWindow(); // Закрываем текущий ViewModel
+                }
+
+                _currentUnitViewModel = viewModel; // Обновляем текущий ViewModel
+
+                if (viewModel != null) {
+                    viewModel.ShowWindow(); // Показываем новый ViewModel
+                }
+            }
+
+            _closeWindowsButton.SetActive(viewModel != null); // Активируем или деактивируем кнопку закрытия окон
+        }
+
+        public void OnClosedAllWindowsButton() {
+            if (_currentUnitViewModel != null) {
+                _currentUnitViewModel.HideWindow();
+                _currentUnitViewModel = null; // Обнуляем текущий ViewModel
+            }
+
+            if (_currentUiUnitView != null) {
+                _currentUiUnitView.HideWindow();
+                _currentUiUnitView = null; // Обнуляем текущий UiUnitView
+            }
+
             _closeWindowsButton.SetActive(false);
         }
-
-        public void OnAnyInputControllerEvent() {
-
-        }
-
-        public void UpdateOnChangedLevelPlayer() {
-
-        }
-
 
 
         public void UpdateOnChangedStatsOrMoney() {
@@ -118,69 +149,81 @@ namespace Assets._Game._Scripts._5_Managers {
             return ProductTypeAndNameMap.GetValueOrDefault(productType);
         }
 
-       
-        public void UpdateAllUpgradeButtons() {
-            if (_upgradeButtons == null)return;
-            long currentCoins = GameMode.Coins;
-            foreach (var button in _upgradeButtons) {
-                button.UpdateButtonState(currentCoins);
-            }
-        }
-
-        public void OnBuyUpgradeSeller(UpgradeSeller upgradeSeller)
-        {
-            _economyAndUpgrade.OnBuyUpgradeSeller(upgradeSeller);
-        }
-        public void OnBuyUpgradeCustomer(UpgradeCustomer upgradeCustomer) {
-            _economyAndUpgrade.OnBuyUpgradeCustomer(upgradeCustomer);
-        }
-        public void OnBuyProductBoost(ProductBoost productBoost)
-        {
-            _economyAndUpgrade.OnBuyUpgradeProductionBoost(productBoost);
-        }
-
-        public void OnBuySpeedBoost(SpeedBoost speedBoost)
-        {
-            _economyAndUpgrade.OnBuyUpgradeSpeedBoost(speedBoost);
-        }
-
-        public void OpenUpgradeWindow()
-        {
+        public void OpenUpgradeWindow() {
+            Debug.Log("Open Upgrade wWindow");
+            OpenNewView(_upgradeWindowView);
             GenerateButtons(_gameMode.Store.Stats);
-            UpgradeWindow.SetActive(true);
+
 
         }
-
-        // public void CloseUpgradeWindow()
-        // {
-        //     UpgradeWindow.SetActive(false);
-        // }
-        public void GenerateButtons(StoreStats storeStats) {
-            var upgrades = storeStats.LevelUpgrade.GetAllUnpurchasedUpgrades();
-
-            // Сортировка по стоимости
-            var sortedUpgrades = upgrades.OrderBy(u => u.Price).ToList();
-
-            for (int i = 0; i < _upgradeButtons.Length; i++) {
-                if (i < sortedUpgrades.Count) {
-                    var upgrade = sortedUpgrades[i];
-                    _upgradeButtons[i].Initialized(this); // Инициализация контекста UI
-                    if (upgrade is UpgradeSeller upgradeOption) {
-                        _upgradeButtons[i].InitializeUpgrade(upgradeOption); // Инициализация кнопки для UpgradeSeller
-                    } else if (upgrade is ProductBoost productBoost) {
-                        _upgradeButtons[i].InitializeUpgrade(productBoost); // Инициализация кнопки для ProductBoost
-                    } else if (upgrade is SpeedBoost speedBoost) {
-                        _upgradeButtons[i].InitializeUpgrade(speedBoost); // Инициализация кнопки для SpeedBoost
+        public void UpdateAllUpgradeButtons() {
+            long currentCoins = GameMode.Coins;
+            // Проверяем, что массив кнопок инициализирован
+            if (_upgradeButtons != null) {
+                foreach (var button in _upgradeButtons) {
+                    // Проверяем, что кнопка активна и что у кнопки есть инициализированный элемент _upgradeItem
+                    if (button.gameObject.activeSelf && button.HasInitializedItem()) {
+                        button.UpdateButtonState(currentCoins);
                     }
-                    _upgradeButtons[i].UpdateButtonState(GameMode.Coins); // Обновление состояния кнопки
-                    _upgradeButtons[i].gameObject.SetActive(true);
-                } else {
-                    _upgradeButtons[i].gameObject.SetActive(false);
                 }
             }
         }
 
 
-       
+
+        public void OnBuyUpgradeItem(IUpgradeItem upgradeItem) {
+            if (upgradeItem is UpgradeSeller upgradeSeller) {
+                _economyAndUpgrade.OnBuyUpgradeSeller(upgradeSeller);
+            } else if (upgradeItem is UpgradeCustomer upgradeCustomer) {
+                _economyAndUpgrade.OnBuyUpgradeCustomer(upgradeCustomer);
+            } else if (upgradeItem is ProductBoost productBoost) {
+                _economyAndUpgrade.OnBuyUpgradeProductionBoost(productBoost);
+            } else if (upgradeItem is SpeedBoost speedBoost) {
+                _economyAndUpgrade.OnBuyUpgradeSpeedBoost(speedBoost);
+            }
+            //После покупки деактивируем соответствующую кнопку - если надо
+            foreach (var button in _upgradeButtons) {
+                if (button.HasInitializedItem() && button._upgradeItem == upgradeItem) {
+                    button.DeactivateButton();
+                    break;
+                }
+            }
+        }
+
+     
+
+        // public void CloseUpgradeWindow() {
+        //     _upgradeWindowView.SetActive(false);
+        // }
+        public void GenerateButtons(StoreStats storeStats) {
+            var upgrades = storeStats.LevelUpgrade.GetAllUnpurchasedUpgrades();
+            var sortedUpgrades = upgrades.OrderBy(u => u.Price).ToList();
+
+            for (int i = 0; i < _upgradeButtons.Length; i++) {
+                if (i < sortedUpgrades.Count) {
+                    _upgradeButtons[i].Initialize(sortedUpgrades[i], this, _gameMode.HasDesktops());
+                    _upgradeButtons[i].gameObject.SetActive(true);
+                } else {
+                    _upgradeButtons[i].gameObject.SetActive(false); // Если оставлять кнопки - это убрать
+                    // Закомментированный код для оставления кнопок с IsPurchased=true в UI
+                    // if (_upgradeButtons[i].HasInitializedItem() && _upgradeButtons[i]._upgradeItem.IsPurchased) {
+                    //     _upgradeButtons[i].gameObject.SetActive(true);
+                    // } else {
+                    //     _upgradeButtons[i].gameObject.SetActive(false);
+                    // }
+
+                }
+            }
+
+
+        }
+
+        public void OnButtonResetSaves()
+        {
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save(); // Не забудь сохранить изменения
+        }
+
+
     }
 }

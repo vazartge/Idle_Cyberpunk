@@ -11,7 +11,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             set => _canvas = value;
         }
 
-        [SerializeField] private UIDesktopViewModel _viewModel;
+        [SerializeField] private DesktopViewModel _viewModel;
         [SerializeField] private Canvas _canvas;
         [SerializeField] private TMP_Text _textLevel;
         [SerializeField] private TMP_Text _typeProduct;
@@ -32,7 +32,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             }
         }
 
-        public void Construct(UIDesktopViewModel viewModel, int maxStars) {
+        public void Construct(DesktopViewModel viewModel, int maxStars) {
             _viewModel = viewModel;
             maxStarsForCurrentLevel=maxStars;
             SetActiveStars(maxStarsForCurrentLevel);
@@ -56,7 +56,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         }
 
         public void UpdateOnChangeMoney(long сost, int level, long money, string productName
-             , int incomeValue, int starsAmount, float progressStarIndicator) {
+            , int incomeValue, int starsAmount, float progressStarIndicator, bool isButtonEnabled) {
              // Debug.Log($"Прогресс индикатора: {progressStarIndicator}");
              // Заполнение текста уровня
              _textLevel.text = level.ToString();
@@ -81,8 +81,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
                  _buyButton.interactable = true;
              }
 
+             _buyButton.interactable = isButtonEnabled;// проверка достиг ли уровень прокачки стола предела для данного уровня игры
              // Заполнение рекламы
-         }
+        }
         // Обновляет количество активных звезд
         public void UpdateStars(int starsAmount) {
             for (int i = 0; i < maxStarsForCurrentLevel; i++) {

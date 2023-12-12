@@ -24,7 +24,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         public event Action OnUIChangedShowProduct;
         public event Action OnUIChangedHideProduct;
         public UiSellerView SellerView;
-        public UiSellerViewModel SellerViewModel;
+        public SellerViewModel SellerViewModel;
 
         private float timeTakingOrder => _store.Stats.TakingOrder;
         private float productionSpeed => _store.Stats.ProductionSpeed;
@@ -47,7 +47,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
         public void Awake() {
             SellerView = GetComponentInChildren<UiSellerView>();
-            SellerViewModel = new UiSellerViewModel(this, SellerView);
+            SellerViewModel = new SellerViewModel(this, SellerView);
         }
         public void Construct(GameMode gameMode, Store store) {
             _gameMode = gameMode;

@@ -6,6 +6,10 @@
         public int Price { get; set; }
         public bool IsPurchased { get; set; }
 
+        public SpeedBoost()
+        {
+        }
+
         public SpeedBoost(string name ,float speedMultiplier, int price, bool isPurchased) {
             Name = name;
             SpeedMultiplier = speedMultiplier;

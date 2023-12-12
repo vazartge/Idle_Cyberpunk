@@ -5,15 +5,19 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
     public class PrebuilderDesktop : BaseUnitGame {
-        [SerializeField] private GameMode _gameMode;
-        [SerializeField] private UIMode _uiMode;
+        [Header("Тип продукта - ОБЯЗАТЕЛЬНО ЗАПОЛНИТЬ")]
         [SerializeField] private ProductType _productType;
-        [SerializeField] private int _price;
-        [SerializeField] private int _cost;
+        [Header("Угол поворота для стола против часовой стрелки")]
+        public float RotationAngleZ = 0f;
+        private GameMode _gameMode;
+        private UIMode _uiMode;
+        
+         private int _price;
+        private int _cost;
 
-        [SerializeField] private Order _order;
-        [SerializeField] private UIPrebuilderViewModel _viewModel;
-        [SerializeField] private UIPrebuilderView _view;
+        private Order _order;
+        private PrebuilderViewModel _viewModel;
+        private UIPrebuilderView _view;
         
         private DataMode_ _dataMode;
         public bool IsActive { get; set;}
@@ -47,7 +51,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             GameMode =gameMode;
             _dataMode = dataMode;
             _view = GetComponentInChildren<UIPrebuilderView>();
-            _viewModel = new UIPrebuilderViewModel(this, _view);
+            _viewModel = new PrebuilderViewModel(this, _view, _uiMode);
             ViewModel = _viewModel;
             _view.Construct(_viewModel);
             

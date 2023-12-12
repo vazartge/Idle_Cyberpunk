@@ -6,11 +6,11 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 {
-    public class UIDesktopViewModel: UIUnitViewModel  
+    public class DesktopViewModel: UnitViewModel  
     {
         public  DesktopUnit _desktopModel;
         private UIDesktopView _view;
-        public UiUnitView View=>_view;
+        
         
         private UIMode _uiMode;
         private string _productName;
@@ -21,7 +21,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 
        
 
-        public UIDesktopViewModel(DesktopUnit desktopModelUnit, UIDesktopView view)
+        public DesktopViewModel(DesktopUnit desktopModelUnit, UIDesktopView view)
         {
             _desktopModel = desktopModelUnit;
             _view = view;
@@ -34,24 +34,22 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
        
         public void UpdateOnChangeMoney()
         {
+            var isButtonEnabled = _desktopModel.GameMode.DataMode.GameLevel >= _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType)
+                .Upgrades[_desktopModel.Level-1].OpeningAtLevel;
             _productName = _uiMode.GetStringNameByProductType(_desktopModel.ProductType);
             _incomeValue = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType)
                 .Upgrades[_desktopModel.Level].IncomeMoney;
             _progressStarsValue = CalculateProgressToNextStar();
             _view.UpdateOnChangeMoney(_desktopModel.Cost, _desktopModel.Level, _desktopModel.Money
-                , _productName, _incomeValue, _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType).Upgrades[_desktopModel.Level-1].Stars, _progressStarsValue);
+                , _productName, _incomeValue, _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType).Upgrades[_desktopModel.Level-1].Stars, _progressStarsValue, isButtonEnabled);
 
         }
 
-        public void CheckWindow()
-        {
-            
-        }
 
         public override void ShowWindow()
         {
             // if(IsOpenedWindow) return;
-            _uiMode.SetCurrentViewModel(this);
+            _uiMode.OpenNewViewModel(this);
             _view.ShowWindow();
             _desktopModel.UpdateOnChangeStatsOrMoney();
            

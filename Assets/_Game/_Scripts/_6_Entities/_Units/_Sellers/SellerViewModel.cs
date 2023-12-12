@@ -4,12 +4,12 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Sellers
 {
-    public class UiSellerViewModel : UIUnitViewModel
+    public class SellerViewModel : UnitViewModel
     {
         private Seller _sellerModel;
         private UiSellerView _sellerView;
 
-        public UiSellerViewModel(Seller seller, UiSellerView view) {
+        public SellerViewModel(Seller seller, UiSellerView view) {
             _sellerModel = seller;
             _sellerView = view;
 

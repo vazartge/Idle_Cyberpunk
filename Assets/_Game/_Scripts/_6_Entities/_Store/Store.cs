@@ -196,6 +196,9 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         }
 
 
-       
+        public bool HasActiveDesktops()
+        {
+            return _desktopsList != null && _desktopsList.Count > 0;
+        }
     }
 }

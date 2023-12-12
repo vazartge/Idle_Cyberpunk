@@ -2,5 +2,7 @@
 {
     public interface IUiUnitView
     {
+        public void ShowWindow() { }
+        public void HideWindow() { }
     }
 }

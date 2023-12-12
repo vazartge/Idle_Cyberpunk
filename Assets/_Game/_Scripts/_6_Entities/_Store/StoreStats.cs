@@ -20,13 +20,13 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             new LevelUpgrade(
                 new List<UpgradeCustomer>
                 {
-                    new UpgradeCustomer("Второй покупатель", 2, 0, false), // Изначально
+                  //  new UpgradeCustomer("Второй покупатель", 2, 0, false), // Изначально
                     new UpgradeCustomer("Третий покупатель", 3, 20, false),
                     new UpgradeCustomer("Четвертый покупатель", 4, 250, false)
                 },
                 new List<UpgradeSeller>
                 {
-                    new UpgradeSeller("Первый продавец", 1, 0, false), // Изначально
+                  //  new UpgradeSeller("Первый продавец", 1, 0, false), // Изначально
                     new UpgradeSeller("Второй продавец", 2, 35, false)
                 },
                 new ProductBoost("Ускорение производства 30%", 1.3f, 350, false), // на 30% быстрее

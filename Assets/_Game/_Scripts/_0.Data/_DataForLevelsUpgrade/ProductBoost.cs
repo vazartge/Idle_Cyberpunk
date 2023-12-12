@@ -6,6 +6,11 @@
         public int Price { get; set; }
         public bool IsPurchased { get; set; }
 
+
+        public ProductBoost()
+        {
+        }
+
         public ProductBoost(string name,float productMultiplier, int price, bool isPurchased) {
             Name = name;
             ProductMultiplier = productMultiplier;

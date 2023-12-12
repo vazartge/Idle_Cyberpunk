@@ -21,7 +21,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
        
         public event Action OnUIChanged;
         public UiCustomerView CustomerView;
-        public UiCustomerViewModel CustomerViewModel;
+        public CustomerViewModel CustomerViewModel;
 
 
         private GameMode _gameMode;
@@ -37,7 +37,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         public void Awake()
         {
             CustomerView = GetComponentInChildren<UiCustomerView>();
-            CustomerViewModel  = new UiCustomerViewModel(this, CustomerView);
+            CustomerViewModel  = new CustomerViewModel(this, CustomerView);
         }
         public void Construct(GameMode gameMode, Store store, Transform startPoint, Transform endPoint) {
             _gameMode = gameMode;

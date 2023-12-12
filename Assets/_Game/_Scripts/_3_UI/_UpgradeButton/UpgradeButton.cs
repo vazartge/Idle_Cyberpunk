@@ -3,7 +3,6 @@ using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._5_Managers;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace Assets._Game._Scripts._3_UI._UpgradeButton {
@@ -13,64 +12,63 @@ namespace Assets._Game._Scripts._3_UI._UpgradeButton {
         public TMP_Text PriceText;
         public Button ButtonComponent;
         private UIMode _uiMode;
-        private UpgradeSeller _upgradeSeller;
-        private UpgradeCustomer _upgradeCustomer;
-        private ProductBoost _productBoost;
-        private SpeedBoost _speedBoost;
-        private IUpgradeItem _upgradeItem;
-        public void Initialized(UIMode uiMode)
-        {
+        
+        public IUpgradeItem _upgradeItem;
+        public void Initialize(IUpgradeItem upgradeItem, UIMode uiMode, bool hasDesktops) {
             _uiMode = uiMode;
+            _upgradeItem = upgradeItem;
+
+            SetupTextsButton(upgradeItem.Name, upgradeItem.Price, upgradeItem.Price <= _uiMode.GameMode.Store.Stats.Coins);
+
+            // Дополнительная логика для кнопок UpgradeCustomer
+            if (upgradeItem is UpgradeCustomer && !hasDesktops) {
+                ButtonComponent.interactable = false; // Делаем кнопку неактивной, если это UpgradeCustomer и нет столов
+            } else {
+                ButtonComponent.interactable = true;
+            }
+
+            ButtonComponent.onClick.AddListener(() => uiMode.OnBuyUpgradeItem(_upgradeItem));
         }
-        public void SetupTextsButton(string upgradeName, int cost, bool enoughCoins) {
+
+        public void SetupTextsButton(string upgradeName, int cost, bool enoughCoins, bool hasDesktops = true) {
             UpgradeNameText.text = upgradeName;
             PriceText.text = NumberFormatterService.FormatNumber(cost);
             PriceText.color = enoughCoins ? Color.black : Color.red;
-            ButtonComponent.interactable = enoughCoins;
+
+            // Дополнительная проверка для UpgradeCustomer
+            if (_upgradeItem is UpgradeCustomer && !hasDesktops) {
+                ButtonComponent.interactable = false;
+            } else {
+                ButtonComponent.interactable = enoughCoins;
+            }
         }
+
         public void UpdateButtonState(long currentCoins) {
-            bool enoughCoins = false;
-            if (_upgradeSeller != null) {
-                enoughCoins = _upgradeSeller.Price <= currentCoins;
-                ButtonComponent.interactable = enoughCoins && !_upgradeSeller.IsPurchased;
-            } else if (_productBoost != null) {
-                enoughCoins = _productBoost.Price <= currentCoins;
-                ButtonComponent.interactable = enoughCoins && !_productBoost.IsPurchased;
-            } else if (_speedBoost != null) {
-                enoughCoins = _speedBoost.Price <= currentCoins;
-                ButtonComponent.interactable = enoughCoins && !_speedBoost.IsPurchased;
+            // Проверка, есть ли рабочие столы
+            bool hasDesktops = _uiMode.GameMode.HasDesktops();
+
+            // Проверка, достаточно ли монет и не куплен ли уже данный элемент
+            bool enoughCoins = _upgradeItem.Price <= currentCoins;
+            bool isPurchased = _upgradeItem.IsPurchased;
+
+            // Если элемент - UpgradeCustomer и нет рабочих столов, кнопка неактивна
+            if (_upgradeItem is UpgradeCustomer && !hasDesktops) {
+                ButtonComponent.interactable = false;
+            } else {
+                ButtonComponent.interactable = enoughCoins && !isPurchased;
             }
 
+            // Обновление цвета текста цены
             PriceText.color = enoughCoins ? Color.black : Color.red;
         }
 
-        // Для обработки нажатия на кнопку UpgradeSeller
-        public void InitializeUpgrade(UpgradeSeller upgradeSeller) {
-            _upgradeSeller = upgradeSeller;
-            SetupTextsButton(upgradeSeller.Name, upgradeSeller.Price, upgradeSeller.Price<=_uiMode.GameMode.Coins);
-            ButtonComponent.onClick.AddListener(() => _uiMode.OnBuyUpgradeSeller(_upgradeSeller));
-            
+        // Добавьте этот метод, чтобы проверить, инициализирован ли _upgradeItem
+        public bool HasInitializedItem() {
+            return _upgradeItem != null;
         }
-        public void InitializeUpgrade(UpgradeCustomer upgradeCustomer) {
-            _upgradeCustomer = upgradeCustomer;
-            SetupTextsButton(upgradeCustomer.Name, upgradeCustomer.Price, upgradeCustomer.Price<=_uiMode.GameMode.Coins);
-            ButtonComponent.onClick.AddListener(() => _uiMode.OnBuyUpgradeCustomer(_upgradeCustomer));
-            
+       // Метод для деактивации кнопки
+        public void DeactivateButton() {
+            gameObject.SetActive(false);
         }
-
-        // Для обработки нажатия на кнопку ProductBoost
-        public void InitializeUpgrade(ProductBoost productBoost) {
-            _productBoost = productBoost;
-            SetupTextsButton(productBoost.Name, productBoost.Price,productBoost.Price <=_uiMode.GameMode.Coins);
-            ButtonComponent.onClick.AddListener(() => _uiMode.OnBuyProductBoost(_productBoost));
-        }
-
-        // Для обработки нажатия на кнопку SpeedBoost
-        public void InitializeUpgrade(SpeedBoost speedBoost) {
-            _speedBoost = speedBoost;
-            SetupTextsButton(speedBoost.Name, speedBoost.Price, speedBoost.Price<=_uiMode.GameMode.Coins);
-            ButtonComponent.onClick.AddListener(() => _uiMode.OnBuySpeedBoost(_speedBoost));
-        }
-
     }
 }

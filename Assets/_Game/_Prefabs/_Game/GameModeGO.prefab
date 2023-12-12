@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &2497382096697198746
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2246153774608939718}
+  - component: {fileID: 8602084135447077340}
+  m_Layer: 0
+  m_Name: GameModeGO
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2246153774608939718
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2497382096697198746}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 12.77, y: 6.52, z: 0.031211287}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8602084135447077340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2497382096697198746}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5466380a29ca6a947a25b722d08b5df5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  numberOrders: 0
+  Store: {fileID: 0}
+  UiCamera: {fileID: 0}
+  _prebuildersGO:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  _countCustomerForID: 0
+  _requiredNumberCustomersOnScene: 0
+  SellerPrefab: {fileID: 3698890507568529808, guid: 9ab6d206db7ffab47889fe878ff33699, type: 3}
+  _requiredNumberSellersOnScene: 0
+  SellerStartTransform: {fileID: 0}
+  CustomerStartTransform: {fileID: 0}
+  CustomerEndTransform: {fileID: 0}
+  CustomerPrefab: {fileID: 3698890507568529808, guid: a0369aa23e567c64a86ff846c13f1a3b, type: 3}
+  ButtonForNextLevel: {fileID: 0}

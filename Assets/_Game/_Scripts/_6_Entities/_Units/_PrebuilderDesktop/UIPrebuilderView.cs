@@ -10,14 +10,14 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
     public class UIPrebuilderView: UiUnitView {
         [SerializeField] private GameObject _uiWindow;
         
-        [SerializeField] private UIPrebuilderViewModel _viewModel;
-
+        [SerializeField] private PrebuilderViewModel _viewModel;
+        [SerializeField] private TMP_Text _typeProduct;
         [SerializeField] private TMP_Text _cost;
         [SerializeField] private Button _buyButton;
         private UICameraScript _uiCamera;
 
 
-        public void Construct(UIPrebuilderViewModel viewModel)
+        public void Construct(PrebuilderViewModel viewModel)
         {
             _viewModel = viewModel;
             _uiCamera = GameObject.FindObjectOfType<UICameraScript>();
@@ -29,6 +29,8 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
             _uiWindow.SetActive(true);
             if (!enough)
             {
+                _typeProduct.text =
+                    _viewModel.UiMode.GetStringNameByProductType(_viewModel.PrebuilderDesktop.ProductType);
                 _cost.color = Color.red;
                 _buyButton.interactable = false;
             }

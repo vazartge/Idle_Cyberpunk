@@ -1,7 +1,7 @@
-﻿using Assets._Game._Scripts._5_Managers;
+﻿using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
+using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using DG.Tweening;
-using Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -43,6 +43,7 @@ namespace Assets._Game._Scripts._2_Game {
             Instance = this;
             DontDestroyOnLoad(this);
             Application.targetFrameRate = 30; // оставить только в Boot
+            _storeStatsService = new StoreStatsService();
             
         }
 
@@ -99,7 +100,9 @@ namespace Assets._Game._Scripts._2_Game {
         public void NextLevelStart()
         {
             ChangeLevel(_gameMode.Store.Stats.LevelGame);
+            SaveGame(_storeStats);
             SceneManager.LoadScene(_gameMode.Store.Stats.LevelGame); // Загрузка соответствующей сцены
+            LoadGame();
 
         }
         private void ChangeLevel(int newLevel) {
@@ -115,19 +118,4 @@ namespace Assets._Game._Scripts._2_Game {
 
 
     }
-
-    public class StoreStatsService
-    {
-        public string SaveToJson(StoreStats storeStats)
-        {
-            return JsonConvert.SerializeObject(storeStats);
-        }
-
-
-        public StoreStats LoadFromJson(string json)
-        {
-            return JsonConvert.DeserializeObject<StoreStats>(json);
-        }
-    }
-
 }

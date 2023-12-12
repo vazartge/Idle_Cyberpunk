@@ -137,6 +137,7 @@ namespace Assets._Game._Scripts._5_Managers
                 RemoveMoney(upgradeSeller.Price);
                 upgradeSeller.IsPurchased = true;
                 GameMode.AddSeller();
+                _gameMode.ChangedStatsOrMoney();
             }
         }
         public void OnBuyUpgradeCustomer(UpgradeCustomer upgradeCustomer)
@@ -145,6 +146,7 @@ namespace Assets._Game._Scripts._5_Managers
                 RemoveMoney(upgradeCustomer.Price);
                 upgradeCustomer.IsPurchased = true;
                 GameMode.AddCustomer();
+                _gameMode.ChangedStatsOrMoney();
             }
         }
         public void OnBuyUpgradeProductionBoost(ProductBoost productBoost)
@@ -153,6 +155,7 @@ namespace Assets._Game._Scripts._5_Managers
                 RemoveMoney(productBoost.Price);
                 productBoost.IsPurchased = true;
                 Store.Stats.ProductionSpeed *= productBoost.ProductMultiplier;
+                _gameMode.ChangedStatsOrMoney();
             }
         }
 
@@ -161,9 +164,11 @@ namespace Assets._Game._Scripts._5_Managers
                 RemoveMoney(speedBoost.Price);
                 speedBoost.IsPurchased = true;
                 Store.Stats.SpeedMoveSeller *= speedBoost.SpeedMultiplier;
+                _gameMode.ChangedStatsOrMoney();
             }
         }
 
-      
+
+        
     }
 }

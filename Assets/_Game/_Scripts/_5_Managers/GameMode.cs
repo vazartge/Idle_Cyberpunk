@@ -10,6 +10,7 @@ using Assets._Game._Scripts._6_Entities._Units._Customers;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using Assets._Game._Scripts._6_Entities._Units._Sellers;
+using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -47,6 +48,7 @@ namespace Assets._Game._Scripts._5_Managers {
         private InputControlService _inputControlService;
         private DataMode_ _dataMode;
         private UIMode _uiMode;
+        private bool _isFirstDesktopCreate;
 
         [Header("PrebuildersDesktop")]
         [SerializeField] private GameObject[] _prebuildersGO;
@@ -58,7 +60,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
 
         [Header("Customers")]
-        [SerializeField] private GameObject _buttonAddCustomer;
+        //[SerializeField] private GameObject _buttonAddCustomer;
         [SerializeField] private int _countCustomerForID;
         // Требуемое количество покупателей на сцене
         [SerializeField] private int _requiredNumberCustomersOnScene;
@@ -140,7 +142,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
             OnChangedStatsOrMoney?.Invoke();
             StartCoroutine(InitializeUnitsPrebuldersOnScene(_countOpenedPrebuilder));
-
+            AddSellerMainMethod();
             _isInitialized = true;
 
         }
@@ -168,16 +170,7 @@ namespace Assets._Game._Scripts._5_Managers {
             CheckPrebuilders();
             UiMode?.UpdateOnChangedStatsOrMoney();
         }
-        // public void ChangeLevel() {
-        //    // OnChangedLevelPlayer?.Invoke();
-        //     OnChangedStatsOrMoney?.Invoke();
-        //     CheckPrebuilders();
-        //     _uiMode?.UpdateOnChangedLevelPlayer();
-        // }
-
-        public void OnAnyInputControllerEvent() {
-            UiMode?.OnAnyInputControllerEvent();
-        }
+      
 
         private void Update() {
             if (!_isInitialized) return;
@@ -223,7 +216,7 @@ namespace Assets._Game._Scripts._5_Managers {
             return obj;
         }
 
-        public void NewSellerButton() {
+        public void AddSellerMainMethod() {
             if (RequiredNumberSellersOnScene >= _maxNuberSellers) return;
             RequiredNumberSellersOnScene++;
             InstantiateNewSeller();
@@ -345,14 +338,17 @@ namespace Assets._Game._Scripts._5_Managers {
             var newDesktopObj = Instantiate(DataMode.GetPrefabForDesktop()
                 , prebuilderDesktop.gameObject.transform.position,
                 Quaternion.identity);
+            
             var newDesktop = newDesktopObj.GetComponentInChildren<DesktopUnit>();
+            newDesktop.ContainerForRotate.transform.rotation =  Quaternion.Euler(0f, 0f, prebuilderDesktop.RotationAngleZ);
             newDesktop.ProductType = prebuilderDesktop.ProductType;
             newDesktop.ConstructMain(this);
             SetupNewDesktopAndSlot(newDesktop, newDesktopObj);
            // prebuilderDesktop.ViewModel.HideWindow();
             
-            _buttonAddCustomer.gameObject.SetActive(true);
+           // _buttonAddCustomer.gameObject.SetActive(true);
             prebuilderDesktop.gameObject.SetActive(false);
+            
             return true;
         }
         
@@ -362,6 +358,13 @@ namespace Assets._Game._Scripts._5_Managers {
             Store.AddDesktop(newDesktop);
             Store.DesktopSlots.Add(newDesktopSlot);
             newDesktopObj.SetActive(true);
+
+            if (!_isFirstDesktopCreate)
+            {
+                _isFirstDesktopCreate = true;
+                Invoke("AddNewCustomerMainMethod", 0.5f);
+                Invoke("AddNewCustomerMainMethod", 1f);
+            }
         }
 
         #endregion
@@ -374,8 +377,9 @@ namespace Assets._Game._Scripts._5_Managers {
 
         private void CreateAdditionalDesktop(DesktopUnit desktopMain) {
             var newDesktopGO = Instantiate(DataMode.GetPrefabForDesktop(), desktopMain.AdditionalDesktopPointTransform.position
-            , desktopMain.ContainerForRotate.transform.rotation); // Создаем новый объект стола
+            ,Quaternion.identity); // Создаем новый объект стола
             var newDesktop = newDesktopGO.GetComponent<DesktopUnit>();
+            newDesktop.ContainerForRotate.transform.rotation = desktopMain.ContainerForRotate.transform.rotation;
             newDesktop.IsAdditionalDesktop = true;
             // // Рассчитываем позицию для нового стола
             // var spriteRenderer = desktopMain.GetComponentInChildren<DesktopUnitMainSpriteRenderer>().GetComponent<SpriteRenderer>(); // Получаем компонент SpriteRenderer основного стола
@@ -426,7 +430,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
             }
         }
-        public void NewCustomerButton() {
+        public void AddNewCustomerMainMethod() {
             if (RequiredNumberCustomersOnScene >=_maxNuberCustomers) return;
             RequiredNumberCustomersOnScene++;
             StartCoroutine(UpdateCustomersOnScene());
@@ -443,18 +447,18 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public void AddMoney() /// Удалить!!!!!!!!!!!!!!!!!!!!!!!!!
         {
-            EconomyAndUpgrade.AddMoney(1000);
+            EconomyAndUpgrade.AddMoney(10000);
         }
 
 
         public void AddSeller()
         {
-            NewSellerButton();
+            AddSellerMainMethod();
         }
 
         public void AddCustomer()
         {
-            NewCustomerButton();
+            AddNewCustomerMainMethod();
         }
         public bool CanUpgradeLevel() {
             int nextLevel = Store.Stats.LevelGame + 1;
@@ -463,6 +467,7 @@ namespace Assets._Game._Scripts._5_Managers {
             switch (nextLevel) {
                 case 2:
                     cost = 2000;
+
                     break;
                 case 3:
                     cost = 200000;
@@ -483,9 +488,33 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public void OnNextLevelButton()
         {
+            int nextLevel = Store.Stats.LevelGame + 1;
+            long cost = 0;
+
+            switch (nextLevel) {
+                case 2:
+                    cost = 2000;
+                    
+                    break;
+                case 3:
+                    cost = 200000;
+                    break;
+                case 4:
+                    cost = 3000000;
+                    break;
+                default:
+                    // Если уровень не определен, возвращаем false.
+                   break;
+            }
+
+            EconomyAndUpgrade.RemoveMoney(cost);
             Store.Stats.LevelGame++;
             Game.Instance.NextLevelStart();
         }
 
+        public bool HasDesktops()
+        {
+            return Store.HasActiveDesktops();
+        }
     }
 }
