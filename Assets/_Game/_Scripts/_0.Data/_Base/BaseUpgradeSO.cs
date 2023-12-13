@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Linq;
-using Assets._Game._Scripts._2_Game;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._0.Data._Base {

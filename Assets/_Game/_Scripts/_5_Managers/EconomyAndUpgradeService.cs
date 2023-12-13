@@ -4,6 +4,7 @@ using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using System;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
+using Assets._Game._Scripts._6_Entities._Store._Products;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers
@@ -39,7 +40,7 @@ namespace Assets._Game._Scripts._5_Managers
             GameMode = gameMode;
             Store = store;
             //_gameMode.ChangedStatsOrMoney();
-            _gameMode.InitializedStoreStats();
+            _gameMode.InitializeComponents();
         }
 
         public bool TryBuyPrebuilder(PrebuilderDesktop prebuilderDesktop)
@@ -132,17 +133,18 @@ namespace Assets._Game._Scripts._5_Managers
 
         public void OnBuyUpgradeSeller(UpgradeSeller upgradeSeller)
         {
-            if (upgradeSeller.Price <= Coins)
+            if (upgradeSeller.Price <= Coins && upgradeSeller.IsPurchased != true)
             {
                 RemoveMoney(upgradeSeller.Price);
                 upgradeSeller.IsPurchased = true;
                 GameMode.AddSeller();
                 _gameMode.ChangedStatsOrMoney();
+                Debug.Log("покупка продавца в сервисе");
             }
         }
         public void OnBuyUpgradeCustomer(UpgradeCustomer upgradeCustomer)
         {
-            if (upgradeCustomer.Price <= Coins) {
+            if (upgradeCustomer.Price <= Coins && upgradeCustomer.IsPurchased != true) {
                 RemoveMoney(upgradeCustomer.Price);
                 upgradeCustomer.IsPurchased = true;
                 GameMode.AddCustomer();
@@ -151,7 +153,7 @@ namespace Assets._Game._Scripts._5_Managers
         }
         public void OnBuyUpgradeProductionBoost(ProductBoost productBoost)
         {
-            if (productBoost.Price <= Coins) {
+            if (productBoost.Price <= Coins && productBoost.IsPurchased != true) {
                 RemoveMoney(productBoost.Price);
                 productBoost.IsPurchased = true;
                 Store.Stats.ProductionSpeed *= productBoost.ProductMultiplier;
@@ -160,7 +162,7 @@ namespace Assets._Game._Scripts._5_Managers
         }
 
         public void OnBuyUpgradeSpeedBoost(SpeedBoost speedBoost) {
-            if (speedBoost.Price <= Coins) {
+            if (speedBoost.Price <= Coins && speedBoost.IsPurchased != true) {
                 RemoveMoney(speedBoost.Price);
                 speedBoost.IsPurchased = true;
                 Store.Stats.SpeedMoveSeller *= speedBoost.SpeedMultiplier;

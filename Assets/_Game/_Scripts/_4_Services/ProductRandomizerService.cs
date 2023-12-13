@@ -1,7 +1,8 @@
-﻿using Assets._Game._Scripts._5_Managers;
-using System.Collections.Generic;
+﻿using Assets._Game._Scripts._6_Entities._Store._Products;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Assets._Game._Scripts._4_Services {
@@ -9,61 +10,58 @@ namespace Assets._Game._Scripts._4_Services {
         public int Counts;
         public float[] Weights;
     }
+
     public class ProductRandomizerService {
-        // Список весов для всех продуктов
-        private List<ProductWeight> _productWeights;
-        private WeightsProductMap[] _weightsMap;
+        private Dictionary<int, WeightsProductMap> _weightsMapByCount;
 
         public ProductRandomizerService() {
             InitializeWeights();
         }
 
         private void InitializeWeights() {
-            // Заполняем веса для каждого продукта и каждого уровня
-            _weightsMap = new WeightsProductMap[] {
-                new WeightsProductMap
-                {
-                    Counts = 1,
-                    Weights = new float[] {1f}
-                },
-                new WeightsProductMap {
-                    Counts = 2,
-                    Weights = new float[] {0.4f,0.6f}
-                },
-                new WeightsProductMap {
-                    Counts = 3,
-                    Weights = new float[] {0.21f, 0.32f, 0.47f}
-                },
-                new WeightsProductMap {
-                    Counts = 4,
-                    Weights = new float[] {0.12f,0.19f,0.28f,0.41f}
-                },
+            _weightsMapByCount = new Dictionary<int, WeightsProductMap> {
+                { 1, new WeightsProductMap { Counts = 1, Weights = new[] {1f} } },
+                { 2, new WeightsProductMap { Counts = 2, Weights = new[] {0.4f, 0.6f} } },
+                { 3, new WeightsProductMap { Counts = 3, Weights = new[] {0.21f, 0.32f, 0.47f} } },
+                { 4, new WeightsProductMap { Counts = 4, Weights = new[] {0.12f, 0.19f, 0.28f, 0.41f} } }
             };
-
         }
 
-
-        // Метод для выбора продукта на основе весов типов продуктов
-        public ProductType GetRandomProductType(List<ProductType> availableTypes) {
-            // Проверяем, есть ли доступные типы товаров
-            if (!availableTypes.Any()) {
-                throw new InvalidOperationException("No product types available.");
+        public ProductType? GetRandomProductType(List<ProductType> availableProductTypes) {
+            if (availableProductTypes == null || availableProductTypes.Count == 0) {
+                Debug.Log("Нет доступных типов продуктов.");
+                return null;
             }
 
-            // Получаем веса для доступных типов товаров из _weightsMap
-            var weightsForAvailableTypes = _weightsMap.FirstOrDefault(row => row.Counts == availableTypes.Count)?.Weights;
-            if (weightsForAvailableTypes == null || !weightsForAvailableTypes.Any()) {
-                throw new InvalidOperationException("No weights available for the number of product types.");
+            // Сортируем доступные типы по приоритету
+            var sortedProductTypes = availableProductTypes.OrderBy(type => type.GetPriority()).ToList();
+
+            // Получаем количество доступных типов продуктов
+            int count = sortedProductTypes.Count;
+
+            // Получаем веса из соответствующего объекта WeightsProductMap
+            if (!_weightsMapByCount.TryGetValue(count, out WeightsProductMap weightsMap)) {
+                Debug.Log("Веса для данного количества продуктов не найдены.");
+                return null;
             }
 
-            // Создаём список весов для доступных типов товаров
-            _productWeights = availableTypes.Select((t, i) => new ProductWeight(t, weightsForAvailableTypes[i])).ToList();
+            float[] weights = weightsMap.Weights;
 
-            // Выбираем случайный тип товара на основе весов
-            var randomProductType = _productWeights.OrderBy(pw => Random.value * pw.Weight).First().ProductType;
+            // Генерируем случайное число
+            float totalWeight = weights.Sum();
+            float randomValue = UnityEngine.Random.Range(0, totalWeight);
 
-            return randomProductType;
+            // Выбираем продукт на основе случайного значения
+            float weightSum = 0;
+            for (int i = 0; i < weights.Length; i++) {
+                weightSum += weights[i];
+                if (randomValue <= weightSum) {
+                    return sortedProductTypes[i];
+                }
+            }
+
+            // В случае если что-то пошло не так, возвращаем null
+            return null;
         }
-
     }
 }

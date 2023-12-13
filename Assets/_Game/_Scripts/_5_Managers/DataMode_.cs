@@ -4,8 +4,7 @@ using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._0.Data._Base;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using Assets._Game._Scripts._0.Data._DataForUpgrade;
-using Assets._Game._Scripts._2_Game;
-using Assets._Game._Scripts._6_Entities._Store;
+using Assets._Game._Scripts._6_Entities._Store._Products;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers {
@@ -22,12 +21,7 @@ namespace Assets._Game._Scripts._5_Managers {
     }
 
 
-    public enum ProductType {
-        MechanicalEyeProduct,
-        RoboticArmProduct,
-        IronHeartProduct,
-        NeurochipProduct
-    }
+   
 
     public class DataMode_ : MonoBehaviour {
         [SerializeField] private ResourceData ResData;

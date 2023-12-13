@@ -6,6 +6,7 @@ using Assets._Game._Scripts._3_UI._HUD._WindowUpggrade;
 using Assets._Game._Scripts._3_UI._UIUnits._Base;
 using Assets._Game._Scripts._3_UI._UpgradeButton;
 using Assets._Game._Scripts._6_Entities._Store;
+using Assets._Game._Scripts._6_Entities._Store._Products;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers {

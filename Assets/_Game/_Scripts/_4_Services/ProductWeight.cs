@@ -1,4 +1,5 @@
 ﻿using Assets._Game._Scripts._5_Managers;
+using Assets._Game._Scripts._6_Entities._Store._Products;
 
 namespace Assets._Game._Scripts._4_Services
 {
