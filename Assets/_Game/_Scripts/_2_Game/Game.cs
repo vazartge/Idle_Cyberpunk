@@ -126,5 +126,6 @@ namespace Assets._Game._Scripts._2_Game {
             }
         }
 
+
     }
 }
