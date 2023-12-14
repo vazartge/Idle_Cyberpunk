@@ -13,12 +13,44 @@ MonoBehaviour:
   m_Name: CharacterDataSO
   m_EditorClassIdentifier: 
   sellers:
-  - head: {fileID: 0}
-    hair: {fileID: 0}
-    clothes: {fileID: 0}
-    faceElement: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 134244097, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairDown: {fileID: -1872884864, guid: b38370586b5096541afc638bff1804b9, type: 3}
+    ClothesDown: {fileID: 0}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 0}
+    HairUp: {fileID: 0}
+    ClothesUp: {fileID: 0}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 134244097, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairDown: {fileID: -1872884864, guid: b38370586b5096541afc638bff1804b9, type: 3}
+    ClothesDown: {fileID: 0}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 0}
+    HairUp: {fileID: 0}
+    ClothesUp: {fileID: 0}
+    FaceElementUp: {fileID: 0}
   buyers:
-  - head: {fileID: 0}
-    hair: {fileID: 0}
-    clothes: {fileID: 0}
-    faceElement: {fileID: 0}
+  - BodyDown: {fileID: 0}
+    HeadDown: {fileID: 0}
+    HairDown: {fileID: 0}
+    ClothesDown: {fileID: 0}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 0}
+    HeadUp: {fileID: 0}
+    HairUp: {fileID: 0}
+    ClothesUp: {fileID: 0}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 0}
+    HeadDown: {fileID: 0}
+    HairDown: {fileID: 0}
+    ClothesDown: {fileID: 0}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 0}
+    HeadUp: {fileID: 0}
+    HairUp: {fileID: 0}
+    ClothesUp: {fileID: 0}
+    FaceElementUp: {fileID: 0}

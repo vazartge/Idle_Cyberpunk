@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
@@ -9,8 +10,8 @@ using DG.Tweening;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
-
-    public class Seller : BaseUnitGame {
+    
+    public class Seller : BaseUnitGame, ICharacterUnitChangableSprites {
         private enum SellerState {
             SearchingForCustomerState,
             MovingToCustomerForOrderState,
@@ -26,6 +27,10 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         public UiSellerView SellerView;
         public SellerViewModel SellerViewModel;
 
+        public int IDSprites;
+        public CharacterType CharacterType;
+        public AnimationState AnimationState;
+        private Animator _animator;
         private float timeTakingOrder => _store.Stats.TakingOrder;
         private float productionSpeed => _store.Stats.ProductionSpeed;
        private float moveSpeed => _store.Stats.SpeedMoveSeller;
@@ -43,16 +48,24 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         public SellerSlot CurrentSellerSlot;
         [SerializeField] DesktopSlot TargetDesktopSlot;
 
+        public CharacterSpritesAndAnimationController characterSpritesAndAnimationController { get; set; }
 
 
         public void Awake() {
             SellerView = GetComponentInChildren<UiSellerView>();
             SellerViewModel = new SellerViewModel(this, SellerView);
+            _animator = GetComponentInChildren<Animator>();
+            characterSpritesAndAnimationController = GetComponentInChildren<CharacterSpritesAndAnimationController>();
+            
         }
-        public void Construct(GameMode gameMode, Store store) {
+        public void Construct(GameMode gameMode, Store store, CharacterType characterType, int idSprites) {
             _gameMode = gameMode;
             _store = store;
             SetupSeller();
+
+            CharacterType = characterType;
+            IDSprites = idSprites;
+            characterSpritesAndAnimationController.Construct(this, idSprites, characterType);
         }
 
         private void SetupSeller() {
@@ -67,22 +80,28 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
             while (true) {
                 switch (_sellerState) {
                     case SellerState.SearchingForCustomerState:
+                        characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_up);
                         yield return StartCoroutine(SearchingForCustomerRoutine());
                         break;
                     case SellerState.MovingToCustomerForOrderState:
+                        characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_up);
                         yield return StartCoroutine(MovingToCustomerForOrderRoutine());
                         break;
                     case SellerState.TakingOrderState:
+                        characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_up);
                         yield return StartCoroutine(TakingOrderRoutine());
                         break;
 
                     case SellerState.MovingToDesktopState:
+                        characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_down);
                         yield return StartCoroutine(MovingToDesktopRoutine());
                         break;
                     case SellerState.CollectingOrderState:
+                        characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_down);
                         yield return StartCoroutine(CollectingOrderRoutine());
                         break;
                     case SellerState.MovingToCustomerForDeliverState:
+                        characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_up);
                         yield return StartCoroutine(MovingToCustomerForDeliverRoutine());
                         break;
                     case SellerState.DeliveredOrderState:
@@ -91,7 +110,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
                 }
             }
         }
-
+       
         private IEnumerator SearchingForCustomerRoutine() {
             while (true) {
 
@@ -106,7 +125,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
                     // Переключение на следующее состояние
                     _sellerState = SellerState.MovingToCustomerForOrderState;
-                  //  Debug.Log($"{this.ID} + Получил данные нового покупателя {TargetCustomer.ID}");
+                  //  Debug.Log($"{this.IDSprites} + Получил данные нового покупателя {TargetCustomer.IDSprites}");
 
                     CurrentSellerSlot = TargetSellerSlot;
 
@@ -142,7 +161,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
             // Запустите Dotween анимацию и ждите её завершения
             yield return MoveToTargetWithSpeed(customerPosition, SellerState.MovingToCustomerForOrderState);
-          //  Debug.Log($"{this.ID} Продавец подошел к новому покупателю {TargetCustomer.ID} за заказом");
+          //  Debug.Log($"{this.IDSprites} Продавец подошел к новому покупателю {TargetCustomer.IDSprites} за заказом");
             _sellerState = SellerState.TakingOrderState;
 
         }
@@ -150,7 +169,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         // private IEnumerator TakingOrderRoutine() {
         //
         //     // Взятие заказа у покупателя
-        //     Debug.Log($"{this.ID} Продавец берет заказ у нового покупателя {TargetCustomer.ID}");
+        //     Debug.Log($"{this.IDSprites} Продавец берет заказ у нового покупателя {TargetCustomer.IDSprites}");
         //     yield return new WaitForSeconds(timeTakingOrder);
         //     TargetCustomer.TransferOrder();
         //     Debug.Log("Продавец заказ у нового покупателя в лист заказов");
@@ -161,7 +180,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
             float elapsedTime = 0;
 
             // Взятие заказа у покупателя
-         //   Debug.Log($"{this.ID} Продавец берет заказ у нового покупателя {TargetCustomer.ID}");
+         //   Debug.Log($"{this.IDSprites} Продавец берет заказ у нового покупателя {TargetCustomer.IDSprites}");
             while (elapsedTime < timeTakingOrder) {
                 elapsedTime += Time.deltaTime;
                 OnUIChangedProgress?.Invoke(elapsedTime / timeTakingOrder, true);
@@ -240,7 +259,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         }
 
         private IEnumerator MoveToTargetWithSpeed(Vector3 target, SellerState sender) {
-            //Debug.Log($"{this.ID} Продавец начал движение");
+            //Debug.Log($"{this.IDSprites} Продавец начал движение");
             float distance = Vector3.Distance(transform.position, target);
             float duration = distance / moveSpeed; // Рассчитываем продолжительность на основе скорости и расстояния
                                                     // Добавляем обработчик, который вызовется по завершении анимации
@@ -250,11 +269,14 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
         }
 
+  
+
         private void OnDestroy() {
             OnUIChangedProgress = null;
             OnUIChangedShowProduct= null;
             OnUIChangedHideProduct= null;
         }
 
+        
     }
 }

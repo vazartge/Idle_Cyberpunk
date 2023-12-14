@@ -114,9 +114,10 @@ namespace Assets._Game._Scripts._5_Managers {
         public Transform CustomerStartTransform;
         public Transform CustomerEndTransform;
         public GameObject CustomerPrefab;
-
-
         public GameObject ButtonForNextLevel;
+
+        [Header("Service")]
+        private CharacterSpritesBuilder _characterSpritesBuilder;
 
         #endregion
 
@@ -149,7 +150,9 @@ namespace Assets._Game._Scripts._5_Managers {
         public void InitializeComponents() {
             OnChangedStatsOrMoney?.Invoke();
             StartCoroutine(InitializeUnitsPrebuldersOnScene(_countOpenedPrebuilder));
+            _characterSpritesBuilder = new CharacterSpritesBuilder(this);
             AddSellerMainMethod();
+           
             _isInitialized = true;
             Debug.Log("_gameMode Start");
         }
@@ -215,26 +218,28 @@ namespace Assets._Game._Scripts._5_Managers {
         // Метод для создания нового покупателя
         private Customer InstantiateNewCustomer() {
 
-            Customer obj = Instantiate(CustomerPrefab, CustomerStartTransform.position, Quaternion.identity).GetComponent<Customer>();
-            obj.gameObject.transform.parent = Store.CustomersParentTransform;
-            obj.Construct(this, Store, CustomerStartTransform, CustomerEndTransform);
-            _customersPool.Enqueue(obj); // Добавляем в пул
-            obj.gameObject.SetActive(false); // Скрываем покупателя
-            ActiveCustomers.Add(obj); // Добавляем в список для учета
+            Customer customer = Instantiate(CustomerPrefab, CustomerStartTransform.position, Quaternion.identity).GetComponent<Customer>();
+            customer.gameObject.transform.parent = Store.CustomersParentTransform;
+            customer.Construct(this, Store, CustomerStartTransform, CustomerEndTransform
+                , CharacterType.Seller, _countCustomerForID);
+            _customersPool.Enqueue(customer); // Добавляем в пул
+            customer.gameObject.SetActive(false); // Скрываем покупателя
+            ActiveCustomers.Add(customer); // Добавляем в список для учета
+            _characterSpritesBuilder.SetupCharacterSprites(customer);
             _countCustomerForID++;
-            obj.ID = "CustomerID:" + _countCustomerForID;
-            return obj;
+            customer.ID = "CustomerID:" + _countCustomerForID;
+            return customer;
         }
 
         private Seller InstantiateNewSeller() {
-            Seller obj = Instantiate(SellerPrefab, SellerStartTransform.position, Quaternion.identity).GetComponent<Seller>();
-            obj.gameObject.transform.parent = Store.SellersParentTransform;
-            obj.Construct(this, Store);
-
-            Sellers.Add(obj); // Добавляем в список для учета
+            Seller seller = Instantiate(SellerPrefab, SellerStartTransform.position, Quaternion.identity).GetComponent<Seller>();
+            seller.gameObject.transform.parent = Store.SellersParentTransform;
+            seller.Construct(this, Store, CharacterType.Seller, _countSellerForID);
+            Sellers.Add(seller); // Добавляем в список для учета
+            _characterSpritesBuilder.SetupCharacterSprites(seller);
             _countSellerForID++;
-            obj.ID = "SellerID:" + _countSellerForID;
-            return obj;
+            seller.ID = "SellerID:" + _countSellerForID;
+            return seller;
         }
 
         // Метод для получения текущего количества заказов по типам продуктов у активных покупателей

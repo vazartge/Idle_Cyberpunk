@@ -4,6 +4,7 @@ using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._0.Data._Base;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using Assets._Game._Scripts._0.Data._DataForUpgrade;
+using Assets._Game._Scripts._0.Data._SpritesForPersons;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using UnityEngine;
 
@@ -25,7 +26,8 @@ namespace Assets._Game._Scripts._5_Managers {
 
     public class DataMode_ : MonoBehaviour {
         [SerializeField] private ResourceData ResData;
-
+        [SerializeField] private CharacterSpritesDataSO _characterSpritesDataSo;
+ 
         [SerializeField] private LevelsUpgradesSO _levelsUpgrades;
         public Dictionary<ProductType, BaseUpgradeSO> _dataForUpgradeDesktopsMap;
         [SerializeField] private IronHeartUpgradeSO _ironHeartUpgradeSO;
@@ -51,6 +53,8 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject PreafabsForCreatePrebuilderDesktop => _prebuilderDesktopPrefab;
         public int GameLevel => _gameMode.GameLevel;
         public List<LevelInfo> Levels => _levels;
+
+        public CharacterSpritesDataSO CharacterSpritesDataSo => _characterSpritesDataSo;
 
 
         private void Awake() {
@@ -135,5 +139,9 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
 
+        public CharacterSpritesDataSO GetCharacterDataForSprites()
+        {
+            return CharacterSpritesDataSo;
+        }
     }
 }

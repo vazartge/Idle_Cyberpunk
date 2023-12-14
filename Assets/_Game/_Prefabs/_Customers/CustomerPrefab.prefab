@@ -291,6 +291,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8832745585581454893}
   - component: {fileID: -7143077065801042581}
+  - component: {fileID: 4753817083319326256}
   m_Layer: 0
   m_Name: CustomerPrefab
   m_TagString: Untagged
@@ -329,7 +330,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 
   CustomerView: {fileID: 9109101521876058179}
+  IDSprites: 0
+  CharacterType: 0
+  AnimationState: 0
   CustomerSlot: {fileID: 0}
+--- !u!114 &4753817083319326256
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3698890507568529808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43eb52102083c3c42add713d27a06c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _idSprites: 0
+  _characterType: 0
+  ViewData:
+    BodyDown: {fileID: 0}
+    HeadDown: {fileID: 0}
+    HairDown: {fileID: 0}
+    ClothesDown: {fileID: 0}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 0}
+    HeadUp: {fileID: 0}
+    HairUp: {fileID: 0}
+    ClothesUp: {fileID: 0}
+    FaceElementUp: {fileID: 0}
+  Body: {fileID: 51704554300400157}
+  Head: {fileID: 5912451802153758336}
+  Hair: {fileID: 3787691148592884298}
+  FaceElement: {fileID: 6883457761368313412}
+  Clothes: {fileID: 2020304967950205658}
 --- !u!1 &3824152558799375515
 GameObject:
   m_ObjectHideFlags: 0
