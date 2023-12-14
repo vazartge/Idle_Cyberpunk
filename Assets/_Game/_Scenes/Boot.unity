@@ -175,6 +175,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameGO
       objectReference: {fileID: 0}
+    - target: {fileID: 8642630551001470099, guid: a18b6478743abec49b6d90663263a418, type: 3}
+      propertyPath: Level
+      value: 3
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
