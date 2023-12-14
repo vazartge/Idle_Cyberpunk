@@ -67,7 +67,7 @@ namespace Assets.TextMesh_Pro.Examples___Extras.Scripts
                 TMP_LinkInfo linkInfo = m_TextComponent.textInfo.linkInfo[linkIndex];
             }
 
-            Debug.Log("Link Index: " + linkIndex + " with ID [" + linkID + "] and Text \"" + linkText +
+            Debug.Log("Link Index: " + linkIndex + " with IDSprites [" + linkID + "] and Text \"" + linkText +
                       "\" has been selected.");
         }
     }

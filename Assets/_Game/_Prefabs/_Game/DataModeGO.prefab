@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ResData: {fileID: 11400000, guid: e5b528a76f49af045ae33aab3658e153, type: 2}
+  _characterSpritesDataSo: {fileID: 11400000, guid: 9e8adbaa2515ede4f8068f102e9b4d6e, type: 2}
   _levelsUpgrades: {fileID: 11400000, guid: 148bbba99ce1d38479f7ea9e29d04c70, type: 2}
   _ironHeartUpgradeSO: {fileID: 11400000, guid: 257b960421b48874cbdbdf5d44dce516, type: 2}
   _mechanicalEyeUpgradeSo: {fileID: 11400000, guid: a480a3a6eb0f3e64f954e30514a5a349, type: 2}

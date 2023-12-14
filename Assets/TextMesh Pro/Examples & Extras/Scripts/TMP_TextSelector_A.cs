@@ -88,7 +88,7 @@ namespace Assets.TextMesh_Pro.Examples___Extras.Scripts
                     TMP_LinkInfo linkInfo = m_TextMeshPro.textInfo.linkInfo[linkIndex];
 
                     // The following provides an example of how to access the link properties.
-                    //Debug.Log("Link ID: \"" + linkInfo.GetLinkID() + "\"   Link Text: \"" + linkInfo.GetLinkText() + "\""); // Example of how to retrieve the Link ID and Link Text.
+                    //Debug.Log("Link IDSprites: \"" + linkInfo.GetLinkID() + "\"   Link Text: \"" + linkInfo.GetLinkText() + "\""); // Example of how to retrieve the Link IDSprites and Link Text.
 
                     Vector3 worldPointInRectangle;
 
@@ -100,12 +100,12 @@ namespace Assets.TextMesh_Pro.Examples___Extras.Scripts
                         case "id_01": // 100041637: // id_01
                             //m_TextPopup_RectTransform.position = worldPointInRectangle;
                             //m_TextPopup_RectTransform.gameObject.SetActive(true);
-                            //m_TextPopup_TMPComponent.text = k_LinkText + " ID 01";
+                            //m_TextPopup_TMPComponent.text = k_LinkText + " IDSprites 01";
                             break;
                         case "id_02": // 100041638: // id_02
                             //m_TextPopup_RectTransform.position = worldPointInRectangle;
                             //m_TextPopup_RectTransform.gameObject.SetActive(true);
-                            //m_TextPopup_TMPComponent.text = k_LinkText + " ID 02";
+                            //m_TextPopup_TMPComponent.text = k_LinkText + " IDSprites 02";
                             break;
                     }
                 }

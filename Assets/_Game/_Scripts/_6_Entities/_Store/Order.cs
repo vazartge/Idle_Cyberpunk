@@ -22,7 +22,7 @@ namespace Assets._Game._Scripts._6_Entities._Store
             Customer = customer;
 
             ProductType = productType;
-            //Debug.Log($"{Customer.ID}.OrderID: {ID}");
+            //Debug.Log($"{Customer.IDSprites}.OrderID: {IDSprites}");
 
         }
 

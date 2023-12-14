@@ -328,6 +328,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8832745585581454893}
   - component: {fileID: -88849682678733353}
+  - component: {fileID: 6354419738635345649}
   m_Layer: 0
   m_Name: SellerPrefab
   m_TagString: Untagged
@@ -366,11 +367,44 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: 
   SellerView: {fileID: 1320250316414676512}
+  IDSprites: 0
+  CharacterType: 0
+  AnimationState: 0
   TargetCustomer: {fileID: 0}
   TargetCustomerSlot: {fileID: 0}
   TargetSellerSlot: {fileID: 0}
   CurrentSellerSlot: {fileID: 0}
   TargetDesktopSlot: {fileID: 0}
+--- !u!114 &6354419738635345649
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3698890507568529808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43eb52102083c3c42add713d27a06c1d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _idSprites: 0
+  _characterType: 0
+  ViewData:
+    BodyDown: {fileID: 0}
+    HeadDown: {fileID: 0}
+    HairDown: {fileID: 0}
+    ClothesDown: {fileID: 0}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 0}
+    HeadUp: {fileID: 0}
+    HairUp: {fileID: 0}
+    ClothesUp: {fileID: 0}
+    FaceElementUp: {fileID: 0}
+  Body: {fileID: 4673337931129761720}
+  Head: {fileID: 8269799172486604343}
+  Hair: {fileID: 6079572031817958047}
+  FaceElement: {fileID: 1306927882747253646}
+  Clothes: {fileID: 2223315578250677926}
 --- !u!1 &4878001334566074605
 GameObject:
   m_ObjectHideFlags: 0

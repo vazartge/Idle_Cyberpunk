@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
@@ -10,7 +11,7 @@ using UnityEngine;
 namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
 
-    public class Customer : BaseUnitGame {
+    public class Customer : BaseUnitGame, ICharacterUnitChangableSprites {
         private enum CustomerState {
             None,
             MovingToTradeState,
@@ -23,7 +24,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         public UiCustomerView CustomerView;
         public CustomerViewModel CustomerViewModel;
 
-
+        public int IDSprites;
+        public CharacterType CharacterType;
+        public AnimationState AnimationState;
         private GameMode _gameMode;
         private Store _store;
         public CustomerSlot CustomerSlot;
@@ -34,16 +37,23 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         private Transform _startPointTransform;
         private Transform _endPointTransform;
 
+        public CharacterSpritesAndAnimationController characterSpritesAndAnimationController { get; set; }
         public void Awake()
         {
             CustomerView = GetComponentInChildren<UiCustomerView>();
             CustomerViewModel  = new CustomerViewModel(this, CustomerView);
+            characterSpritesAndAnimationController = GetComponentInChildren<CharacterSpritesAndAnimationController>();
         }
-        public void Construct(GameMode gameMode, Store store, Transform startPoint, Transform endPoint) {
+        public void Construct(GameMode gameMode, Store store, Transform startPoint,
+            Transform endPoint, CharacterType characterType, int idSprites) {
             _gameMode = gameMode;
             _store = store;
             _startPointTransform = startPoint;
             _endPointTransform = endPoint;
+
+            CharacterType = characterType;
+            IDSprites = idSprites;
+            characterSpritesAndAnimationController.Construct(this, idSprites, characterType);
         }
 
         public void SetupCustomer(CustomerSlot freeSlot, List<Order> orders) {
@@ -63,15 +73,17 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
                     break;
                 case CustomerState.MovingToTradeState:
-                    
+                    characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_down);
                     MovingToTradeRoutine();
                     break;
                 case CustomerState.WaitSellerForOrderingState:
+                    characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_down);
                     break;
                 case CustomerState.WaitProductState:
+                    characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_down);
                     break;
                 case CustomerState.MovingFromTradeState:
-                   
+                    characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_up);
                     MovingFromTradeRoutine();
                     break;
                 default:
@@ -82,7 +94,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         }
         private void MovingToTradeRoutine() {
 
-          //  Debug.Log($"{this.ID} идет к прилавку");
+          //  Debug.Log($"{this.IDSprites} идет к прилавку");
             // Вычисляем промежуточную точку на одной линии с прилавком, но по горизонтали от покупателя
             Vector3 intermediatePoint = new Vector3(CustomerSlot.transform.position.x, transform.position.y, transform.position.z);
 
@@ -107,7 +119,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             _store.CustomerIsReachedStore(this, CustomerSlot);
             // Действия после достижения цели
 
-          //  Debug.Log($"{this.ID}.Достигнута точка назначения");
+          //  Debug.Log($"{this.IDSprites}.Достигнута точка назначения");
         }
 
         public void TransferOrder() {
@@ -149,7 +161,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             _gameMode.CustomerLeftScene(this);
             // Действия после достижения цели
 
-           // Debug.Log($"Покупатель {this.ID}Достигнута точка назначения");
+           // Debug.Log($"Покупатель {this.IDSprites}Достигнута точка назначения");
         }
 
         private void OnDestroy()
