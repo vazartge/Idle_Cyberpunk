@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets._Game._Scripts._5_Managers;
+using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
@@ -11,12 +12,16 @@ using Random = UnityEngine.Random;
 namespace Assets._Game._Scripts._6_Entities._Store {
     public class Store : MonoBehaviour
     {
+        public Transform DesktopsParentTransform;
+        public Transform CustomersParentTransform;
+        public Transform SellersParentTransform;
 
         public GameMode GameMode;
         public StoreStats Stats;
         
         public List<SellerSlot> SellerSlots { get; set; }
         public List<CustomerSlot> CustomerSlots { get; set; }
+
         [SerializeField] public List<DesktopSlot> DesktopSlots { get; set; }
         public  List<Order> Orders { get; set; }
         private Queue<Customer> _waitingOrderCustomer;
@@ -30,7 +35,12 @@ namespace Assets._Game._Scripts._6_Entities._Store {
            
             _desktopsList = new List<DesktopUnit>();
             GetAllStoreSlots();
+            _waitingOrderCustomer = new Queue<Customer>();
+            Orders = new List<Order>();
             GameMode = FindObjectOfType<GameMode>();
+            DesktopsParentTransform = GetComponentInChildren<DesktopParentTransform>().gameObject.transform;
+            CustomersParentTransform = GetComponentInChildren<CustomersParentTransform>().gameObject.transform;
+            SellersParentTransform = GetComponentInChildren<SellersParentTransform>().gameObject.transform;
         }
 
         public void Construct(StoreStats storeStats) {
@@ -65,24 +75,38 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         }
 
 
-        public ProductType GetAlternativeProductType(List<ProductType> excludedTypes) {
-            // Возвращаем случайный тип продукта, который не находится в списке исключенных
-            var availableTypes = Enum.GetValues(typeof(ProductType)).Cast<ProductType>()
-                .Except(excludedTypes)
-                .ToArray();
-            return availableTypes[Random.Range(0, availableTypes.Length)];
+        public ProductType GetAlternativeProductType() {
+            var orderCounts = GetOrderCountsByProductType();
+
+            // Если заказов нет, возвращаем случайный доступный тип продукта
+            if (orderCounts.Count == 0) {
+                var availableProductTypes = GetAvailableProductTypesWithDesks();
+                if (availableProductTypes.Any()) {
+                    return availableProductTypes[Random.Range(0, availableProductTypes.Count)];
+                }
+            }
+
+            // Если заказы есть, выбираем тип продукта с наименьшим количеством заказов
+            else {
+                var minOrderType = orderCounts.Aggregate((l, r) => l.Value < r.Value ? l : r).Key;
+                return minOrderType;
+            }
+
+            // Если нет доступных типов продуктов, то можно возвратить значение по умолчанию или выбросить исключение
+            throw new InvalidOperationException("No available product types found.");
         }
+
 
         private void GetAllStoreSlots() {
             SellerSlots = GetComponentsInChildren<SellerSlot>().ToList();
             CustomerSlots = GetComponentsInChildren<CustomerSlot>().ToList();
             DesktopSlots = GetComponentsInChildren<DesktopSlot>().ToList();
-            _waitingOrderCustomer = new Queue<Customer>();
-            Orders = new List<Order>();
+           
 
         }
 
         public CustomerSlot GetFreeCustomerSlot() {
+         
             // Создание списка свободных слотов
             List<CustomerSlot> freeSlots = CustomerSlots.Where(slot => !slot.IsOccupied).ToList();
 
@@ -93,6 +117,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
             // Выбор случайного свободного слота
             int randomIndex = Random.Range(0, freeSlots.Count);
+            Debug.Log($"Free Customer Slots = {freeSlots.Count}");
             return freeSlots[randomIndex];
         }
 
@@ -199,6 +224,35 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public bool HasActiveDesktops()
         {
             return _desktopsList != null && _desktopsList.Count > 0;
+        }
+
+        public bool AreAllDesktopsUpgradedForLevel()
+        {
+            if(!GameMode.IsOpenedAllPrebuilders) return false;
+            if (_desktopsList.Count == 0) return false;
+                // Проверяем, удовлетворяет ли каждый стол в списке _desktopsList условию IsUpgradedForLevel == true
+                int count = 0;
+            foreach (var desktop in _desktopsList)
+            {
+                if (desktop._mainDesktop._desktopType == DesktopUnit.DesktopType.main &&
+                    desktop._mainDesktop.IsUpgradedForLevel)
+                {
+                    count++;
+                }
+            }
+
+            if (count == _desktopsList.Count)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+               
+           
+            //return _desktopsList.All(desktop => desktop._mainDesktop._desktopType == DesktopUnit.DesktopType.main && desktop._mainDesktop.IsUpgradedForLevel) && _desktopsList.Count>0;
+
         }
     }
 }

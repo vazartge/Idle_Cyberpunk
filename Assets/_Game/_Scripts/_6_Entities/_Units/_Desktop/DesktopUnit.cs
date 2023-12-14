@@ -1,10 +1,16 @@
-﻿using Assets._Game._Scripts._5_Managers;
+﻿using System;
+using System.Linq;
+using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
+using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Desktop._Base;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
-    public class DesktopUnit : DesktopBaseUnitBase {
+    public class DesktopUnit : DesktopBaseUnitBase
+    {
+        [SerializeField]
+        public bool IsUpgradedForLevel = false;
         public enum DesktopType {
             main, additional
         }
@@ -42,7 +48,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         }
 
         public GameObject ContainerForRotate;
-        [SerializeField] private DesktopType _desktopType;
+        [SerializeField] public DesktopType _desktopType;
         [SerializeField] public Transform AdditionalDesktopPointTransform;
         [SerializeField] private bool _isAdditionalDesktop;
         [SerializeField] private int _level = 1;
@@ -58,7 +64,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
         private EconomyAndUpgradeService _economyAndUpgrade;
         private DesktopUnit _additionalDesktop;
-        private DesktopUnit _mainDesktop;
+        public DesktopUnit _mainDesktop;
         private long _cost;
 
 
@@ -108,8 +114,23 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
         public void UpgradeLevelUp() {
             _mainDesktop.Level++;
-            //UpdateOnChangeStatsOrMoney();
+            // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
+            var upgradeData = _gameMode.DataMode.DataForUpgradeDesktopsMap[_mainDesktop.ProductType];
+
+            // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
+            var currentUpgradeData = upgradeData.Upgrades.FirstOrDefault(u => u.Level == _mainDesktop.Level);
+
+            // Проверяем, существуют ли данные для данного уровня и не превышает ли уровень игры OpeningAtLevel
+            if (currentUpgradeData != null && _gameMode.GameLevel < currentUpgradeData.OpeningAtLevel)
+            {
+                _mainDesktop.IsUpgradedForLevel = true;
+                IsUpgradedForLevel = true;
+            }
+            
+            
+            Debug.Log($"IsUpgradedForLevel == {IsUpgradedForLevel}" );
         }
+    
 
        
         private void SetCost() {

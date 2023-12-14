@@ -35,7 +35,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
         public void UpdateOnChangeMoney()
         {
             var isButtonEnabled = _desktopModel.GameMode.DataMode.GameLevel >= _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType)
-                .Upgrades[_desktopModel.Level-1].OpeningAtLevel;
+                .Upgrades[_desktopModel.Level-1].OpeningAtLevel;// проверка соответствует ли уровень игры уровню прокачки отдельного стола
             _productName = _uiMode.GetStringNameByProductType(_desktopModel.ProductType);
             _incomeValue = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType)
                 .Upgrades[_desktopModel.Level].IncomeMoney;

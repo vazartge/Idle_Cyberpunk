@@ -1,8 +1,14 @@
 ﻿using System.Collections.Generic;
-using Assets._Game._Scripts._5_Managers;
 
 namespace Assets._Game._Scripts._6_Entities._Store._Products
 {
+    public enum ProductType {
+        MechanicalEyeProduct,
+        RoboticArmProduct,
+        IronHeartProduct,
+        NeurochipProduct
+    }
+
     public static class ProductTypeExtensions {
         private static readonly Dictionary<ProductType, int> Priorities = new Dictionary<ProductType, int> {
             { ProductType.MechanicalEyeProduct, 1 },

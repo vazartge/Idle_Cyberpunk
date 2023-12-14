@@ -1,5 +1,6 @@
 ﻿using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
+using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;
 
