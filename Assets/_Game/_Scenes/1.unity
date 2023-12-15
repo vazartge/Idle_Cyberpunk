@@ -154,11 +154,11 @@ Transform:
   m_GameObject: {fileID: 198518665}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0.1396465, w: 0.9902014}
-  m_LocalPosition: {x: -10.37, y: 6.3826356, z: 0.89571637}
+  m_LocalPosition: {x: -9.467624, y: 5.878938, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 623459853}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -16.055}
 --- !u!212 &198518667
 SpriteRenderer:
@@ -237,7 +237,7 @@ Transform:
   m_GameObject: {fileID: 623459852}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.90237594, y: -0.50369734, z: -0.89571637}
+  m_LocalPosition: {x: 0.90237594, y: 4.11, z: -0.89571637}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -251,8 +251,6 @@ Transform:
   - {fileID: 1183329605}
   - {fileID: 47069806}
   - {fileID: 1162998445}
-  - {fileID: 1267056925}
-  - {fileID: 198518666}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1119104397 stripped
@@ -375,11 +373,11 @@ Transform:
   m_GameObject: {fileID: 1267056924}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.1599515, w: 0.9871249}
-  m_LocalPosition: {x: 8.81, y: 6.7400002, z: 0.89571637}
+  m_LocalPosition: {x: 9.712377, y: 6.236303, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 623459853}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 18.408}
 --- !u!212 &1267056926
 SpriteRenderer:
@@ -814,11 +812,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6039184557175600514, guid: 9589c0e5860d96a4a8126ec4e75841e7, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8.37
+      value: -9.5
       objectReference: {fileID: 0}
     - target: {fileID: 6039184557175600514, guid: 9589c0e5860d96a4a8126ec4e75841e7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -8.02
+      value: -6.51
       objectReference: {fileID: 0}
     - target: {fileID: 6039184557175600514, guid: 9589c0e5860d96a4a8126ec4e75841e7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -876,7 +874,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 879737561596275225, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -11.5
+      value: -6.18
       objectReference: {fileID: 0}
     - target: {fileID: 1445452612677927708, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
       propertyPath: m_LocalPosition.x
@@ -961,6 +959,26 @@ PrefabInstance:
     - target: {fileID: 7186495774452907174, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7450507252240993279, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7450507252240993279, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.9358344
+      objectReference: {fileID: 0}
+    - target: {fileID: 7450507252240993279, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1.9358344
+      objectReference: {fileID: 0}
+    - target: {fileID: 7450507252240993279, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 5.44
+      objectReference: {fileID: 0}
+    - target: {fileID: 7450507252240993279, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -8.66
       objectReference: {fileID: 0}
     - target: {fileID: 7762219508478086597, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
       propertyPath: m_Color.b
@@ -1107,3 +1125,5 @@ SceneRoots:
   m_Roots:
   - {fileID: 6810127999050651476}
   - {fileID: 623459853}
+  - {fileID: 1267056925}
+  - {fileID: 198518666}
