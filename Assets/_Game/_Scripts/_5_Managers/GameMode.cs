@@ -309,7 +309,7 @@ namespace Assets._Game._Scripts._5_Managers {
             // Создаем заказы
             var orders = CreateOrders(customer, selectedType.Value, maxProductsPerCustomer);
             customer.SetupCustomer(freeSlot, orders);
-
+            customer.characterSpritesAndAnimationController.GetCharacterSprites();
             // Увеличиваем количество активных покупателей
             CurrentActiveCustomers++;
 

@@ -32,6 +32,7 @@ namespace Assets._Game._Scripts._6_Entities._Units {
         private void Awake() {
             // Получение компонента Animator при инициализации
             _animator = GetComponentInChildren<Animator>();
+           
         }
 
         public void Construct(BaseUnitGame controller, int idSprites, CharacterType characterType) {
@@ -40,7 +41,7 @@ namespace Assets._Game._Scripts._6_Entities._Units {
             _idSprites = idSprites;
             _characterType = characterType;
             GetCharacterSprites();
-            SetSpritesForDirection(true);
+            
         }
 
         public void GetCharacterSprites()
@@ -49,6 +50,8 @@ namespace Assets._Game._Scripts._6_Entities._Units {
             // Получение данных о внешности персонажа
             if (_characterType == CharacterType.Customer)
             {
+                int seed = (int)System.DateTime.Now.Ticks;
+                Random.InitState(seed);
                 // Получение рандомного индекса для массива внешности
                 int randomIndex = Random.Range(0, dataMode.CharacterSpritesDataSo.Customers.Length);
                 ViewData = dataMode.CharacterSpritesDataSo.Customers[randomIndex];
@@ -58,7 +61,7 @@ namespace Assets._Game._Scripts._6_Entities._Units {
                 // Получение данных о внешности персонажа
                 ViewData = dataMode.CharacterSpritesDataSo.Sellers[_idSprites];
             }
-            
+            SetSpritesForDirection(true);
         }
 
         public void SetSpritesForDirection(bool isFacingDown) {
