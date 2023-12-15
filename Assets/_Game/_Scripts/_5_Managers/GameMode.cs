@@ -225,7 +225,7 @@ namespace Assets._Game._Scripts._5_Managers {
             
             customer.ID = "CustomerID:" + _countCustomerForID;
             customer.Construct(this, Store, CustomerStartTransform, CustomerEndTransform
-                , CharacterType.Seller, _countCustomerForID);
+                , CharacterType.Customer, _countCustomerForID);
             _customersPool.Enqueue(customer); // Добавляем в пул
             customer.gameObject.SetActive(false); // Скрываем покупателя
             ActiveCustomers.Add(customer); // Добавляем в список для учета

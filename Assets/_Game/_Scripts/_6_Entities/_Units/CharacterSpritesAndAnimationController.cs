@@ -1,5 +1,6 @@
 ﻿using Assets._Game._Scripts._0.Data._SpritesForPersons;
 using Assets._Game._Scripts._4_Services;
+using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;
 
@@ -44,17 +45,18 @@ namespace Assets._Game._Scripts._6_Entities._Units {
 
         public void GetCharacterSprites()
         {
+            var dataMode = FindObjectOfType<DataMode_>();
             // Получение данных о внешности персонажа
             if (_characterType == CharacterType.Customer)
             {
                 // Получение рандомного индекса для массива внешности
-                int randomIndex = Random.Range(0, _controller.GameMode.DataMode.CharacterSpritesDataSo.Customers.Length);
-                ViewData = _controller.GameMode.DataMode.CharacterSpritesDataSo.Customers[randomIndex];
+                int randomIndex = Random.Range(0, dataMode.CharacterSpritesDataSo.Customers.Length);
+                ViewData = dataMode.CharacterSpritesDataSo.Customers[randomIndex];
             }
             else
             {
                 // Получение данных о внешности персонажа
-                ViewData = _controller.GameMode.DataMode.CharacterSpritesDataSo.Sellers[_idSprites];
+                ViewData = dataMode.CharacterSpritesDataSo.Sellers[_idSprites];
             }
             
         }
