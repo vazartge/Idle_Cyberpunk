@@ -63,7 +63,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             Orders = orders;
             
             UpdateStates(CustomerState.MovingToTradeState);
-            
+            characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_down);
         }
 
         private void UpdateStates(CustomerState state) {
@@ -74,14 +74,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
                     break;
                 case CustomerState.MovingToTradeState:
-                    characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_down);
                     MovingToTradeRoutine();
                     break;
                 case CustomerState.WaitSellerForOrderingState:
-                    characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_down);
                     break;
                 case CustomerState.WaitProductState:
-                    characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_down);
                     break;
                 case CustomerState.MovingFromTradeState:
                     characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_up);
@@ -94,8 +91,8 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
         }
         private void MovingToTradeRoutine() {
-
-          //  Debug.Log($"{this.IDSprites} идет к прилавку");
+            characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_down);
+            //  Debug.Log($"{this.IDSprites} идет к прилавку");
             // Вычисляем промежуточную точку на одной линии с прилавком, но по горизонтали от покупателя
             Vector3 intermediatePoint = new Vector3(CustomerSlot.transform.position.x, transform.position.y, transform.position.z);
 
@@ -116,6 +113,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
 
         private void ReachedDestinationToTrade() {
+            characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_down);
             UpdateStates(CustomerState.WaitSellerForOrderingState);
             _store.CustomerIsReachedStore(this, CustomerSlot);
             // Действия после достижения цели
@@ -141,6 +139,8 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
         }
         private void MovingFromTradeRoutine() {
+            characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_up);
+
             CustomerSlot.Customer = null;
             _store.CustomerLeftSlot(this);
            
@@ -150,6 +150,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
             // Создаем последовательность анимации
             Sequence sequence = DOTween.Sequence();
+
             sequence.Append(transform.DOMove(_endPointTransform.position, duration).SetEase(Ease.Linear));
 
             // Добавляем обработчик, который вызовется по завершении всей анимации

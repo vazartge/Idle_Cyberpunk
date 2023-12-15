@@ -45,6 +45,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Customer
+    uniqueID: 2896552111
+    locked: 0
   - name: Seller
     uniqueID: 3445025953
     locked: 0

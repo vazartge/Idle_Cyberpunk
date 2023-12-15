@@ -368,7 +368,7 @@ MonoBehaviour:
   ID: 
   SellerView: {fileID: 1320250316414676512}
   IDSprites: 0
-  CharacterType: 0
+  CharacterType: 1
   AnimationState: 0
   TargetCustomer: {fileID: 0}
   TargetCustomerSlot: {fileID: 0}

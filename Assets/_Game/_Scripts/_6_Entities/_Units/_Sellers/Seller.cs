@@ -160,10 +160,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
             // Определите точку, к которой нужно переместиться
             Vector3 customerPosition = TargetSellerSlot.transform.position;
-
+            characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_up);
             // Запустите Dotween анимацию и ждите её завершения
             yield return MoveToTargetWithSpeed(customerPosition, SellerState.MovingToCustomerForOrderState);
-          //  Debug.Log($"{this.IDSprites} Продавец подошел к новому покупателю {TargetCustomer.IDSprites} за заказом");
+
+            characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_up);
+            //  Debug.Log($"{this.IDSprites} Продавец подошел к новому покупателю {TargetCustomer.IDSprites} за заказом");
             _sellerState = SellerState.TakingOrderState;
 
         }
@@ -197,11 +199,13 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
 
         private IEnumerator MovingToDesktopRoutine() {
+            characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_down);
             // Определите позицию свободного стола
             Vector3 tablePosition = TargetDesktopSlot.transform.position;
 
             // Запустите Dotween анимацию и ждите её завершения
             yield return MoveToTargetWithSpeed(tablePosition, SellerState.MovingToDesktopState);
+            characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_down);
             _sellerState = SellerState.CollectingOrderState;
 
 
@@ -236,13 +240,13 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
             // Определите точку, к которой нужно переместиться
             Vector3 customerPosition = TargetSellerSlot.transform.position;
 
-
+            characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_up);
             // Запустите Dotween анимацию и ждите её завершения
             yield return
                 MoveToTargetWithSpeed(customerPosition,
                     SellerState
                         .MovingToCustomerForDeliverState); //null;// transform.DOMove(customerPosition, GetMoveDuration(customerPosition)).SetEase(Ease.Linear).WaitForCompletion();
-
+            characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.idle_up);
             // После достижения покупателя продолжаем следующую корутину
             _sellerState = SellerState.DeliveredOrderState;
         }
