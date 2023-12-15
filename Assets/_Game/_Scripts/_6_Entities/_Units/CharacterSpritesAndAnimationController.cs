@@ -10,11 +10,15 @@ namespace Assets._Game._Scripts._6_Entities._Units {
         idle_down,
         idle_up
     }
-
-    public class CharacterSpritesAndAnimationController : MonoBehaviour {
+    public enum CharacterType {
+        Customer, Seller,
+    }
+    public class CharacterSpritesAndAnimationController : MonoBehaviour
+    {
+        private BaseUnitGame _controller;
         [SerializeField] private int _idSprites;
         [SerializeField] private CharacterType _characterType;
-        [SerializeField] public CharacterSpritesDataSO.CharacterView ViewData;
+        [SerializeField] public CharacterView ViewData;
         [SerializeField] public SpriteRenderer Body;
         [SerializeField] public SpriteRenderer Head;
         [SerializeField] public SpriteRenderer Hair;
@@ -22,8 +26,7 @@ namespace Assets._Game._Scripts._6_Entities._Units {
         [SerializeField] public SpriteRenderer Clothes;
         private Animator _animator;
 
-        public int IdSprites => _idSprites;
-        public CharacterType CharacterType => _characterType;
+       
 
         private void Awake() {
             // Получение компонента Animator при инициализации
@@ -31,9 +34,29 @@ namespace Assets._Game._Scripts._6_Entities._Units {
         }
 
         public void Construct(BaseUnitGame controller, int idSprites, CharacterType characterType) {
+            _controller = controller;
             // Инициализация данных персонажа
             _idSprites = idSprites;
             _characterType = characterType;
+            GetCharacterSprites();
+            SetSpritesForDirection(true);
+        }
+
+        public void GetCharacterSprites()
+        {
+            // Получение данных о внешности персонажа
+            if (_characterType == CharacterType.Customer)
+            {
+                // Получение рандомного индекса для массива внешности
+                int randomIndex = Random.Range(0, _controller.GameMode.DataMode.CharacterSpritesDataSo.Customers.Length);
+                ViewData = _controller.GameMode.DataMode.CharacterSpritesDataSo.Customers[randomIndex];
+            }
+            else
+            {
+                // Получение данных о внешности персонажа
+                ViewData = _controller.GameMode.DataMode.CharacterSpritesDataSo.Sellers[_idSprites];
+            }
+            
         }
 
         public void SetSpritesForDirection(bool isFacingDown) {
@@ -54,19 +77,32 @@ namespace Assets._Game._Scripts._6_Entities._Units {
         }
 
         public void UpdateAnimationAndSprites(AnimationState state) {
-            // Определение, куда смотрит персонаж, и установка спрайтов
-            bool isFacingDown = state == AnimationState.walk_down || state == AnimationState.idle_down;
-
-            // Если направление изменилось, обновляем спрайты
-            if ((_animator.GetBool("walk_down") || _animator.GetBool("idle_down")) != isFacingDown) {
-                SetSpritesForDirection(isFacingDown);
-            }
+            // Сброс всех параметров перед установкой нового состояния
+            _animator.SetBool("walk_down", false);
+            _animator.SetBool("walk_up", false);
+            _animator.SetBool("idle_down", false);
+            _animator.SetBool("idle_up", false);
 
             // Установка соответствующего анимационного состояния
-            _animator.SetBool("walk_down", state == AnimationState.walk_down);
-            _animator.SetBool("walk_up", state == AnimationState.walk_up);
-            _animator.SetBool("idle_down", state == AnimationState.idle_down);
-            _animator.SetBool("idle_up", state == AnimationState.idle_up);
+            switch (state) {
+                case AnimationState.walk_down:
+                    _animator.SetBool("walk_down", true);
+                    break;
+                case AnimationState.walk_up:
+                    _animator.SetBool("walk_up", true);
+                    break;
+                case AnimationState.idle_down:
+                    _animator.SetBool("idle_down", true);
+                    break;
+                case AnimationState.idle_up:
+                    _animator.SetBool("idle_up", true);
+                    break;
+            }
+
+            // Определение, куда смотрит персонаж, и установка спрайтов
+            bool isFacingDown = state == AnimationState.walk_down || state == AnimationState.idle_down;
+            SetSpritesForDirection(isFacingDown);
         }
+
     }
 }

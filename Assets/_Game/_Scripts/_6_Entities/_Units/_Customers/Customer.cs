@@ -38,6 +38,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         private Transform _endPointTransform;
 
         public CharacterSpritesAndAnimationController characterSpritesAndAnimationController { get; set; }
+      //  public GameMode GameMode => _gameMode;
         public void Awake()
         {
             CustomerView = GetComponentInChildren<UiCustomerView>();

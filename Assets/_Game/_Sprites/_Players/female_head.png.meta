@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 831ccdabfcc3d744f948d8d695c0f060
+guid: 7dd8fb82f1a53b247b0b72a2367491a9
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -136,43 +136,43 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Hoodie2_blue_2
+      name: female_head_0
       rect:
         serializedVersion: 2
         x: 0
         y: 512
         width: 256
         height: 256
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 87d75c0c704f75947bce7a0b54ce5ec2
-      internalID: -254135023
+      spriteID: 00942755d0f971947aca2e5984d1c100
+      internalID: 113914750
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hoodie2_blue_3
+      name: female_head_1
       rect:
         serializedVersion: 2
         x: 256
         y: 512
         width: 256
         height: 256
-      alignment: 7
-      pivot: {x: 0.5, y: 0}
+      alignment: 0
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: b3d2edd9598822846a1b94f32b75b06e
-      internalID: 1611842502
+      spriteID: 7948171d9f9f5d54a9e6d4689752e5a5
+      internalID: 391234825
       vertices: []
       indices: 
       edges: []
@@ -188,10 +188,8 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Hoodie2_blue_0: -1326075427
-      Hoodie2_blue_1: -650030024
-      Hoodie2_blue_2: -254135023
-      Hoodie2_blue_3: 1611842502
+      female_head_0: 113914750
+      female_head_1: 391234825
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

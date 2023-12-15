@@ -7,6 +7,7 @@ using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
+using Assets._Game._Scripts._6_Entities._Units;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
@@ -35,7 +36,7 @@ namespace Assets._Game._Scripts._5_Managers {
         [Header("Refererences")]
         public Store Store;
         public long Coins => Store.Stats.Coins;
-        public EconomyAndUpgradeService EconomyAndUpgrade;
+       
         public Camera UiCamera;
         public UIMode UiMode {
             get => _uiMode;
@@ -64,7 +65,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         [Header("Customers")]
         //[SerializeField] private GameObject _buttonAddCustomer;
-        [SerializeField] private int _countCustomerForID;
+        private int _countCustomerForID=0;
         // Требуемое количество покупателей на сцене
         [SerializeField] private int _requiredNumberCustomersOnScene;
         // Требуемое количество покупателей на сцене
@@ -90,7 +91,7 @@ namespace Assets._Game._Scripts._5_Managers {
             set => _requiredNumberSellersOnScene = value;
         }
         private int _maxNuberSellers = 8;
-        private int _countSellerForID;
+        private int _countSellerForID=0;
         // Текущее количество активных продавцов на сцене
         private int CurrentActiveSellers { get; set; }
         // Количество продавцов, которое надо создать при старте в пул
@@ -117,14 +118,15 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject ButtonForNextLevel;
 
         [Header("Service")]
-        private CharacterSpritesBuilder _characterSpritesBuilder;
+        public EconomyAndUpgradeService EconomyAndUpgrade;
 
         #endregion
 
         #region Initialization
 
         public void Construct(DataMode_ dataMode, UIMode uiMode, StoreStats storeStats) {
-            DataMode = dataMode;
+            _dataMode = dataMode;
+            Debug.Log($"_dataMode != null {_dataMode!=null}");
             UiMode = uiMode;
             maxProductsPerCustomer = new Dictionary<int, int>
             {
@@ -144,13 +146,13 @@ namespace Assets._Game._Scripts._5_Managers {
           //  StartCoroutine(UpdateCustomersOnScene());
             EconomyAndUpgrade = new EconomyAndUpgradeService(this, Store);
             _inputControlService = new InputControlService(this);
-            UiMode.Construct(DataMode, this);
+            UiMode.Construct(_dataMode, this);
 
         }
         public void InitializeComponents() {
             OnChangedStatsOrMoney?.Invoke();
             StartCoroutine(InitializeUnitsPrebuldersOnScene(_countOpenedPrebuilder));
-            _characterSpritesBuilder = new CharacterSpritesBuilder(this);
+           
             AddSellerMainMethod();
            
             _isInitialized = true;
@@ -220,25 +222,28 @@ namespace Assets._Game._Scripts._5_Managers {
 
             Customer customer = Instantiate(CustomerPrefab, CustomerStartTransform.position, Quaternion.identity).GetComponent<Customer>();
             customer.gameObject.transform.parent = Store.CustomersParentTransform;
+            
+            customer.ID = "CustomerID:" + _countCustomerForID;
             customer.Construct(this, Store, CustomerStartTransform, CustomerEndTransform
                 , CharacterType.Seller, _countCustomerForID);
             _customersPool.Enqueue(customer); // Добавляем в пул
             customer.gameObject.SetActive(false); // Скрываем покупателя
             ActiveCustomers.Add(customer); // Добавляем в список для учета
-            _characterSpritesBuilder.SetupCharacterSprites(customer);
             _countCustomerForID++;
-            customer.ID = "CustomerID:" + _countCustomerForID;
+
             return customer;
         }
 
         private Seller InstantiateNewSeller() {
             Seller seller = Instantiate(SellerPrefab, SellerStartTransform.position, Quaternion.identity).GetComponent<Seller>();
             seller.gameObject.transform.parent = Store.SellersParentTransform;
+            
+            seller.ID = "SellerID:" + _countSellerForID;
             seller.Construct(this, Store, CharacterType.Seller, _countSellerForID);
             Sellers.Add(seller); // Добавляем в список для учета
-            _characterSpritesBuilder.SetupCharacterSprites(seller);
+
             _countSellerForID++;
-            seller.ID = "SellerID:" + _countSellerForID;
+
             return seller;
         }
 
@@ -402,7 +407,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         private bool CreateDesktopFromPrebuilder(PrebuilderDesktop prebuilderDesktop) {
-            var newDesktopObj = Instantiate(DataMode.GetPrefabForDesktop()
+            var newDesktopObj = Instantiate(_dataMode.GetPrefabForDesktop()
                 , prebuilderDesktop.gameObject.transform.position,
                 Quaternion.identity);
             newDesktopObj.transform.parent = Store.DesktopsParentTransform;
@@ -447,7 +452,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         private void CreateAdditionalDesktop(DesktopUnit desktopMain) {
-            var newDesktopGO = Instantiate(DataMode.GetPrefabForDesktop(), desktopMain.AdditionalDesktopPointTransform.position
+            var newDesktopGO = Instantiate(_dataMode.GetPrefabForDesktop(), desktopMain.AdditionalDesktopPointTransform.position
             , Quaternion.identity); // Создаем новый объект стола
             newDesktopGO.transform.parent = Store.DesktopsParentTransform;
             var newDesktop = newDesktopGO.GetComponent<DesktopUnit>();

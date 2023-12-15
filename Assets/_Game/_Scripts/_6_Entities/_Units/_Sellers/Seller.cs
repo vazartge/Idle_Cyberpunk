@@ -50,6 +50,8 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
         public CharacterSpritesAndAnimationController characterSpritesAndAnimationController { get; set; }
 
+       // public GameMode GameMode => _gameMode;
+
 
         public void Awake() {
             SellerView = GetComponentInChildren<UiSellerView>();
@@ -61,11 +63,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         public void Construct(GameMode gameMode, Store store, CharacterType characterType, int idSprites) {
             _gameMode = gameMode;
             _store = store;
-            SetupSeller();
-
+            
             CharacterType = characterType;
             IDSprites = idSprites;
             characterSpritesAndAnimationController.Construct(this, idSprites, characterType);
+            SetupSeller();
         }
 
         private void SetupSeller() {
@@ -279,4 +281,5 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
 
         
     }
+
 }

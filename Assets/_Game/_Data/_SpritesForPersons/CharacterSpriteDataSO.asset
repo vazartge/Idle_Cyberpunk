@@ -1,0 +1,136 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b868f86ced1f1df40ad95803bfbb1725, type: 3}
+  m_Name: CharacterSpriteDataSO
+  m_EditorClassIdentifier: 
+  Sellers:
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 113914750, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairDown: {fileID: 1393438740, guid: 5772ed00b63ed494b940597c656e650b, type: 3}
+    ClothesDown: {fileID: 1003883649, guid: 53c18d0213974a143bde705fd08cc806, type: 3}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 391234825, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairUp: {fileID: 462383184, guid: 5772ed00b63ed494b940597c656e650b, type: 3}
+    ClothesUp: {fileID: -1098514404, guid: 53c18d0213974a143bde705fd08cc806, type: 3}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 134244097, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairDown: {fileID: -1872884864, guid: b38370586b5096541afc638bff1804b9, type: 3}
+    ClothesDown: {fileID: 1320721067, guid: 270eef2879f7e044aac539a694696443, type: 3}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 145459632, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairUp: {fileID: 1641375207, guid: b38370586b5096541afc638bff1804b9, type: 3}
+    ClothesUp: {fileID: -1788903705, guid: 270eef2879f7e044aac539a694696443, type: 3}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 113914750, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairDown: {fileID: 1203605514, guid: 6ed0454dd026c744e9e7c461f4d54064, type: 3}
+    ClothesDown: {fileID: 556606293, guid: b4a90661778ab8e49887326b9a7618ce, type: 3}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 391234825, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairUp: {fileID: -998793974, guid: 6ed0454dd026c744e9e7c461f4d54064, type: 3}
+    ClothesUp: {fileID: 1330210745, guid: b4a90661778ab8e49887326b9a7618ce, type: 3}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 134244097, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairDown: {fileID: -1514613477, guid: ce694a2af29670c4a83197145cc227af, type: 3}
+    ClothesDown: {fileID: 1380681832, guid: ad002da25889b694292bdcfb12006d06, type: 3}
+    FaceElementDown: {fileID: 587660558, guid: e88c1e58868d51d47a874dcab235582a, type: 3}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 145459632, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairUp: {fileID: -1971582337, guid: ce694a2af29670c4a83197145cc227af, type: 3}
+    ClothesUp: {fileID: -1934103700, guid: ad002da25889b694292bdcfb12006d06, type: 3}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 113914750, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairDown: {fileID: 980239119, guid: 717cdb506139a4043be39b074764ed41, type: 3}
+    ClothesDown: {fileID: 1372762750, guid: 2c92f580f4b462c4a896fc6599e16158, type: 3}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 391234825, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairUp: {fileID: -778156537, guid: 717cdb506139a4043be39b074764ed41, type: 3}
+    ClothesUp: {fileID: 786625020, guid: 2c92f580f4b462c4a896fc6599e16158, type: 3}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 134244097, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairDown: {fileID: -27135588, guid: ed1310be12963064d91eaf5f8de33ddc, type: 3}
+    ClothesDown: {fileID: 1372762750, guid: 2c92f580f4b462c4a896fc6599e16158, type: 3}
+    FaceElementDown: {fileID: 2023993137, guid: 18b45af41710a9b40bcfaf889dc214ff, type: 3}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 145459632, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairUp: {fileID: 1604650975, guid: ed1310be12963064d91eaf5f8de33ddc, type: 3}
+    ClothesUp: {fileID: 786625020, guid: 2c92f580f4b462c4a896fc6599e16158, type: 3}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 113914750, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairDown: {fileID: -1143431684, guid: f2b859921e8c13b42afaa50e6245384d, type: 3}
+    ClothesDown: {fileID: 1553531454, guid: 1240b889f84c9c646815a582c8ea3043, type: 3}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 391234825, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairUp: {fileID: 38161610, guid: f2b859921e8c13b42afaa50e6245384d, type: 3}
+    ClothesUp: {fileID: 723139220, guid: 1240b889f84c9c646815a582c8ea3043, type: 3}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 134244097, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairDown: {fileID: 1364246623, guid: a84119c4d3062b74eaa624a465aea9f4, type: 3}
+    ClothesDown: {fileID: -1018193377, guid: 3e50672b159d9054d90d43c38fb93536, type: 3}
+    FaceElementDown: {fileID: 655485182, guid: 094c33c8950de7648a974707d4f44761, type: 3}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 145459632, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairUp: {fileID: -948093671, guid: a84119c4d3062b74eaa624a465aea9f4, type: 3}
+    ClothesUp: {fileID: 272527942, guid: 3e50672b159d9054d90d43c38fb93536, type: 3}
+    FaceElementUp: {fileID: 0}
+  Customers:
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 134244097, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairDown: {fileID: 0}
+    ClothesDown: {fileID: -254135023, guid: 831ccdabfcc3d744f948d8d695c0f060, type: 3}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 145459632, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairUp: {fileID: 0}
+    ClothesUp: {fileID: 1611842502, guid: 831ccdabfcc3d744f948d8d695c0f060, type: 3}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 113914750, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairDown: {fileID: -155487477, guid: 086b17fdcd03eec4198aad5e5b501ee7, type: 3}
+    ClothesDown: {fileID: -1795490003, guid: ca13f0fd142172a4c9fdf170633d267c, type: 3}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 391234825, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairUp: {fileID: -1399561911, guid: 086b17fdcd03eec4198aad5e5b501ee7, type: 3}
+    ClothesUp: {fileID: 277042326, guid: ca13f0fd142172a4c9fdf170633d267c, type: 3}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 134244097, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairDown: {fileID: -1872884864, guid: b38370586b5096541afc638bff1804b9, type: 3}
+    ClothesDown: {fileID: 846147039, guid: 1f27b57c7d90ee3498d6f1aaa3ba434e, type: 3}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 145459632, guid: 398eb6444936dc54d93e4988e978d384, type: 3}
+    HairUp: {fileID: 1641375207, guid: b38370586b5096541afc638bff1804b9, type: 3}
+    ClothesUp: {fileID: 736230646, guid: 1f27b57c7d90ee3498d6f1aaa3ba434e, type: 3}
+    FaceElementUp: {fileID: 0}
+  - BodyDown: {fileID: 113135021, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadDown: {fileID: 113914750, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairDown: {fileID: 0}
+    ClothesDown: {fileID: 2078776018, guid: 51722132cf9412d429e31bcf0dd6bbf5, type: 3}
+    FaceElementDown: {fileID: 0}
+    BodyUp: {fileID: 806082281, guid: 5dad9beadf544474c99954437107b50d, type: 3}
+    HeadUp: {fileID: 391234825, guid: 7dd8fb82f1a53b247b0b72a2367491a9, type: 3}
+    HairUp: {fileID: 0}
+    ClothesUp: {fileID: -1973715887, guid: 51722132cf9412d429e31bcf0dd6bbf5, type: 3}
+    FaceElementUp: {fileID: 0}
