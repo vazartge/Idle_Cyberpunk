@@ -26,13 +26,17 @@ namespace Assets._Game._Scripts._6_Entities._Units {
         [SerializeField] public SpriteRenderer FaceElement;
         [SerializeField] public SpriteRenderer Clothes;
         private Animator _animator;
+        [SerializeField] private Transform _headTransform;
+        [SerializeField] private Transform _clothesTransform;
+        // [SerializeField] private int _headSiblingIndex;
+        // [SerializeField] private int _clothesSiblingIndex;
 
-       
 
         private void Awake() {
             // Получение компонента Animator при инициализации
             _animator = GetComponentInChildren<Animator>();
-           
+            _headTransform = Head.GetComponent<Transform>();
+            _clothesTransform = Clothes.GetComponent<Transform>();
         }
 
         public void Construct(BaseUnitGame controller, int idSprites, CharacterType characterType) {
@@ -41,7 +45,8 @@ namespace Assets._Game._Scripts._6_Entities._Units {
             _idSprites = idSprites;
             _characterType = characterType;
             GetCharacterSprites();
-            
+
+           //_headSiblingIndex = Head.gameObject.transform.GetSiblingIndex();
         }
 
         public void GetCharacterSprites()
@@ -65,11 +70,45 @@ namespace Assets._Game._Scripts._6_Entities._Units {
         }
 
         public void SetSpritesForDirection(bool isFacingDown) {
+
             // Установка спрайтов в зависимости от направления
             Body.sprite = isFacingDown ? ViewData.BodyDown : ViewData.BodyUp;
             Head.sprite = isFacingDown ? ViewData.HeadDown : ViewData.HeadUp;
             Hair.sprite = isFacingDown ? ViewData.HairDown : ViewData.HairUp;
             Clothes.sprite = isFacingDown ? ViewData.ClothesDown : ViewData.ClothesUp;
+            // Сохраняем текущее положение объекта в иерархии
+
+            //Перемещение головы назад, если определенный тип одежды
+            switch (ViewData.NeedChangeOrderGameobjectSpriteRenderer) {
+                case NeedChangeOrderGameobjectSpriteRenderer.highClothesDown:
+                    if (isFacingDown) {
+                        _clothesTransform.SetSiblingIndex(3);
+                        _headTransform.SetSiblingIndex(2);
+                    }
+                    break;
+                    
+                // Добавьте другие случаи здесь, если нужно
+                 case NeedChangeOrderGameobjectSpriteRenderer.none:
+                    //     // Действия для другого условия
+                    if (isFacingDown)
+                    {
+                        _clothesTransform.SetSiblingIndex(2);
+                        _headTransform.SetSiblingIndex(3);
+                    }
+                    else {
+                        _clothesTransform.SetSiblingIndex(3);
+                        _headTransform.SetSiblingIndex(2);
+                    }
+                   
+                    break;
+                default:
+                    // Действия по умолчанию, если не совпадает ни одно из условий
+                    break;
+            }
+
+
+
+
 
             // Установка видимости FaceElement и проверка на null
             if (FaceElement != null) {

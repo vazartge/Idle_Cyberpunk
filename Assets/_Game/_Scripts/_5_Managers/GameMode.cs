@@ -520,7 +520,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public void AddMoney() /// Удалить!!!!!!!!!!!!!!!!!!!!!!!!!
         {
-            EconomyAndUpgrade.AddMoney(100000);
+            EconomyAndUpgrade.AddMoney(10000000);
         }
 
 

@@ -45,3 +45,6 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Seller
+    uniqueID: 1017686187
+    locked: 0

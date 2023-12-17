@@ -1156,6 +1156,10 @@ PrefabInstance:
       propertyPath: RotationAngleZ
       value: -270
       objectReference: {fileID: 0}
+    - target: {fileID: 7537820655738027992, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -203
+      objectReference: {fileID: 0}
     - target: {fileID: 7762219508478086597, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
       propertyPath: m_Color.b
       value: 0.5628338
