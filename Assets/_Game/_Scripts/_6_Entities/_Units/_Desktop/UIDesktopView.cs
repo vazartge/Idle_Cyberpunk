@@ -16,6 +16,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] private TMP_Text _textLevel;
         [SerializeField] private TMP_Text _typeProduct;
         [SerializeField] private Image[] _starsImages;
+        [SerializeField] private DesktopStarUI[] _starScripList;
         [SerializeField] private Transform _starsContainer; // Родительский объект для звезд
         [SerializeField] private Image _indicator;
         [SerializeField] private TMP_Text _incomeText;
@@ -26,11 +27,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
 
         private void Awake() {
-            // Инициализируем все звезды серым цветом
-            foreach (var star in _starsImages) {
-                star.color = Color.gray;
-            }
+            
         }
+
 
         public void Construct(DesktopViewModel viewModel, int maxStars) {
             _viewModel = viewModel;
@@ -39,10 +38,30 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         }
         // Метод для установки активности звезд
         private void SetActiveStars(int maxStarsCount) {
+            // Убедитесь, что maxStarsCount не больше длины массива _starsImages
+            maxStarsCount = Mathf.Min(maxStarsCount, _starsImages.Length);
+
             for (int i = 0; i < _starsImages.Length; i++) {
                 _starsImages[i].gameObject.SetActive(i < maxStarsCount);
             }
+
+            InitStarsActiveList();
         }
+
+        private void InitStarsActiveList() {
+            // Инициализация _starScripList с той же длиной, что и активные _starsImages
+            _starScripList = new DesktopStarUI[maxStarsForCurrentLevel];
+
+            // Заполнение _starScripList и деактивация звезд
+            for (int i = 0; i < maxStarsForCurrentLevel; i++) {
+                DesktopStarUI starScript = _starsImages[i].GetComponent<DesktopStarUI>();
+                if (starScript != null) {
+                    _starScripList[i] = starScript;
+                    starScript.DeactivateStar(); // Деактивировать звезду
+                }
+            }
+        }
+
         public void ShowWindow() {
             Canvas.gameObject.SetActive(true);
         }
@@ -86,8 +105,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         }
         // Обновляет количество активных звезд
         public void UpdateStars(int starsAmount) {
-            for (int i = 0; i < maxStarsForCurrentLevel; i++) {
-                _starsImages[i].color = i < starsAmount ? Color.yellow : Color.gray;
+            for (int i = 0; i < _starScripList.Length; i++) {
+                if (i < starsAmount) {
+                    _starScripList[i].ActivateStar();
+                } else {
+                    _starScripList[i].DeactivateStar();
+                }
             }
         }
         // Обновляет количество активных звезд

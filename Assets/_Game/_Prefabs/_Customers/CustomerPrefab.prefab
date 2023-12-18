@@ -103,7 +103,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 7c7f3e5ab2a57d540beb9beac673aef0, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8da21b874156d814a8c8d9622246472e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -349,6 +349,7 @@ MonoBehaviour:
   _idSprites: 0
   _characterType: 0
   ViewData:
+    NeedChangeOrderGameobjectSpriteRenderer: 0
     BodyDown: {fileID: 0}
     HeadDown: {fileID: 0}
     HairDown: {fileID: 0}
@@ -364,6 +365,8 @@ MonoBehaviour:
   Hair: {fileID: 3787691148592884298}
   FaceElement: {fileID: 6883457761368313412}
   Clothes: {fileID: 2020304967950205658}
+  _headTransform: {fileID: 0}
+  _clothesTransform: {fileID: 0}
 --- !u!1 &3824152558799375515
 GameObject:
   m_ObjectHideFlags: 0

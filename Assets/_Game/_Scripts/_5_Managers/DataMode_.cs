@@ -57,7 +57,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public CharacterSpritesDataSO CharacterSpritesDataSo => _characterSpritesDataSo;
 
 
-        private void Awake() {
+        private void Start() {
             //словарь данных для обновления столов 
             _dataForUpgradeDesktopsMap = new Dictionary<ProductType, BaseUpgradeSO>()
             {
