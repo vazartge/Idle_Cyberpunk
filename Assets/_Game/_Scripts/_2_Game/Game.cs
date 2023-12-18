@@ -56,7 +56,7 @@ namespace Assets._Game._Scripts._2_Game {
             _storeStats = LoadGame(); // Загрузка или создание StoreStats
             int levelToLoad = _storeStats.LevelGame; // Получение уровня из StoreStats
             SceneManager.LoadScene(levelToLoad); // Загрузка соответствующей сцены
-            //SceneManager.LoadScene(Level); // Загрузка соответствующей сцены
+           // SceneManager.LoadScene(Level); // Загрузка соответствующей сцены
         }
 
         private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {

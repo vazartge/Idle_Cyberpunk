@@ -2,12 +2,13 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using Assets._Game._Scripts._3_UI._HUD;
-using Assets._Game._Scripts._3_UI._HUD._WindowUpggrade;
+using Assets._Game._Scripts._3_UI._HUD._Windows;
 using Assets._Game._Scripts._3_UI._UIUnits._Base;
 using Assets._Game._Scripts._3_UI._UpgradeButton;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets._Game._Scripts._5_Managers {
     public class UIMode : MonoBehaviour {
@@ -27,7 +28,10 @@ namespace Assets._Game._Scripts._5_Managers {
 
         [SerializeField] private Transform upgradeButtonsContainer; // Родительский элемент для кнопок
         public GameObject UpgradeWindowGO;
+        public GameObject NextLevelWindowGO;
         private UIWindowUpgradeView _upgradeWindowView;
+        private UIWindowNextLevelView _nextLevelWinodwView;
+        public GameObject OpenNextLevelWinodwButton;
         public GameObject UpgradeButtonPrefab;
         private UpgradeButton[] _upgradeButtons;
         public Dictionary<ProductType, string> ProductTypeAndNameMap;
@@ -41,9 +45,17 @@ namespace Assets._Game._Scripts._5_Managers {
 
         }
 
-        private void Awake()
+        private void Awake() {
+           
+
+
+        }
+
+        private void Start()
         {
             _upgradeWindowView = UpgradeWindowGO.GetComponent<UIWindowUpgradeView>();
+            _nextLevelWinodwView = NextLevelWindowGO.GetComponent<UIWindowNextLevelView>();
+            _nextLevelWinodwView.Construct(this);
         }
         private void InitializeUpgradeButtons() {
             // Инициализация массива кнопок
@@ -86,14 +98,22 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         public void OpenNewView(IUiUnitView view) {
+            // Если текущее окно открыто и совпадает с переданным view, закрываем его
+            if (_currentUiUnitView != null && _currentUiUnitView == view) {
+                _currentUiUnitView.HideWindow();
+                _currentUiUnitView = null;
+                _closeWindowsButton.SetActive(false); // Деактивируем кнопку закрытия окон
+                return;
+            }
+
             // Закрываем текущее окно UnitViewModel, если оно открыто
             if (_currentUnitViewModel != null) {
                 _currentUnitViewModel.HideWindow();
-                _currentUnitViewModel = null; // Обнуляем текущий ViewModel, так как он закрыт
+                _currentUnitViewModel = null;
             }
 
             // Закрываем текущее окно IUiUnitView, если оно открыто
-            if (_currentUiUnitView != null && _currentUiUnitView != view) {
+            if (_currentUiUnitView != null) {
                 _currentUiUnitView.HideWindow();
             }
 
@@ -106,6 +126,7 @@ namespace Assets._Game._Scripts._5_Managers {
                 _closeWindowsButton.SetActive(true); // Активируем кнопку закрытия окон
             }
         }
+
 
 
         public void OpenNewViewModel(UnitViewModel viewModel) {
@@ -191,7 +212,7 @@ namespace Assets._Game._Scripts._5_Managers {
             }
         }
 
-     
+
 
         // public void CloseUpgradeWindow() {
         //     _upgradeWindowView.SetActive(false);
@@ -219,12 +240,49 @@ namespace Assets._Game._Scripts._5_Managers {
 
         }
 
-        public void OnButtonResetSaves()
-        {
+        public void OnButtonResetSaves() {
             PlayerPrefs.DeleteAll();
             PlayerPrefs.Save(); // Не забудь сохранить изменения
         }
 
 
+        public int GetCostBuyNextLevel() {
+            int costNextLevel;
+            switch (GameMode.GameLevel + 1) {
+                case 2:
+
+                    costNextLevel = 2000;
+
+                    break;
+                case 3:
+                    costNextLevel = 200000;
+                    break;
+                case 4:
+                    costNextLevel = 3000000;
+                    break;
+                default:
+                    // Если уровень не определен, возвращаем false.
+                    costNextLevel = 100000000;
+                    break;
+            }
+
+            return costNextLevel;
+        }
+        public void ShowButtonForNextLevel() {
+            OpenNextLevelWinodwButton.SetActive(true);
+        }
+        public void OnOpenWindowForNextLevelButton() {
+            Debug.Log("Open Window For Next Level");
+            OpenNewView(_nextLevelWinodwView);
+        }
+        public void OnNextLevelButton() {
+            GameMode.OnNextLevelButton();
+        }
+
+
+        public bool GetEnoughMoney()
+        {
+            return EconomyAndUpgrade.Coins >= GetCostBuyNextLevel();
+        }
     }
 }

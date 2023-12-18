@@ -533,7 +533,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
         
         private void ShowButtonNextLevel() {
-            ButtonForNextLevel.SetActive(true);
+            UiMode.ShowButtonForNextLevel();
         }
         public bool CanUpgradeLevel()
         {
