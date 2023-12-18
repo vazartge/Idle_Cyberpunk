@@ -109,6 +109,7 @@ namespace Assets._Game._Scripts._0.Data._DataForUpgrade {
         new IronHeartDataForUpgrade { Stars = 4, Level = 98, Cost = 4760000, IncomeMoney = 1190000, OpeningAtLevel = 4, Events = "" },
         new IronHeartDataForUpgrade { Stars = 4, Level = 99, Cost = 4900000, IncomeMoney = 1230000, OpeningAtLevel = 4, Events = "" },
         new IronHeartDataForUpgrade { Stars = 5, Level = 100, Cost = 5050000, IncomeMoney = 1260000, OpeningAtLevel = 4, Events = "" },
+        new IronHeartDataForUpgrade { Stars = 5, Level = 101, Cost = 0, IncomeMoney = 0, OpeningAtLevel = 5, Events = "" },
         };
     }
 }

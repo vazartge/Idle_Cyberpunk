@@ -109,6 +109,7 @@ namespace Assets._Game._Scripts._0.Data._DataForUpgrade {
         new NeurochipDataForUpgrade { Stars = 4, Level = 98, Cost = 5850000, IncomeMoney = 1540000, OpeningAtLevel = 4, Events = "" },
         new NeurochipDataForUpgrade { Stars = 4, Level = 99, Cost = 5970000, IncomeMoney = 1570000, OpeningAtLevel = 4, Events = "" },
         new NeurochipDataForUpgrade { Stars = 5, Level = 100, Cost = 6090000, IncomeMoney = 1600000, OpeningAtLevel = 4, Events = "" },
+        new NeurochipDataForUpgrade { Stars = 5, Level = 101, Cost = 0, IncomeMoney = 0, OpeningAtLevel = 5, Events = "" },
         };
     }
 }

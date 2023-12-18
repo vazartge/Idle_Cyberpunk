@@ -613,3 +613,9 @@ MonoBehaviour:
     _incomeMoney: 1260000
     _openingAtLevel: 4
     _events: 
+  - _stars: 5
+    _level: 101
+    _cost: 0
+    _incomeMoney: 0
+    _openingAtLevel: 5
+    _events: 

@@ -234,14 +234,14 @@ namespace Assets._Game._Scripts._6_Entities._Store {
                 int count = 0;
             foreach (var desktop in _desktopsList)
             {
-                if (desktop._mainDesktop._desktopType == DesktopUnit.DesktopType.main &&
-                    desktop._mainDesktop.IsUpgradedForLevel)
+                if (desktop._desktopType == DesktopUnit.DesktopType.main &&
+                    desktop.IsUpgradedForLevel)
                 {
                     count++;
                 }
             }
-
-            if (count == _desktopsList.Count)
+            var countMainDesktop = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopUnit.DesktopType.main).Count;
+            if (count == countMainDesktop)
             {
                 return true;
             }

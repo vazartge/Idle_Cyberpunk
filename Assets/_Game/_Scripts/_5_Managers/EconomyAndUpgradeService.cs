@@ -95,7 +95,7 @@ namespace Assets._Game._Scripts._5_Managers
 
         private void CheckDesktopAfterUpgrade(DesktopUnit desktop)
         {
-            var eventData = GameMode.DataMode.GetProductUpgradeSO(desktop.ProductType).Upgrades[desktop.Level - 1]
+            var eventData = GameMode.DataMode.GetProductUpgradeSO(desktop.ProductType).Upgrades[desktop.Level-1]
                 .Events;
             if (!string.IsNullOrWhiteSpace(eventData))
             {

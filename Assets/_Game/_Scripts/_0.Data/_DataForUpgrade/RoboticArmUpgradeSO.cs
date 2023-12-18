@@ -110,6 +110,7 @@ namespace Assets._Game._Scripts._0.Data._DataForUpgrade
         new RoboticArmDataForUpgrade { Stars = 4, Level = 98, Cost = 2810000, IncomeMoney = 759000, OpeningAtLevel = 4, Events = "" },
         new RoboticArmDataForUpgrade { Stars = 4, Level = 99, Cost = 2870000, IncomeMoney = 776000, OpeningAtLevel = 4, Events = "" },
         new RoboticArmDataForUpgrade { Stars = 5, Level = 100, Cost = 2930000, IncomeMoney = 792000, OpeningAtLevel = 4, Events = "" },
+        new RoboticArmDataForUpgrade { Stars = 5, Level = 101, Cost = 0, IncomeMoney = 0, OpeningAtLevel = 5, Events = "" },
         };
     }
 }

@@ -114,11 +114,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
         public void UpgradeLevelUp() {
             _mainDesktop.Level++;
+            //Level++;
             // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
             var upgradeData = _gameMode.DataMode.DataForUpgradeDesktopsMap[_mainDesktop.ProductType];
 
             // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
-            var currentUpgradeData = upgradeData.Upgrades.FirstOrDefault(u => u.Level == _mainDesktop.Level);
+            var currentUpgradeData = upgradeData.Upgrades[_mainDesktop.Level];
 
             // Проверяем, существуют ли данные для данного уровня и не превышает ли уровень игры OpeningAtLevel
             if (currentUpgradeData != null && _gameMode.GameLevel < currentUpgradeData.OpeningAtLevel)
@@ -134,7 +135,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
        
         private void SetCost() {
-            Cost = _mainDesktop._economyAndUpgrade.SetCostBuyProductAndLevel(_mainDesktop.Level+1, ProductType);
+            Cost = _mainDesktop._economyAndUpgrade.SetCostBuyProductAndLevel(_mainDesktop.Level, ProductType);
 
         }
         // protected override void OnTouchAction() {

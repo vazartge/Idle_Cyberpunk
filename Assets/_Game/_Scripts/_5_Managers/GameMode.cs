@@ -183,19 +183,20 @@ namespace Assets._Game._Scripts._5_Managers {
             OnChangedStatsOrMoney?.Invoke();
             CheckPrebuilders();
             UiMode?.UpdateOnChangedStatsOrMoney();
-           
+            CanTransitionToNextLevel();
+
         }
 
 
         private void Update() {
             if (!_isInitialized) return;
             if (Game.Instance.IsPaused) return;
-            CanTransToNextLevel();
+            //CanTransitionToNextLevel();
             //_inputControlService.UpdateInputControl();
 
         }
 
-        private void CanTransToNextLevel()
+        private void CanTransitionToNextLevel()
         {
             if (CanUpgradeLevel())
             {

@@ -110,6 +110,7 @@ namespace Assets._Game._Scripts._0.Data._DataForUpgrade
         new MechanicalEyeDataForUpgrade { Stars = 4, Level = 98, Cost = 2480000, IncomeMoney = 752000, OpeningAtLevel = 4, Events = "" },
         new MechanicalEyeDataForUpgrade { Stars = 4, Level = 99, Cost = 2600000, IncomeMoney = 788000, OpeningAtLevel = 4, Events = "" },
         new MechanicalEyeDataForUpgrade { Stars = 5, Level = 100, Cost = 2730000, IncomeMoney = 827000, OpeningAtLevel = 4, Events = "" },
+        new MechanicalEyeDataForUpgrade { Stars = 5, Level = 101, Cost = 0, IncomeMoney = 0, OpeningAtLevel = 5, Events = "" },
         };
     }
 
