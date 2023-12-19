@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6016902877581219045}
   - component: {fileID: 7374003766094375020}
   m_Layer: 5
-  m_Name: AvailabilityIndicator
+  m_Name: AvailabilityIndicatorForGO
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

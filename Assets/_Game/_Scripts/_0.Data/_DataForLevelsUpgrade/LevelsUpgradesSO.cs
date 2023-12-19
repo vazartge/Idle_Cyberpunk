@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
+using System.Collections.Generic;
 using UnityEngine;
 
 
@@ -11,7 +12,7 @@ namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade{
     {
         public Dictionary<int, LevelUpgrade> LevelUpgrades => _levelsUpgrades;
 
-        private Dictionary<int, LevelUpgrade> _levelsUpgrades = new Dictionary<int, LevelUpgrade>()
+        public Dictionary<int, LevelUpgrade> _levelsUpgrades = new Dictionary<int, LevelUpgrade>()
         {
             /// Ключ - номер текущего уроыня
 
@@ -122,3 +123,24 @@ namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade{
 
     }
 }
+
+// [System.Serializable]
+// public class LevelData {
+//     public int LevelNumber;
+//     public LevelUpgrade LevelUpgradeData;
+// }
+//
+// [CreateAssetMenu(fileName = "LevelsUpgradesSO", menuName = "Game/LevelsUpgradesSO")]
+// public class LevelsUpgradesSO : ScriptableObject {
+//     public List<LevelData> LevelsData = new List<LevelData>();
+//
+//     // Метод для получения данных об улучшении для определенного уровня
+//     public LevelUpgrade GetLevelUpgrade(int level) {
+//         foreach (var data in LevelsData) {
+//             if (data.LevelNumber == level) {
+//                 return data.LevelUpgradeData;
+//             }
+//         }
+//         return null; // или какую-то логику обработки ошибок
+//     }
+// }

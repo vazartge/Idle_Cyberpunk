@@ -7,11 +7,16 @@ using Assets._Game._Scripts._3_UI._UIUnits._Base;
 using Assets._Game._Scripts._3_UI._UpgradeButton;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets._Game._Scripts._5_Managers {
     public class UIMode : MonoBehaviour {
+
+        public TMP_InputField inputField; // Ссылка на InputField  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ 
+        public GameObject AvailabilityIndicator; // Ссылка на индикатор доступности
+
         public EconomyAndUpgradeService EconomyAndUpgrade {
             get => _economyAndUpgrade;
             set => _economyAndUpgrade = value;
@@ -34,6 +39,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject OpenNextLevelWinodwButton;
         public GameObject UpgradeButtonPrefab;
         private UpgradeButton[] _upgradeButtons;
+        private bool _isInitUpdateButtons;
         public Dictionary<ProductType, string> ProductTypeAndNameMap;
 
         private UnitViewModel _currentUnitViewModel;
@@ -44,7 +50,19 @@ namespace Assets._Game._Scripts._5_Managers {
             set => _gameMode = value;
 
         }
+        // Метод, который можно вызвать, например, при потере фокуса поля ввода
+        public void OnInputFieldChanged() {
+            // Проверяем, можно ли преобразовать текст в long
+            if (long.TryParse(inputField.text, out long result)) {
+                Debug.Log("Преобразованное значение: " + result);
+                _economyAndUpgrade.AddMoney(result);
+            } else {
+                Debug.Log("Введено некорректное значение. Поле будет обнулено.");
+            }
 
+            // Обнуляем поле ввода в любом случае
+            inputField.text = "";
+        }
         private void Awake() {
            
 
@@ -53,6 +71,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         private void Start()
         {
+            AvailabilityIndicator.SetActive(false);
             _upgradeWindowView = UpgradeWindowGO.GetComponent<UIWindowUpgradeView>();
             _nextLevelWinodwView = NextLevelWindowGO.GetComponent<UIWindowNextLevelView>();
             _nextLevelWinodwView.Construct(this);
@@ -65,6 +84,10 @@ namespace Assets._Game._Scripts._5_Managers {
                 _upgradeButtons[i] = buttonObj.GetComponent<UpgradeButton>();
                 buttonObj.SetActive(false);
             }
+
+            _isInitUpdateButtons = true;
+            CheckUpgradesAvailability();
+            UpdateOnChangedStatsOrMoney();
         }
 
 
@@ -163,6 +186,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public void UpdateOnChangedStatsOrMoney() {
             _hudCanvas.UpdateUIHUD(_gameMode.EconomyAndUpgrade.Coins);
+            CheckUpgradesAvailability();
             UpdateAllUpgradeButtons();
         }
 
@@ -192,6 +216,41 @@ namespace Assets._Game._Scripts._5_Managers {
             }
         }
 
+        // private void CheckUpgradesAvailability() {
+        //     if(!_isInitUpdateButtons) return;
+        //     // Проверка наличия доступных улучшений
+        //     bool hasAvailableUpgrades = _upgradeButtons.Any(button => button.gameObject.activeSelf && !button._upgradeItem.IsPurchased && button._upgradeItem.Price <= _economyAndUpgrade.Coins);
+        //
+        //     // Активация индикатора доступности, если есть доступные улучшения
+        //     AvailabilityIndicator.SetActive(hasAvailableUpgrades);
+        // }
+        private void CheckUpgradesAvailability() {
+            if (!_isInitUpdateButtons) return;
+            bool hasAvailableUpgrades = false;
+
+            foreach (var button in _upgradeButtons) {
+                // Проверка, что у кнопки есть инициализированный элемент _upgradeItem
+                if (!button.HasInitializedItem()) {
+                    continue;
+                }
+
+                var upgradeItem = button._upgradeItem;
+                bool hasEnoughCoins = upgradeItem.Price <= _economyAndUpgrade.Coins;
+                bool isPurchased = upgradeItem.IsPurchased;
+
+                // Проверка на UpgradeCustomer и наличие рабочих столов
+                bool isUpgradeCustomer = upgradeItem is UpgradeCustomer;
+                bool hasDesktops = GameMode.HasDesktops();
+
+                if (!isPurchased && hasEnoughCoins && (!isUpgradeCustomer || (isUpgradeCustomer && hasDesktops))) {
+                    hasAvailableUpgrades = true;
+                    break;
+                }
+            }
+
+            // Активация индикатора доступности
+            AvailabilityIndicator.SetActive(hasAvailableUpgrades);
+        }
 
 
         public void OnBuyUpgradeItem(IUpgradeItem upgradeItem) {

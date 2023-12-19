@@ -56,16 +56,18 @@ namespace Assets._Game._Scripts._3_UI._UpgradeButton {
             bool enoughCoins = _upgradeItem.Price <= currentCoins;
             bool isPurchased = _upgradeItem.IsPurchased;
 
-            // Если элемент - UpgradeCustomer и нет рабочих столов, кнопка неактивна
-            if (_upgradeItem is UpgradeCustomer && !hasDesktops) {
-                ButtonComponent.interactable = false;
-            }
+           
             
             ButtonComponent.interactable = enoughCoins && !isPurchased;
             
 
             // Обновление цвета текста цены
             PriceText.color = enoughCoins ? Color.black : Color.red;
+
+            // Если элемент - UpgradeCustomer и нет рабочих столов, кнопка неактивна
+            if (_upgradeItem is UpgradeCustomer && !hasDesktops) {
+                ButtonComponent.interactable = false;
+            }
         }
 
         // Добавьте этот метод, чтобы проверить, инициализирован ли _upgradeItem
