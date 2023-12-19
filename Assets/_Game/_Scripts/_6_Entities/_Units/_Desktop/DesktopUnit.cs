@@ -100,7 +100,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         private void UpdateViewAvailabilityIndicator() {
             if (this == _mainDesktop) {
                 bool res = GameMode.Coins >= GameMode.DataMode
-                    .GetProductUpgradeSO(_mainDesktop.ProductType).Upgrades[_mainDesktop.Level].Cost;
+                    .GetProductUpgradeSO(_mainDesktop.ProductType).Upgrades[_mainDesktop.Level].Cost && !_mainDesktop.IsUpgradedForLevel;
                 _mainDesktop.AvailabilityIndicator.SetActive(res);
                 if (_additionalDesktop != null) {
                     _additionalDesktop.AvailabilityIndicator.SetActive(res);

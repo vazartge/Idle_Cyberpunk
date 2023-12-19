@@ -167,7 +167,7 @@ MonoBehaviour:
     _level: 26
     _cost: 1180
     _incomeMoney: 394
-    _openingAtLevel: 1
+    _openingAtLevel: 2
     _events: 
   - _stars: 2
     _level: 27

@@ -35,7 +35,7 @@ namespace Assets._Game._Scripts._0.Data._DataForUpgrade
         new MechanicalEyeDataForUpgrade { Stars = 1, Level = 23, Cost = 619, IncomeMoney = 157, OpeningAtLevel = 1, Events = "" },
         new MechanicalEyeDataForUpgrade { Stars = 1, Level = 24, Cost = 780, IncomeMoney = 170, OpeningAtLevel = 1, Events = "" },
         new MechanicalEyeDataForUpgrade { Stars = 2, Level = 25, Cost = 983, IncomeMoney = 374, OpeningAtLevel = 1, Events = "" },
-        new MechanicalEyeDataForUpgrade { Stars = 2, Level = 26, Cost = 1180, IncomeMoney = 394, OpeningAtLevel = 1, Events = "" },
+        new MechanicalEyeDataForUpgrade { Stars = 2, Level = 26, Cost = 1180, IncomeMoney = 394, OpeningAtLevel = 2, Events = "" },
         new MechanicalEyeDataForUpgrade { Stars = 2, Level = 27, Cost = 1420, IncomeMoney = 474, OpeningAtLevel = 2, Events = "" },
         new MechanicalEyeDataForUpgrade { Stars = 2, Level = 28, Cost = 1700, IncomeMoney = 567, OpeningAtLevel = 2, Events = "" },
         new MechanicalEyeDataForUpgrade { Stars = 2, Level = 29, Cost = 2040, IncomeMoney = 680, OpeningAtLevel = 2, Events = "" },
