@@ -38,7 +38,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
                 .Upgrades[_desktopModel.Level].OpeningAtLevel;// проверка соответствует ли уровень игры уровню прокачки отдельного стола
             _productName = _uiMode.GetStringNameByProductType(_desktopModel.ProductType);
             _incomeValue = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType)
-                .Upgrades[_desktopModel.Level].IncomeMoney;
+                .Upgrades[_desktopModel.Level-1].IncomeMoney;
             _progressStarsValue = CalculateProgressToNextStar();
             _view.UpdateOnChangeMoney(_desktopModel.Cost, _desktopModel.Level, _desktopModel.Money
                 , _productName, _incomeValue, _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType).Upgrades[_desktopModel.Level-1].Stars, _progressStarsValue, isButtonEnabled);
@@ -72,35 +72,28 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
         }
 
         public float CalculateProgressToNextStar() {
-            var currentLevel = _desktopModel.Level;
+            var currentLevel = _desktopModel.Level; // Текущий уровень стола
             var upgradesData = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType).Upgrades;
 
-            // Находим текущее улучшение и следующее улучшение по звездам
+            // Находим текущее улучшение
             var currentUpgrade = upgradesData.FirstOrDefault(upgrade => upgrade.Level == currentLevel);
-            var nextStarUpgrade = upgradesData.FirstOrDefault(upgrade => upgrade.Stars > currentUpgrade.Stars);
-
-            if (nextStarUpgrade == null) {
-                Debug.Log("Следующее улучшение не найдено, текущий уровень - максимальный");
-                return 1f;
-            }
-
-            // Ищем индекс первого улучшения с текущим количеством звезд
-            int firstLevelWithCurrentStar = Array.FindIndex(upgradesData, upgrade => upgrade.Stars == currentUpgrade.Stars);
-            if (firstLevelWithCurrentStar == -1) {
-                Debug.LogError("Ошибка при поиске первого уровня с текущим количеством звезд");
+            if (currentUpgrade == null) {
+                Debug.LogError("Текущее улучшение не найдено.");
                 return 0f;
             }
 
+            // Находим все улучшения с текущим количеством звезд
+            var sameStarsUpgrades = upgradesData.Where(upgrade => upgrade.Stars == currentUpgrade.Stars).ToArray();
+            var totalSameStarsUpgrades = sameStarsUpgrades.Length;
+
+            // Находим позицию текущего улучшения среди улучшений с тем же количеством звезд
+            var currentUpgradePosition = Array.IndexOf(sameStarsUpgrades, currentUpgrade);
+
             // Расчет прогресса
-            int levelsToNextStar = nextStarUpgrade.Level - upgradesData[firstLevelWithCurrentStar].Level;
-            int completedLevels = currentLevel - upgradesData[firstLevelWithCurrentStar].Level;
-            float progress = completedLevels / (float)levelsToNextStar;
+            float progress = (float)(currentUpgradePosition) / (totalSameStarsUpgrades - 1);
 
-          //  Debug.Log($"Прогресс до следующей звезды: {progress} (Текущий уровень: {currentLevel}, Уровни до след. звезды: {levelsToNextStar}, Пройдено уровней: {completedLevels})");
-            return progress;
+            return Mathf.Clamp01(progress);
         }
-
-
 
 
 

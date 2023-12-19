@@ -80,7 +80,7 @@ namespace Assets._Game._Scripts._5_Managers
         {
             int level = desktop.Level;
             ProductType productType = desktop.ProductType;
-            int income = GameMode.DataMode.GetProductUpgradeSO(productType).Upgrades[level].IncomeMoney;
+            int income = GameMode.DataMode.GetProductUpgradeSO(productType).Upgrades[level-1].IncomeMoney;
 
             AddMoney(income);
         }
