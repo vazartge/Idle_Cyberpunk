@@ -5,7 +5,10 @@ using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
-    public class PrebuilderDesktop : BaseUnitGame {
+    public class PrebuilderDesktop : BaseUnitGame
+    {
+        public GameObject AvailableIndicator;
+
         [Header("Тип продукта - ОБЯЗАТЕЛЬНО ЗАПОЛНИТЬ")]
         [SerializeField] private ProductType _productType;
         [Header("Угол поворота для стола против часовой стрелки")]
@@ -44,6 +47,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         private void Awake()
         {
             _view = GetComponentInChildren<UIPrebuilderView>();
+            
         }
         // Use this for initialization
         public override void Construct(GameMode gameMode, DataMode_ dataMode)
@@ -55,13 +59,21 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             _viewModel = new PrebuilderViewModel(this, _view, _uiMode);
             ViewModel = _viewModel;
             _view.Construct(_viewModel);
-            
-            Cost = GameMode.DataMode.GetProductUpgradeSO(ProductType).Upgrades[0].Cost; 
-           
+            _gameMode.OnChangedStatsOrMoney  += UpdateOnChangeStatsOrMoney;
+            Cost = GameMode.DataMode.GetProductUpgradeSO(ProductType).Upgrades[0].Cost;
 
+            UpdateOnChangeStatsOrMoney();
         }
 
-        
+        private void UpdateOnChangeStatsOrMoney()
+        {
+            UpdateViewAvailabilityIndicator();
+        }
+
+        private void UpdateViewAvailabilityIndicator() {
+            AvailableIndicator.SetActive(GameMode.Coins >= GameMode.DataMode.GetProductUpgradeSO(ProductType).Upgrades[0].Cost);
+        }
+
         public void OnButtonBuyDesktop()
         {
             GameMode.OnButtonBuyDesktop(this);

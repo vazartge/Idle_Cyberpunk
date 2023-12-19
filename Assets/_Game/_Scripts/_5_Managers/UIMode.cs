@@ -175,6 +175,7 @@ namespace Assets._Game._Scripts._5_Managers {
             Debug.Log("Open Upgrade wWindow");
             OpenNewView(_upgradeWindowView);
             GenerateButtons(_gameMode.Store.Stats);
+            UpdateAllUpgradeButtons();
 
 
         }

@@ -14,6 +14,11 @@ namespace Assets._Game._Scripts._3_UI._UpgradeButton {
         private UIMode _uiMode;
         
         public IUpgradeItem _upgradeItem;
+
+        private void OnEnable()
+        {
+            UpdateButtonState(_uiMode.GameMode.Coins);
+        }
         public void Initialize(IUpgradeItem upgradeItem, UIMode uiMode, bool hasDesktops) {
             _uiMode = uiMode;
             _upgradeItem = upgradeItem;
@@ -54,9 +59,10 @@ namespace Assets._Game._Scripts._3_UI._UpgradeButton {
             // Если элемент - UpgradeCustomer и нет рабочих столов, кнопка неактивна
             if (_upgradeItem is UpgradeCustomer && !hasDesktops) {
                 ButtonComponent.interactable = false;
-            } else {
-                ButtonComponent.interactable = enoughCoins && !isPurchased;
             }
+            
+            ButtonComponent.interactable = enoughCoins && !isPurchased;
+            
 
             // Обновление цвета текста цены
             PriceText.color = enoughCoins ? Color.black : Color.red;

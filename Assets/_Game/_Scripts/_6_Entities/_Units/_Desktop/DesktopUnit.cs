@@ -7,8 +7,7 @@ using Assets._Game._Scripts._6_Entities._Units._Desktop._Base;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
-    public class DesktopUnit : DesktopBaseUnitBase
-    {
+    public class DesktopUnit : DesktopBaseUnitBase {
         [SerializeField]
         public bool IsUpgradedForLevel = false;
         public enum DesktopType {
@@ -41,20 +40,20 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             set => _isAdditionalDesktop = value;
         }
 
-        public DesktopUnit AdditionalDesktop
-        {
+        public DesktopUnit AdditionalDesktop {
             get => _additionalDesktop;
             set => _additionalDesktop = value;
         }
 
         public GameObject ContainerForRotate;
+        public GameObject AvailabilityIndicator;
         [SerializeField] public DesktopType _desktopType;
         [SerializeField] public Transform AdditionalDesktopPointTransform;
         [SerializeField] private bool _isAdditionalDesktop;
         [SerializeField] private int _level = 1;
         [SerializeField] private ProductType _productType;
         [SerializeField] private SpriteRenderer _spriteIconProductType;
-        
+
         private GameMode _gameMode;
         //[SerializeField] private UIMode UiMode;
         private Order _order;
@@ -71,9 +70,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         public void ConstructMain(GameMode gameMode) {
             _mainDesktop = this;
             _desktopType = DesktopType.main;
-            
+
             GameMode = gameMode;
-            
+
             _view = GetComponentInChildren<UIDesktopView>();
             _viewModel = new DesktopViewModel(this, _view);
             ViewModel = _viewModel;
@@ -89,19 +88,31 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             IsAdditionalDesktop = true;
             _mainDesktop.IsAdditionalDesktop = IsAdditionalDesktop;
             _view = GetComponentInChildren<UIDesktopView>();
-            _viewModel = new DesktopViewModel(_mainDesktop, _view); 
+            _viewModel = new DesktopViewModel(_mainDesktop, _view);
             ViewModel = _viewModel;
-           // _gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
+            // _gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
             _spriteIconProductType.sprite = _mainDesktop._spriteIconProductType.sprite;
             _mainDesktop._gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
 
 
 
         }
-      
+        private void UpdateViewAvailabilityIndicator() {
+            if (this == _mainDesktop) {
+                bool res = GameMode.Coins >= GameMode.DataMode
+                    .GetProductUpgradeSO(_mainDesktop.ProductType).Upgrades[_mainDesktop.Level].Cost;
+                _mainDesktop.AvailabilityIndicator.SetActive(res);
+                if (_additionalDesktop != null) {
+                    _additionalDesktop.AvailabilityIndicator.SetActive(res);
+                }
+
+            }
+        }
+
         public void UpdateOnChangeStatsOrMoney() {
             //if(_viewModel.IsOpenedWindow) return;
             SetCost();
+            UpdateViewAvailabilityIndicator();
             _viewModel.UpdateOnChangeMoney();
         }
 
@@ -122,18 +133,17 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             var currentUpgradeData = upgradeData.Upgrades[_mainDesktop.Level];
 
             // Проверяем, существуют ли данные для данного уровня и не превышает ли уровень игры OpeningAtLevel
-            if (currentUpgradeData != null && _gameMode.GameLevel < currentUpgradeData.OpeningAtLevel)
-            {
+            if (currentUpgradeData != null && _gameMode.GameLevel < currentUpgradeData.OpeningAtLevel) {
                 _mainDesktop.IsUpgradedForLevel = true;
                 IsUpgradedForLevel = true;
             }
-            
-            
-            Debug.Log($"IsUpgradedForLevel == {IsUpgradedForLevel}" );
-        }
-    
 
-       
+
+            Debug.Log($"IsUpgradedForLevel == {IsUpgradedForLevel}");
+        }
+
+
+
         private void SetCost() {
             Cost = _mainDesktop._economyAndUpgrade.SetCostBuyProductAndLevel(_mainDesktop.Level, ProductType);
 
