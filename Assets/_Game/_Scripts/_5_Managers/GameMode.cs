@@ -547,14 +547,14 @@ namespace Assets._Game._Scripts._5_Managers {
             switch (nextLevel) {
                 case 2:
 
-                    cost = 2000;
+                    cost = 700;
 
                     break;
                 case 3:
-                    cost = 200000;
+                    cost = 9000;
                     break;
                 case 4:
-                    cost = 3000000;
+                    cost = 300000;
                     break;
                 default:
                     // Если уровень не определен, возвращаем false.

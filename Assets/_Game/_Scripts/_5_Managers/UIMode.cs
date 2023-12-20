@@ -311,14 +311,14 @@ namespace Assets._Game._Scripts._5_Managers {
             switch (GameMode.GameLevel + 1) {
                 case 2:
 
-                    costNextLevel = 2000;
+                    costNextLevel = 700;
 
                     break;
                 case 3:
-                    costNextLevel = 200000;
+                    costNextLevel = 9000;
                     break;
                 case 4:
-                    costNextLevel = 3000000;
+                    costNextLevel = 300000;
                     break;
                 default:
                     // ≈сли уровень не определен, возвращаем false.
