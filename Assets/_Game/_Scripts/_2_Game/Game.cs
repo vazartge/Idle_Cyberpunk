@@ -1,7 +1,11 @@
 ﻿using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
+using Assets._Game._Scripts._6_Entities._Units._Desktop;
+using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using DG.Tweening;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -16,7 +20,9 @@ namespace Assets._Game._Scripts._2_Game {
         private StoreStats _storeStats;
         public LevelsUpgradesSO levelsUpgradesSO;
         [SerializeField] private int Level = 1;
+        public bool IsDataLoaded { get; private set; }
 
+       // public List<PrebuilderDesktop> prebuilders = new List<PrebuilderDesktop>();
 
         private bool isPaused;
         public bool IsPaused {
@@ -39,6 +45,8 @@ namespace Assets._Game._Scripts._2_Game {
 
         public DataMode_ DataMode => _dataMode;
 
+        public StoreStats StoreStats => _storeStats;
+
 
         private void Awake() {
             Instance = this;
@@ -52,9 +60,12 @@ namespace Assets._Game._Scripts._2_Game {
             SceneManager.sceneLoaded += OnSceneLoaded; // Подписка на событие загрузки сцены
             LoadLevel();
         }
-        private void LoadLevel() {
+        private void LoadLevel()
+        {
+          //  ClearPrebuildersList();
             _storeStats = LoadGame(); // Загрузка или создание StoreStats
-            int levelToLoad = _storeStats.LevelGame; // Получение уровня из StoreStats
+            int levelToLoad = StoreStats.LevelGame; // Получение уровня из StoreStats
+            
             SceneManager.LoadScene(levelToLoad); // Загрузка соответствующей сцены
            // SceneManager.LoadScene(Level); // Загрузка соответствующей сцены
         }
@@ -68,9 +79,9 @@ namespace Assets._Game._Scripts._2_Game {
             _gameMode = FindObjectOfType<GameMode>();
             _uiMode = FindObjectOfType<UIMode>();
             _dataMode = FindObjectOfType<DataMode_>();
-            _storeStats = LoadGame();
+           // _storeStats = LoadGame();
             _dataMode.Construct(_gameMode, _uiMode);
-            _gameMode.Construct(_dataMode, _uiMode, _storeStats);
+            _gameMode.Construct(_dataMode, _uiMode, StoreStats);
 
 
             OnStartNewScene();
@@ -80,7 +91,7 @@ namespace Assets._Game._Scripts._2_Game {
 
             Debug.Log("Game Start");
         }
-
+      
         private void SaveGame(StoreStats storeStats) {
             string json = _storeStatsService.SaveToJson(storeStats);
             PlayerPrefs.SetString("StoreStats", json);
@@ -90,9 +101,11 @@ namespace Assets._Game._Scripts._2_Game {
         private StoreStats LoadGame() {
             string json = PlayerPrefs.GetString("StoreStats", "");
             if (!string.IsNullOrEmpty(json)) {
+                IsDataLoaded = true;
                 return _storeStatsService.LoadFromJson(json);
             } else {
                 // Создать новый StoreStats и загрузить LevelUpgrade из LevelsUpgradesSO
+                IsDataLoaded = false;
                 var newStoreStats = new StoreStats();
                 newStoreStats.LevelUpgrade = GetLevelUpgradeForLevel(newStoreStats.LevelGame);
                 return newStoreStats;
@@ -116,7 +129,7 @@ namespace Assets._Game._Scripts._2_Game {
             IsPaused = true;
             DOTween.CompleteAll();
             ChangeLevel(_gameMode.Store.Stats.LevelGame);
-            SaveGame(_storeStats);
+            SaveGame(StoreStats);
             SceneManager.LoadScene(_gameMode.Store.Stats.LevelGame); // Загрузка соответствующей сцены
             LoadGame();
 
@@ -124,9 +137,43 @@ namespace Assets._Game._Scripts._2_Game {
         private void ChangeLevel(int newLevel) {
             var levelUpgrade = GetLevelUpgradeForLevel(newLevel);
             if (levelUpgrade != null) {
-                _storeStats.LevelUpgrade = levelUpgrade;
+                StoreStats.LevelUpgrade = levelUpgrade;
             }
         }
+        // public void RegisterPrebuilder(PrebuilderDesktop prebuilder) {
+        //     if (!prebuilders.Contains(prebuilder)) {
+        //         prebuilders.Add(prebuilder);
+        //     }
+        // }
+        // public void ClearPrebuildersList() {
+        //     prebuilders.Clear();
+        // }
+        public void CollectDataForSave()
+        {
+            var prebuilders = _gameMode.GetPrebuildersList(); //FindObjectsOfType<PrebuilderDesktop>();
+            var prebuilderData = prebuilders.Select(p => new PrebuilderStats(p.ProductType, p.RotationAngleZ, p.IsActive, p.IsDesktopPurchased, p.transform.position)).ToList();
+            StoreStats.PrebuilderStats = prebuilderData;
+            //---------------------------------
+            
+            var desktopStatsList = new List<DesktopStats>();
+            foreach (var desktop in GameMode.Store.GetDesktopUnitsList()) {
+                if (desktop._desktopType == DesktopUnit.DesktopType.main) {
+                    var stats = new DesktopStats(
+                        desktop.transform.position,
+                        desktop.ProductType,
+                        desktop.Level,
+                        desktop._desktopType == DesktopUnit.DesktopType.main,
+                        desktop.IsUpgradedForLevel,
+                        desktop.AdditionalDesktop != null
+                    );
+                    desktopStatsList.Add(stats);
+                }
+            }
+            StoreStats.DesktopStatsList = desktopStatsList;
+            // ... добавление данных от других сущностей ...
+        }
+       
+
 
 
     }

@@ -1,4 +1,5 @@
-﻿using Assets._Game._Scripts._5_Managers;
+﻿using Assets._Game._Scripts._2_Game;
+using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Base;
@@ -24,7 +25,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         private UIPrebuilderView _view;
         
         private DataMode_ _dataMode;
-        public bool IsActive { get; set;}
+        public bool IsActive => gameObject.activeSelf;
 
         public int Cost
         {
@@ -44,10 +45,13 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             set => _gameMode = value;
         }
 
+        public bool IsDesktopPurchased { get; set; }
+
         private void Awake()
         {
             _view = GetComponentInChildren<UIPrebuilderView>();
-            
+           // Game.Instance.RegisterPrebuilder(this);
+
         }
         // Use this for initialization
         public override void Construct(GameMode gameMode, DataMode_ dataMode)
@@ -79,6 +83,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             GameMode.OnButtonBuyDesktop(this);
         }
 
+        public void PurchasedDesktopSetBool()
+        {
+            IsDesktopPurchased = true;
+        }
        
     }
+
+  
 }

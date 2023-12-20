@@ -17,8 +17,8 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
 
         [SerializeField] private LevelUpgrade levelUpgrade; // без начального значения
-
-
+        [SerializeField] private List<PrebuilderStats> prebuilderStats = new List<PrebuilderStats>();
+        [SerializeField] private List<DesktopStats> desktopStatsList = new List<DesktopStats>();
 
 
 
@@ -62,6 +62,16 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         {
             get => levelUpgrade;
             set => levelUpgrade = value;
+        }
+        public List<PrebuilderStats> PrebuilderStats {
+            get => prebuilderStats;
+            set => prebuilderStats = value;
+        }
+
+        public List<DesktopStats> DesktopStatsList
+        {
+            get => desktopStatsList;
+            set => desktopStatsList = value;
         }
     }
 }

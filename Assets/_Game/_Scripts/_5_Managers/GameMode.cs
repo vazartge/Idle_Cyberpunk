@@ -23,9 +23,9 @@ namespace Assets._Game._Scripts._5_Managers {
     public class GameMode : MonoBehaviour {
         #region Fields
 
-        [Header("Changed Stats")]
+        [Header("Changed StoreStats")]
         [SerializeField] private int numberOrders = 1;
-        // Changed Stats
+        // Changed StoreStats
         public event Action OnChangedStatsOrMoney;
         //  public event Action OnChangedLevelPlayer;
         public int GameLevel => Store.Stats.LevelGame;
@@ -54,6 +54,8 @@ namespace Assets._Game._Scripts._5_Managers {
 
         [Header("PrebuildersDesktop")]
         [SerializeField] private GameObject[] _prebuildersGO;
+
+        [SerializeField] private List<PrebuilderDesktop> _prebuilderDesktopsList;  
 
         public bool IsOpenedAllPrebuilders => _prebuildersGO.Length <= _counterForUpgradelEvelOpenedPrebuilder;
         public int _counterForUpgradelEvelOpenedPrebuilder = 0;
@@ -149,6 +151,7 @@ namespace Assets._Game._Scripts._5_Managers {
             UiMode.Construct(_dataMode, this);
 
         }
+       
         public void InitializeComponents() {
             OnChangedStatsOrMoney?.Invoke();
             StartCoroutine(InitializeUnitsPrebuldersOnScene(_countOpenedPrebuilder));
@@ -168,11 +171,40 @@ namespace Assets._Game._Scripts._5_Managers {
             foreach (var prebuilderGO in _prebuildersGO) {
                 var prebuilderDesktop = prebuilderGO.GetComponent<PrebuilderDesktop>();
                 prebuilderDesktop.Construct(this, DataMode);
-                prebuilderDesktop.IsActive = true;
+                //prebuilderDesktop.IsActive = true;
                 prebuilderGO.SetActive(true);
+                _prebuilderDesktopsList.Add(prebuilderDesktop);
 
             }
+            if (Game.Instance.IsDataLoaded) {
+                RestoreGameFromSaveData(Game.Instance.StoreStats);
+       
+            }
 
+        } 
+        public void RestoreGameFromSaveData(StoreStats storeStats) {
+            // Восстановление состояния пребилдеров
+            
+            foreach (var prebuilderData in Game.Instance .StoreStats.PrebuilderStats) {
+                var prebuilder = _prebuilderDesktopsList.FirstOrDefault(p => p.ProductType == prebuilderData.ProductType);
+                if (prebuilder != null) {
+                    prebuilder.RotationAngleZ = prebuilderData.RotationAngleZ;
+                    prebuilder.transform.position = prebuilderData.Position;
+                    prebuilder.gameObject.SetActive(prebuilderData.IsActive);
+                    prebuilder.IsDesktopPurchased = prebuilderData.IsDesktopPurchased;
+                    // Если пребилдер куплен, создаём стол
+                    if (prebuilderData.IsDesktopPurchased) {
+                        CreateDesktopFromPrebuilder(prebuilder);
+                    }
+
+                }
+            }
+
+            // Восстановление других частей игры, если необходимо
+        }
+        public List<PrebuilderDesktop> GetPrebuildersList()
+        {
+            return _prebuilderDesktopsList;
         }
         #endregion
 
@@ -419,7 +451,8 @@ namespace Assets._Game._Scripts._5_Managers {
             SetupNewDesktopAndSlot(newDesktop, newDesktopObj);
             // prebuilderDesktop.ViewModel.HideWindow();
 
-            // _buttonAddCustomer.gameObject.SetActive(true);
+            //_buttonAddCustomer.gameObject.SetActive(true);
+            prebuilderDesktop.PurchasedDesktopSetBool();
             prebuilderDesktop.gameObject.SetActive(false);
             _counterForUpgradelEvelOpenedPrebuilder++;
             if (ActiveCustomers == null)
@@ -569,5 +602,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public bool HasDesktops() {
             return Store.HasActiveDesktops();
         }
+
+       
     }
 }

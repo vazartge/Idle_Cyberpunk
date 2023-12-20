@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DesktopStarUI : MonoBehaviour
+namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 {
-    public GameObject ActiveStar;
-
-    public void ActivateStar()
+    public class DesktopStarUI : MonoBehaviour
     {
-        ActiveStar.SetActive(true);
-    }
+        public GameObject ActiveStar;
 
-    public void DeactivateStar()
-    {
-        ActiveStar.SetActive(false);
+        public void ActivateStar()
+        {
+            ActiveStar.SetActive(true);
+        }
+
+        public void DeactivateStar()
+        {
+            ActiveStar.SetActive(false);
+        }
     }
 }
