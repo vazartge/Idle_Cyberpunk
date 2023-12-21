@@ -161,9 +161,11 @@ namespace Assets._Game._Scripts._5_Managers {
             //AddSellerMainMethod();
             InitializeSellers();
             InitializeCustomers();
-
+            
             _isInitialized = true;
+
             Debug.Log("_gameMode Start");
+            
         }
 
 
@@ -266,6 +268,7 @@ namespace Assets._Game._Scripts._5_Managers {
                 Debug.LogError($"Level upgrade data not found for level {currentLevel}");
             }
             CheckFirstDesktopAndCreateCustomers();
+            
         }
 
         private void CheckFirstDesktopAndCreateCustomers()
@@ -296,16 +299,17 @@ namespace Assets._Game._Scripts._5_Managers {
             OnChangedStatsOrMoney?.Invoke();
             CheckPrebuilders();
             UiMode?.UpdateOnChangedStatsOrMoney();
-            CanTransitionToNextLevel();
+            //CanTransitionToNextLevel();
 
             CheckFirstDesktopAndCreateCustomers();
+           
         }
 
 
         private void Update() {
             if (!_isInitialized) return;
             if (Game.Instance.IsPaused) return;
-            //CanTransitionToNextLevel();
+            CanTransitionToNextLevel();
             //_inputControlService.UpdateInputControl();
 
         }

@@ -16,8 +16,8 @@ namespace Assets._Game._Scripts._5_Managers {
     public class UIMode : MonoBehaviour {
 
         public TMP_InputField inputField; // —сылка на InputField  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ”ƒјЋ»“№ ”ƒјЋ»“№ ”ƒјЋ»“№ ”ƒјЋ»“№ ”ƒјЋ»“№ ”ƒјЋ»“№ 
-        public GameObject AvailabilityIndicator; // —сылка на индикатор доступности
-
+        public GameObject AvailabilityIndicatorForUpgradeWindows; // —сылка на индикатор доступности дл€ кнопки ќкна прокачки
+        public GameObject AvailabilityIndicatorForNextLevelButton;
         public EconomyAndUpgradeService EconomyAndUpgrade {
             get => _economyAndUpgrade;
             set => _economyAndUpgrade = value;
@@ -37,7 +37,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject NextLevelWindowGO;
         private UIWindowUpgradeView _upgradeWindowView;
         private UIWindowNextLevelView _nextLevelWinodwView;
-        public GameObject OpenNextLevelWinodwButton;
+        public GameObject OpenNextLevelWindowButton;
         public GameObject UpgradeButtonPrefab;
         private UpgradeButton[] _upgradeButtons;
         private bool _isInitUpdateButtons;
@@ -68,7 +68,8 @@ namespace Assets._Game._Scripts._5_Managers {
         private void Start()
         {
             Game.Instance.RegisterUIMode(this);
-            AvailabilityIndicator.SetActive(false);
+            AvailabilityIndicatorForNextLevelButton.SetActive(false);
+            AvailabilityIndicatorForUpgradeWindows.SetActive(false);
             _upgradeWindowView = UpgradeWindowGO.GetComponent<UIWindowUpgradeView>();
             _nextLevelWinodwView = NextLevelWindowGO.GetComponent<UIWindowNextLevelView>();
             _nextLevelWinodwView.Construct(this);
@@ -114,7 +115,8 @@ namespace Assets._Game._Scripts._5_Managers {
             GameMode.OnChangedStatsOrMoney += UpdateOnChangedStatsOrMoney;
             // _gameMode.OnChangedLevelPlayer += UpdateOnChangedLevelPlayer;
             UpdateOnChangedStatsOrMoney();
-
+            CheckAvailabilityIndicatorForNextLevelButton();
+            _gameMode.ChangedStatsOrMoney();
         }
 
         public void OpenNewView(IUiUnitView view) {
@@ -185,6 +187,7 @@ namespace Assets._Game._Scripts._5_Managers {
             _hudCanvas.UpdateUIHUD(_gameMode.EconomyAndUpgrade.Coins);
             CheckUpgradesAvailability();
             UpdateAllUpgradeButtons();
+            CheckAvailabilityIndicatorForNextLevelButton();
         }
 
 
@@ -219,7 +222,7 @@ namespace Assets._Game._Scripts._5_Managers {
         //     bool hasAvailableUpgrades = _upgradeButtons.Any(button => button.gameObject.activeSelf && !button._upgradeItem.IsPurchased && button._upgradeItem.Price <= _economyAndUpgrade.Coins);
         //
         //     // јктиваци€ индикатора доступности, если есть доступные улучшени€
-        //     AvailabilityIndicator.SetActive(hasAvailableUpgrades);
+        //     AvailabilityIndicatorForUpgradeWindows.SetActive(hasAvailableUpgrades);
         // }
         private void CheckUpgradesAvailability() {
             if (!_isInitUpdateButtons) return;
@@ -246,7 +249,7 @@ namespace Assets._Game._Scripts._5_Managers {
             }
 
             // јктиваци€ индикатора доступности
-            AvailabilityIndicator.SetActive(hasAvailableUpgrades);
+            AvailabilityIndicatorForUpgradeWindows.SetActive(hasAvailableUpgrades);
         }
 
 
@@ -302,7 +305,11 @@ namespace Assets._Game._Scripts._5_Managers {
             PlayerPrefs.Save(); // Ќе забудь сохранить изменени€
         }
 
-
+        public void CheckAvailabilityIndicatorForNextLevelButton()
+        {
+            if(!OpenNextLevelWindowButton.activeSelf) return;
+            AvailabilityIndicatorForNextLevelButton.SetActive(Game.Instance.StoreStats.Coins >= GetCostBuyNextLevel()); 
+        }
         public int GetCostBuyNextLevel() {
             int costNextLevel;
             switch (GameMode.GameLevel + 1) {
@@ -326,7 +333,8 @@ namespace Assets._Game._Scripts._5_Managers {
             return costNextLevel;
         }
         public void ShowButtonForNextLevel() {
-            OpenNextLevelWinodwButton.SetActive(true);
+            OpenNextLevelWindowButton.SetActive(true);
+            CheckAvailabilityIndicatorForNextLevelButton();
         }
         public void OnOpenWindowForNextLevelButton() {
             Debug.Log("Open Window For Next Level");

@@ -753,7 +753,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &29781116338752297
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1127,11 +1127,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   inputField: {fileID: 9113829439883530775}
-  AvailabilityIndicator: {fileID: 157538978697117939}
+  AvailabilityIndicatorForUpgradeWindows: {fileID: 157538978697117939}
+  AvailabilityIndicatorForNextLevelButton: {fileID: 240877134327264281}
   upgradeButtonsContainer: {fileID: 6073128508974958919}
   UpgradeWindowGO: {fileID: 767015159980131985}
   NextLevelWindowGO: {fileID: 2545579671074294495}
-  OpenNextLevelWinodwButton: {fileID: 4443795246406875501}
+  OpenNextLevelWindowButton: {fileID: 4443795246406875501}
   UpgradeButtonPrefab: {fileID: 838480487262861668, guid: 0308d7e3dd92b6e4e875a2dd0abd611c, type: 3}
   _closeWindowsButton: {fileID: 8716597301472409017}
 --- !u!114 &7858967014776380820
@@ -1165,7 +1166,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &315386029539325027
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1737,6 +1738,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7162637601849703019}
     m_Modifications:
+    - target: {fileID: 940073988652799163, guid: 33980cbcd58fdbd4699230c7b0c6d5d6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3744633201718303183, guid: 33980cbcd58fdbd4699230c7b0c6d5d6, type: 3}
       propertyPath: m_Name
       value: NextLevelButton
@@ -1858,6 +1863,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 33980cbcd58fdbd4699230c7b0c6d5d6, type: 3}
+--- !u!1 &240877134327264281 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 940073988652799163, guid: 33980cbcd58fdbd4699230c7b0c6d5d6, type: 3}
+  m_PrefabInstance: {fileID: 1034724236115779746}
+  m_PrefabAsset: {fileID: 0}
 --- !u!224 &3562793224803834579 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4552437435727018609, guid: 33980cbcd58fdbd4699230c7b0c6d5d6, type: 3}
@@ -2703,6 +2713,10 @@ PrefabInstance:
     - target: {fileID: 8642493132885082534, guid: 908b60445e9d8644db56386f66886a77, type: 3}
       propertyPath: m_Name
       value: AddMoneyButton
+      objectReference: {fileID: 0}
+    - target: {fileID: 8642493132885082534, guid: 908b60445e9d8644db56386f66886a77, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

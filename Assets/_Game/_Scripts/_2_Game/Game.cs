@@ -1,15 +1,11 @@
-﻿using System.Collections;
-using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
+﻿using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
-using Assets._Game._Scripts._6_Entities._Units._Desktop;
-using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
 
 
 namespace Assets._Game._Scripts._2_Game {
@@ -250,14 +246,14 @@ namespace Assets._Game._Scripts._2_Game {
 
         // Вызывается при выходе из приложения
         private void OnApplicationQuit() {
-            //  SaveGame(StoreStats);
+            SaveGame();
         }
 
         // Вызывается при паузе приложения (например, при сворачивании на мобильном устройстве)
         private void OnApplicationPause(bool pauseStatus) {
-            // if (pauseStatus) {
-            //     SaveGame(StoreStats);
-            // }
+             if (pauseStatus) {
+                 SaveGame();
+             }
         }
 
 
