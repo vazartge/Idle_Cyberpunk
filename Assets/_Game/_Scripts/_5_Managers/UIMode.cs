@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
+using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._3_UI._HUD;
 using Assets._Game._Scripts._3_UI._HUD._Windows;
 using Assets._Game._Scripts._3_UI._UIUnits._Base;
@@ -63,14 +64,10 @@ namespace Assets._Game._Scripts._5_Managers {
             // Обнуляем поле ввода в любом случае
             inputField.text = "";
         }
-        private void Awake() {
-           
-
-
-        }
-
+     
         private void Start()
         {
+            Game.Instance.RegisterUIMode(this);
             AvailabilityIndicator.SetActive(false);
             _upgradeWindowView = UpgradeWindowGO.GetComponent<UIWindowUpgradeView>();
             _nextLevelWinodwView = NextLevelWindowGO.GetComponent<UIWindowNextLevelView>();
@@ -198,7 +195,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public void OpenUpgradeWindow() {
             Debug.Log("Open Upgrade wWindow");
             OpenNewView(_upgradeWindowView);
-            GenerateButtons(_gameMode.Store.Stats);
+            GenerateButtons(Game.Instance.StoreStats);
             UpdateAllUpgradeButtons();
 
 

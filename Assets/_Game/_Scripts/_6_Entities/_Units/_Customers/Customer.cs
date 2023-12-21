@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
@@ -33,7 +34,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         public List<Order> Orders;
         private CustomerState _customerState;
 
-        private float speed => _store.Stats.SpeedMoveCustomer; // Скорость перемещения в единицах в секунду
+        private float speed => Game.Instance.StoreStats.SpeedMoveCustomer; // Скорость перемещения в единицах в секунду
         private Transform _startPointTransform;
         private Transform _endPointTransform;
 

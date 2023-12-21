@@ -6,13 +6,15 @@ using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Desktop._Base;
 using UnityEngine;
 
+
+public enum DesktopType {
+    main, additional
+}
 namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
     public class DesktopUnit : DesktopBaseUnitBase {
         [SerializeField]
         public bool IsUpgradedForLevel = false;
-        public enum DesktopType {
-            main, additional
-        }
+        
         public GameMode GameMode {
             get => _gameMode;
             set => _gameMode = value;
@@ -43,6 +45,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         public DesktopUnit AdditionalDesktop {
             get => _additionalDesktop;
             set => _additionalDesktop = value;
+        }
+
+        public DesktopType CurDesktopType{
+            get => _desktopType;
+            set => _desktopType = value;
         }
 
         public GameObject ContainerForRotate;
@@ -114,6 +121,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             SetCost();
             UpdateViewAvailabilityIndicator();
             _viewModel.UpdateOnChangeMoney();
+            _additionalDesktop?.UpdateOnChangeStatsOrMoney();
         }
 
 

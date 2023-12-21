@@ -6,6 +6,7 @@ using System;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using UnityEngine;
+using Assets._Game._Scripts._2_Game;
 
 namespace Assets._Game._Scripts._5_Managers
 {
@@ -13,14 +14,14 @@ namespace Assets._Game._Scripts._5_Managers
     {
         public long Coins
         {
-            get => Store.Stats.Coins;
-            set => Store.Stats.Coins = value;
+            get => Game.Instance.StoreStats.Coins;
+            set => Game.Instance.StoreStats.Coins = value;
         }
 
         public int LevelGame
         {
-            get => Store.Stats.LevelGame;
-            set => Store.Stats.LevelGame = value;
+            get => Game.Instance.StoreStats.LevelGame;
+            set => Game.Instance.StoreStats.LevelGame = value;
         }
 
         public GameMode GameMode
@@ -156,7 +157,7 @@ namespace Assets._Game._Scripts._5_Managers
             if (productBoost.Price <= Coins && productBoost.IsPurchased != true) {
                 RemoveMoney(productBoost.Price);
                 productBoost.IsPurchased = true;
-                Store.Stats.ProductionSpeed *= productBoost.ProductMultiplier;
+                Game.Instance.StoreStats.ProductionSpeed *= productBoost.ProductMultiplier;
                 _gameMode.ChangedStatsOrMoney();
             }
         }
@@ -165,7 +166,7 @@ namespace Assets._Game._Scripts._5_Managers
             if (speedBoost.Price <= Coins && speedBoost.IsPurchased != true) {
                 RemoveMoney(speedBoost.Price);
                 speedBoost.IsPurchased = true;
-                Store.Stats.SpeedMoveSeller *= speedBoost.SpeedMultiplier;
+                Game.Instance.StoreStats.SpeedMoveSeller *= speedBoost.SpeedMultiplier;
                 _gameMode.ChangedStatsOrMoney();
             }
         }

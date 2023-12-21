@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
@@ -31,9 +32,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         public CharacterType CharacterType;
         public AnimationState AnimationState;
         private Animator _animator;
-        private float timeTakingOrder => _store.Stats.TakingOrder;
-        private float productionSpeed => _store.Stats.ProductionSpeed;
-       private float moveSpeed => _store.Stats.SpeedMoveSeller;
+        private float timeTakingOrder => Game.Instance.StoreStats.TakingOrder;
+        private float productionSpeed => Game.Instance.StoreStats.ProductionSpeed;
+       private float moveSpeed => Game.Instance.StoreStats.SpeedMoveSeller;
         private GameMode _gameMode;
         private Store _store;
 

@@ -179,6 +179,10 @@ PrefabInstance:
       propertyPath: Level
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8642630551001470099, guid: a18b6478743abec49b6d90663263a418, type: 3}
+      propertyPath: levelsUpgradesSO
+      value: 
+      objectReference: {fileID: 11400000, guid: 148bbba99ce1d38479f7ea9e29d04c70, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

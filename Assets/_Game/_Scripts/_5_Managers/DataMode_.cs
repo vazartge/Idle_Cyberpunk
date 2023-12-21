@@ -5,6 +5,7 @@ using Assets._Game._Scripts._0.Data._Base;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using Assets._Game._Scripts._0.Data._DataForUpgrade;
 using Assets._Game._Scripts._0.Data._SpritesForPersons;
+using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using UnityEngine;
 
@@ -58,6 +59,9 @@ namespace Assets._Game._Scripts._5_Managers {
 
 
         private void Start() {
+            
+            Game.Instance.RegisterDataMode_(this);
+
             //словарь данных для обновления столов 
             _dataForUpgradeDesktopsMap = new Dictionary<ProductType, BaseUpgradeSO>()
             {

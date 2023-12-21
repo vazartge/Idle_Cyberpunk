@@ -1,4 +1,5 @@
 ﻿using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
+using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._5_Managers;
 using TMPro;
@@ -23,7 +24,7 @@ namespace Assets._Game._Scripts._3_UI._UpgradeButton {
             _uiMode = uiMode;
             _upgradeItem = upgradeItem;
 
-            SetupTextsButton(upgradeItem.Name, upgradeItem.Price, upgradeItem.Price <= _uiMode.GameMode.Store.Stats.Coins);
+            SetupTextsButton(upgradeItem.Name, upgradeItem.Price, upgradeItem.Price <= Game.Instance.StoreStats.Coins);
 
             // Дополнительная логика для кнопок UpgradeCustomer
             if (upgradeItem is UpgradeCustomer && !hasDesktops) {

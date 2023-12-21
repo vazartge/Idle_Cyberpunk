@@ -45,3 +45,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelsUpgradesSO: {fileID: 11400000, guid: 148bbba99ce1d38479f7ea9e29d04c70, type: 2}
+  Level: 1

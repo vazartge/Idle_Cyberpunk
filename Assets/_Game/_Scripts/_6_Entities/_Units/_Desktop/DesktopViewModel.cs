@@ -51,7 +51,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
             // if(IsOpenedWindow) return;
             _uiMode.OpenNewViewModel(this);
             _view.ShowWindow();
-            _desktopModel.UpdateOnChangeStatsOrMoney();
+            _desktopModel._mainDesktop.UpdateOnChangeStatsOrMoney();
            
             // IsOpenedWindow = true;
 

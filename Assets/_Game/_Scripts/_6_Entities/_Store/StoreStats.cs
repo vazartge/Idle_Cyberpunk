@@ -16,7 +16,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         [SerializeField] private float takingOrder = 2f;
 
 
-        [SerializeField] private LevelUpgrade levelUpgrade; // без начального значения
+        [SerializeField] private LevelUpgrade levelUpgrade = new LevelUpgrade(); // без начального значения
         [SerializeField] private List<PrebuilderStats> prebuilderStats = new List<PrebuilderStats>();
         [SerializeField] private List<DesktopStats> desktopStatsList = new List<DesktopStats>();
 

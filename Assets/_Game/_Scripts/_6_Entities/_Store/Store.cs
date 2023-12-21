@@ -17,7 +17,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public Transform SellersParentTransform;
 
         public GameMode GameMode;
-        public StoreStats Stats;
+       // public StoreStats StoreStats;
         
         public List<SellerSlot> SellerSlots { get; set; }
         public List<CustomerSlot> CustomerSlots { get; set; }
@@ -44,7 +44,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         }
 
         public void Construct(StoreStats storeStats) {
-            Stats = storeStats;
+            //StoreStats = storeStats;
         }
 
 
@@ -237,13 +237,13 @@ namespace Assets._Game._Scripts._6_Entities._Store {
                 int count = 0;
             foreach (var desktop in _desktopsList)
             {
-                if (desktop._desktopType == DesktopUnit.DesktopType.main &&
+                if (desktop._desktopType == DesktopType.main &&
                     desktop.IsUpgradedForLevel)
                 {
                     count++;
                 }
             }
-            var countMainDesktop = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopUnit.DesktopType.main).Count;
+            var countMainDesktop = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main).Count;
             if (count == countMainDesktop)
             {
                 return true;

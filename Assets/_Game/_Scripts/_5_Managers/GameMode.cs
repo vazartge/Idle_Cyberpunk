@@ -12,8 +12,8 @@ using Assets._Game._Scripts._6_Entities._Units._Customers;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using Assets._Game._Scripts._6_Entities._Units._Sellers;
-using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using Random = UnityEngine.Random;
 
 
@@ -28,15 +28,15 @@ namespace Assets._Game._Scripts._5_Managers {
         // Changed StoreStats
         public event Action OnChangedStatsOrMoney;
         //  public event Action OnChangedLevelPlayer;
-        public int GameLevel => Store.Stats.LevelGame;
+        public int GameLevel => Game.Instance.StoreStats.LevelGame;
 
         private bool _isInitialized;
         private int _idOrder;
 
         [Header("Refererences")]
         public Store Store;
-        public long Coins => Store.Stats.Coins;
-       
+        public long Coins => Game.Instance.StoreStats.Coins;
+
         public Camera UiCamera;
         public UIMode UiMode {
             get => _uiMode;
@@ -55,7 +55,7 @@ namespace Assets._Game._Scripts._5_Managers {
         [Header("PrebuildersDesktop")]
         [SerializeField] private GameObject[] _prebuildersGO;
 
-        [SerializeField] private List<PrebuilderDesktop> _prebuilderDesktopsList;  
+        [SerializeField] private List<PrebuilderDesktop> _prebuilderDesktopsList;
 
         public bool IsOpenedAllPrebuilders => _prebuildersGO.Length <= _counterForUpgradelEvelOpenedPrebuilder;
         public int _counterForUpgradelEvelOpenedPrebuilder = 0;
@@ -67,7 +67,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         [Header("Customers")]
         //[SerializeField] private GameObject _buttonAddCustomer;
-        private int _countCustomerForID=0;
+        private int _countCustomerForID = 0;
         // Требуемое количество покупателей на сцене
         [SerializeField] private int _requiredNumberCustomersOnScene;
         // Требуемое количество покупателей на сцене
@@ -93,21 +93,19 @@ namespace Assets._Game._Scripts._5_Managers {
             set => _requiredNumberSellersOnScene = value;
         }
         private int _maxNuberSellers = 8;
-        private int _countSellerForID=0;
+        private int _countSellerForID = 0;
         // Текущее количество активных продавцов на сцене
         private int CurrentActiveSellers { get; set; }
         // Количество продавцов, которое надо создать при старте в пул
         private int CountSellersForPool { get; } = 1;
         public List<Seller> Sellers { get; set; }
 
-        public int MaxNuberCustomers
-        {
+        public int MaxNuberCustomers {
             get => _maxNuberCustomers;
             set => _maxNuberCustomers = value;
         }
 
-        public int MaxNuberSellers
-        {
+        public int MaxNuberSellers {
             get => _maxNuberSellers;
             set => _maxNuberSellers = value;
         }
@@ -126,6 +124,10 @@ namespace Assets._Game._Scripts._5_Managers {
 
         #region Initialization
 
+        private void Start()
+        {
+            Game.Instance.RegisterGameMode(this);
+        }
         public void Construct(DataMode_ dataMode, UIMode uiMode, StoreStats storeStats) {
             _dataMode = dataMode;
             Debug.Log($"_dataMode != null {_dataMode!=null}");
@@ -145,19 +147,21 @@ namespace Assets._Game._Scripts._5_Managers {
             Sellers = new List<Seller>();
             _customersPool = new Queue<Customer>();
 
-          //  StartCoroutine(UpdateCustomersOnScene());
+            //  StartCoroutine(UpdateCustomersOnScene());
             EconomyAndUpgrade = new EconomyAndUpgradeService(this, Store);
             _inputControlService = new InputControlService(this);
             UiMode.Construct(_dataMode, this);
 
         }
-       
+
         public void InitializeComponents() {
             OnChangedStatsOrMoney?.Invoke();
             StartCoroutine(InitializeUnitsPrebuldersOnScene(_countOpenedPrebuilder));
-           
-            AddSellerMainMethod();
-           
+
+            //AddSellerMainMethod();
+            InitializeSellers();
+            InitializeCustomers();
+
             _isInitialized = true;
             Debug.Log("_gameMode Start");
         }
@@ -177,33 +181,110 @@ namespace Assets._Game._Scripts._5_Managers {
 
             }
             if (Game.Instance.IsDataLoaded) {
-                RestoreGameFromSaveData(Game.Instance.StoreStats);
-       
-            }
+                RestoreGameFromSaveData();
 
-        } 
-        public void RestoreGameFromSaveData(StoreStats storeStats) {
+            }
+           
+        }
+        public void RestoreGameFromSaveData() {
             // Восстановление состояния пребилдеров
-            
-            foreach (var prebuilderData in Game.Instance .StoreStats.PrebuilderStats) {
+            foreach (var prebuilderData in Game.Instance.StoreStats.PrebuilderStats) {
                 var prebuilder = _prebuilderDesktopsList.FirstOrDefault(p => p.ProductType == prebuilderData.ProductType);
                 if (prebuilder != null) {
                     prebuilder.RotationAngleZ = prebuilderData.RotationAngleZ;
-                    prebuilder.transform.position = prebuilderData.Position;
-                    prebuilder.gameObject.SetActive(prebuilderData.IsActive);
+                   // prebuilder.transform.position = prebuilderData.Position;
+                   prebuilder.IsActive = prebuilderData.IsActive;
+                    prebuilder.SetDeactivateChildTransform(prebuilderData.IsActive);
                     prebuilder.IsDesktopPurchased = prebuilderData.IsDesktopPurchased;
-                    // Если пребилдер куплен, создаём стол
-                    if (prebuilderData.IsDesktopPurchased) {
-                        CreateDesktopFromPrebuilder(prebuilder);
-                    }
-
                 }
             }
 
-            // Восстановление других частей игры, если необходимо
+            // Создание столов из пребилдеров
+            foreach (var prebuilderData in Game.Instance.StoreStats.PrebuilderStats) {
+
+                if ( prebuilderData.IsDesktopPurchased) {
+                    var prebuilder = _prebuilderDesktopsList.FirstOrDefault(p => p.ProductType == prebuilderData.ProductType);
+                    if (prebuilder != null) {
+                        CreateDesktopFromPrebuilder(prebuilder);
+                        
+                    }
+                }
+            }
+
+            // Создание дополнительных столов
+            foreach (var desktopData in Game.Instance.StoreStats.DesktopStatsList) {
+                Debug.Log($"Restoring desktop: ProductType={desktopData.ProductType}, UpgradeLevel={desktopData.UpgradeLevel}, DesktopType={desktopData.DesktopType}, IsAdditionalDesktop={desktopData.IsAdditionalDesktop}, IsUpgradedForLevel={desktopData.IsUpgradedForLevel}");
+
+                if (desktopData.DesktopType == DesktopType.main )
+                {
+                    var mainDesktop = Store.GetDesktopUnitsList()
+                        .FirstOrDefault(d => d.ProductType == desktopData.ProductType);// && d.Level == desktopData.UpgradeLevel);
+                    mainDesktop._mainDesktop.ProductType = desktopData.ProductType;
+                    mainDesktop._mainDesktop.Level = desktopData.UpgradeLevel;
+                    mainDesktop._mainDesktop.CurDesktopType = desktopData.DesktopType;
+                    mainDesktop._mainDesktop.IsAdditionalDesktop = desktopData.IsAdditionalDesktop;
+                    mainDesktop._mainDesktop.IsUpgradedForLevel = desktopData.IsUpgradedForLevel;
+
+                    if (desktopData.IsAdditionalDesktop) {
+                        CreateAdditionalDesktop(mainDesktop);
+                    }
+                }
+            }
+
+
+          
         }
-        public List<PrebuilderDesktop> GetPrebuildersList()
+
+        public void InitializeSellers() {
+            var currentLevel = Game.Instance.StoreStats.LevelGame;
+          //  if (Store.StoreStats.LevelUpgrade != null) {
+                int sellersNeeded = Game.Instance.StoreStats.LevelUpgrade.Sellers
+                    .Where(s => s.IsPurchased)
+                    .Sum(s => s.Amount);
+
+                while (Sellers.Count < sellersNeeded) {
+                    InstantiateNewSeller();
+                }
+         //   } else {
+           //     Debug.LogError($"Level upgrade data not found for level {currentLevel}");
+          //  }
+        }
+
+        public void InitializeCustomers() {
+            var currentLevel = Game.Instance.StoreStats.LevelGame;
+            if (Game.Instance.StoreStats.LevelUpgrade != null) {
+                int customersNeeded = Game.Instance.StoreStats.LevelUpgrade.Customers
+                    .Where(c => c.IsPurchased)
+                    .Sum(c => c.Amount);
+
+                // Создаем покупателей и добавляем их в пул, но не активируем их сразу
+                while (_customersPool.Count < customersNeeded) {
+                    InstantiateNewCustomer();
+                   
+                }
+            } else {
+                Debug.LogError($"Level upgrade data not found for level {currentLevel}");
+            }
+            CheckFirstDesktopAndCreateCustomers();
+        }
+
+        private void CheckFirstDesktopAndCreateCustomers()
         {
+            if (_isFirstDesktopCreate)
+            {
+                StartCoroutine(ActivateCustomersWithDelay());
+            }
+        }
+
+        private IEnumerator ActivateCustomersWithDelay() {
+            while (_customersPool.Count > 0) {
+                GetCustomer();
+
+                yield return new WaitForSeconds(1f); // Задержка в 1 секунду между появлением каждого покупателя
+            }
+        }
+
+        public List<PrebuilderDesktop> GetPrebuildersList() {
             return _prebuilderDesktopsList;
         }
         #endregion
@@ -211,12 +292,13 @@ namespace Assets._Game._Scripts._5_Managers {
         #region EventsUpdate
 
         public void ChangedStatsOrMoney() {
-           
+
             OnChangedStatsOrMoney?.Invoke();
             CheckPrebuilders();
             UiMode?.UpdateOnChangedStatsOrMoney();
             CanTransitionToNextLevel();
 
+            CheckFirstDesktopAndCreateCustomers();
         }
 
 
@@ -228,10 +310,8 @@ namespace Assets._Game._Scripts._5_Managers {
 
         }
 
-        private void CanTransitionToNextLevel()
-        {
-            if (CanUpgradeLevel())
-            {
+        private void CanTransitionToNextLevel() {
+            if (CanUpgradeLevel()) {
                 ShowButtonNextLevel();
             }
         }
@@ -246,16 +326,19 @@ namespace Assets._Game._Scripts._5_Managers {
         //     }
         // }
         public void AddSellerMainMethod() {
-            if (RequiredNumberSellersOnScene >= MaxNuberSellers) return;
-            RequiredNumberSellersOnScene++;
-            InstantiateNewSeller();
+            if (Sellers.Count < MaxNuberSellers) {
+                RequiredNumberSellersOnScene++;
+                InstantiateNewSeller();
+            }
+
         }
+
         // Метод для создания нового покупателя
         private Customer InstantiateNewCustomer() {
 
             Customer customer = Instantiate(CustomerPrefab, CustomerStartTransform.position, Quaternion.identity).GetComponent<Customer>();
             customer.gameObject.transform.parent = Store.CustomersParentTransform;
-            
+
             customer.ID = "CustomerID:" + _countCustomerForID;
             customer.Construct(this, Store, CustomerStartTransform, CustomerEndTransform
                 , CharacterType.Customer, _countCustomerForID);
@@ -270,7 +353,7 @@ namespace Assets._Game._Scripts._5_Managers {
         private Seller InstantiateNewSeller() {
             Seller seller = Instantiate(SellerPrefab, SellerStartTransform.position, Quaternion.identity).GetComponent<Seller>();
             seller.gameObject.transform.parent = Store.SellersParentTransform;
-            
+
             seller.ID = "SellerID:" + _countSellerForID;
             seller.Construct(this, Store, CharacterType.Seller, _countSellerForID);
             Sellers.Add(seller); // Добавляем в список для учета
@@ -292,8 +375,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         // Публичный метод для получения покупателя из пула
         public Customer GetCustomer() {
-            if (ActiveCustomers == null || _customersPool.Count == 0)
-            {
+            if (ActiveCustomers == null || _customersPool.Count == 0) {
                 InstantiateNewCustomer();
             }
             Customer customer = _customersPool.Dequeue();
@@ -304,9 +386,9 @@ namespace Assets._Game._Scripts._5_Managers {
             // Находим максимальное количество товара на уровень для одного покупателя
             int maxProductsPerCustomer = GetMaxProductsPerCustomer(GameLevel);
 
-            // Находим максимально возможное количество товара одного типа исходя из количества продавцов
-            int maxOrderCount = Sellers.Count * 3;
-            Debug.Log($" Продавцов ===== {Sellers.Count}");
+            // // Находим максимально возможное количество товара одного типа исходя из количества продавцов
+            // int maxOrderCount = Sellers.Count * 3;
+            // Debug.Log($" Продавцов ===== {Sellers.Count}");
 
             // Получаем типы продуктов, для которых есть открытые столы
             var availableProductTypesWithDesks = Store.GetAvailableProductTypesWithDesks();
@@ -314,33 +396,37 @@ namespace Assets._Game._Scripts._5_Managers {
             // Получаем текущее количество заказов по типам продуктов у активных покупателей
             var currentOrdersCount = GetCurrentOrdersCountByType();
 
-            // Фильтруем доступные типы продуктов на основе текущего количества заказов у покупателей
-            var eligibleProductTypes = availableProductTypesWithDesks
-                .Where(type => !currentOrdersCount.ContainsKey(type) || currentOrdersCount[type] < maxOrderCount)
-                .ToList();
-            // Добавляем логирование
-            Debug.Log("Доступные для выбора типы продуктов и их текущее количество заказов:");
-            foreach (var type in eligibleProductTypes) {
-                int orderCount = currentOrdersCount.ContainsKey(type) ? currentOrdersCount[type] : 0;
-                Debug.Log($"Тип продукта: {type}, Текущее количество заказов: {orderCount}");
-            }
+            // // Фильтруем доступные типы продуктов на основе текущего количества заказов у покупателей
+            // var eligibleProductTypes = availableProductTypesWithDesks
+            //     .Where(type => !currentOrdersCount.ContainsKey(type) || currentOrdersCount[type] < maxOrderCount)
+            //     .ToList();
+            // // Добавляем логирование
+            // Debug.Log("Доступные для выбора типы продуктов и их текущее количество заказов:");
+            // foreach (var type in eligibleProductTypes) {
+            //     int orderCount = currentOrdersCount.ContainsKey(type) ? currentOrdersCount[type] : 0;
+            //     Debug.Log($"Тип продукта: {type}, Текущее количество заказов: {orderCount}");
+            // }
+            //
+            // ProductType? selectedType;
+            // Используем System.Random для генерации разнообразного результата
+            var random = new System.Random(Guid.NewGuid().GetHashCode()); // Уникальный сид для каждого вызова
+            int randomIndex = random.Next(availableProductTypesWithDesks.Count);
+            ProductType selectedType = availableProductTypesWithDesks[randomIndex];
 
-            ProductType? selectedType;
-
-            if (eligibleProductTypes.Count > 0)
-            {
-                // Пытаемся выбрать случайный тип продукта из подходящих
-                selectedType = _productRandomizerService.GetRandomProductType(eligibleProductTypes);
-                Debug.Log($"Итоговый заказ: Заказ для покупателя {customer.ID} успешно создан: Тип продукта - {selectedType.Value}, Количество - {maxProductsPerCustomer}");
-
-            } else {
-                selectedType = Store.GetAlternativeProductType();
-                Debug.Log($"Альтернативный заказ: Заказ для покупателя {customer.ID} успешно создан: Тип продукта - {selectedType.Value}, Количество - {maxProductsPerCustomer}");
-
-            }
+            //
+            // if (eligibleProductTypes.Count > 0) {
+            //     // Пытаемся выбрать случайный тип продукта из подходящих
+            //     selectedType = _productRandomizerService.GetRandomProductType(eligibleProductTypes);
+            //     Debug.Log($"Итоговый заказ: Заказ для покупателя {customer.ID} успешно создан: Тип продукта - {selectedType.Value}, Количество - {maxProductsPerCustomer}");
+            //
+            // } else {
+            //     selectedType = Store.GetAlternativeProductType();
+            //     Debug.Log($"Альтернативный заказ: Заказ для покупателя {customer.ID} успешно создан: Тип продукта - {selectedType.Value}, Количество - {maxProductsPerCustomer}");
+            //
+            // }
 
             // Создаем заказы
-            var orders = CreateOrders(customer, selectedType.Value, maxProductsPerCustomer);
+            var orders = CreateOrders(customer, selectedType/*.Value*/, maxProductsPerCustomer);
             customer.SetupCustomer(freeSlot, orders);
             customer.characterSpritesAndAnimationController.GetCharacterSprites();
             // Увеличиваем количество активных покупателей
@@ -389,8 +475,8 @@ namespace Assets._Game._Scripts._5_Managers {
         #region CustomersRegistration
 
         public void CustomerLeftTradeSlot() {
-        
-         //   StartCoroutine(UpdateCustomersOnScene());
+
+            //   StartCoroutine(UpdateCustomersOnScene());
         }
         public void CustomerLeftScene(Customer customer) {
             ReturnCustomerToPool(customer);
@@ -398,23 +484,6 @@ namespace Assets._Game._Scripts._5_Managers {
             // StartCoroutine(UpdateCustomersOnScene());
         }
 
-        // private IEnumerator UpdateCustomersOnScene() {
-        //     //Debug.Log($"CurrentActiveCustomers = {CurrentActiveCustomers}");
-        //     //if (RequiredNumberCustomersOnScene == 0) yield break;
-        //     //  if (!Store.HasFreeCustomerSlot()/*CurrentActiveCustomers >= _maxNuberCustomers*/) yield break;
-        //     while (Store.GetNumberOfOccupiedCustomerSlots() < RequiredNumberCustomersOnScene &&  Store.HasFreeCustomerSlot()) {
-        //         if (_customersPool.Count == 0) {
-        //             // Создаем нового покупателя, если в пуле нет доступных
-        //             InstantiateNewCustomer();
-        //         }
-        //
-        //         // Получаем покупателя из пула и активируем его
-        //         GetCustomer();
-        //
-        //         // Задержка перед появлением следующего покупателя
-        //         yield return new WaitForSeconds(_timeRateGetCustomers);
-        //     }
-        // }
 
         // Публичный метод для возвращения покупателя в пул
         public void ReturnCustomerToPool(Customer customer) {
@@ -453,29 +522,34 @@ namespace Assets._Game._Scripts._5_Managers {
 
             //_buttonAddCustomer.gameObject.SetActive(true);
             prebuilderDesktop.PurchasedDesktopSetBool();
-            prebuilderDesktop.gameObject.SetActive(false);
+            //prebuilderDesktop.gameObject.SetActive(false);
+            prebuilderDesktop.SetDeactivateChildTransform(false);
             _counterForUpgradelEvelOpenedPrebuilder++;
-            if (ActiveCustomers == null)
-            {
-                AddCustomer();
-            }
+
+            CheckFirstDesktopAndCreateCustomers();
 
             return true;
         }
 
-        private void SetupNewDesktopAndSlot(DesktopUnit newDesktop, GameObject newDesktopObj) {
+        private void SetupNewDesktopAndSlot(DesktopUnit newDesktop, GameObject newDesktopObj)
+        {
             var newDesktopSlot = newDesktopObj.GetComponentInChildren<DesktopSlot>();
             newDesktopSlot.ProductType = newDesktop.ProductType;
             Store.AddDesktop(newDesktop);
             Store.DesktopSlots.Add(newDesktopSlot);
             newDesktopObj.SetActive(true);
 
-            if (!_isFirstDesktopCreate) {
+            if (!_isFirstDesktopCreate)
+            {
                 _isFirstDesktopCreate = true;
-                Invoke("AddNewCustomerMainMethod", 0.5f);
-                Invoke("AddNewCustomerMainMethod", 1f);
+               // StartCoroutine(ActivateCustomersWithDelay());
+
             }
+            // Корутина для активации покупателей с задержкой
         }
+
+       
+        
 
         #endregion
 
@@ -535,12 +609,11 @@ namespace Assets._Game._Scripts._5_Managers {
 
         }
 
-     
-        public void AddNewCustomerMainMethod() {
-            if (RequiredNumberCustomersOnScene >=MaxNuberCustomers) return;
-            RequiredNumberCustomersOnScene++;
-            GetCustomer();
-            //  StartCoroutine(UpdateCustomersOnScene());
+
+        private void AddNewCustomerMainMethod() {
+            if (ActiveCustomers.Count < MaxNuberCustomers) {
+                GetCustomer();
+            }
         }
         #endregion
 
@@ -565,16 +638,15 @@ namespace Assets._Game._Scripts._5_Managers {
         public void AddCustomer() {
             AddNewCustomerMainMethod();
         }
-        
+
         private void ShowButtonNextLevel() {
             UiMode.ShowButtonForNextLevel();
         }
-        public bool CanUpgradeLevel()
-        {
+        public bool CanUpgradeLevel() {
             return Store.AreAllDesktopsUpgradedForLevel();
         }
         public void OnNextLevelButton() {
-            int nextLevel = Store.Stats.LevelGame + 1;
+            int nextLevel = Game.Instance.StoreStats.LevelGame + 1;
             long cost = 0;
 
             switch (nextLevel) {
@@ -593,9 +665,9 @@ namespace Assets._Game._Scripts._5_Managers {
                     // Если уровень не определен, возвращаем false.
                     break;
             }
-            if(Coins<cost) return;
+            if (Coins<cost) return;
             EconomyAndUpgrade.RemoveMoney(cost);
-            Store.Stats.LevelGame++;
+            Game.Instance.StoreStats.LevelGame++;
             Game.Instance.NextLevelStart();
         }
 
@@ -603,6 +675,6 @@ namespace Assets._Game._Scripts._5_Managers {
             return Store.HasActiveDesktops();
         }
 
-       
+
     }
 }
