@@ -65,7 +65,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1066e74dbe9dcf940b1419e6b653a1d8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a4adc683bf0a0be4aba2f078aa71d86f, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -88,7 +88,7 @@ GameObject:
   - component: {fileID: 5028766357565056963}
   - component: {fileID: 7735065497763625215}
   m_Layer: 5
-  m_Name: OpenUpgradeButton
+  m_Name: ShowRewarderBoostButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -197,9 +197,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Assets._Game._Scripts._5_Managers.UIMode, Assembly-CSharp
-        m_MethodName: OpenUpgradeWindow
+      - m_Target: {fileID: 8642630551001470099, guid: a18b6478743abec49b6d90663263a418, type: 3}
+        m_TargetAssemblyTypeName: Assets._Game._Scripts._2_Game.Game, Assembly-CSharp
+        m_MethodName: OnRewardedButtonForBoostProduction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -220,6 +220,10 @@ PrefabInstance:
     - target: {fileID: 1848777332206322477, guid: cb0f6843a6bde8f408e22d31aa7e45a6, type: 3}
       propertyPath: m_Name
       value: AvailabilityIndicator
+      objectReference: {fileID: 0}
+    - target: {fileID: 1848777332206322477, guid: cb0f6843a6bde8f408e22d31aa7e45a6, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3100439933004909716, guid: cb0f6843a6bde8f408e22d31aa7e45a6, type: 3}
       propertyPath: m_Pivot.x

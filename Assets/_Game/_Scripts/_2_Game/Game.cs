@@ -256,6 +256,23 @@ namespace Assets._Game._Scripts._2_Game {
              }
         }
 
+        public void OnOpenShopButton()
+        {
+            Debug.Log("Open Shop");
+        }
+        public void OnRewardedButtonFor5LevelsUpgrade()
+        {
+            Debug.Log("Start RewardedFor5LevelsUpgrade");
+        }
 
+        public void OnRewardedButtonForBoostProduction()
+        {
+            Debug.Log("Start RewardedForBoosProduction");
+        }
+
+        public void OnOpenSettingsButton()
+        {
+            Debug.Log("Open Settings Window");
+        }
     }
 }

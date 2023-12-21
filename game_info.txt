@@ -1,0 +1,23 @@
+Idle Cyberpunk
+------------------------------
+keystore:
+idlecyberpunk
+password:
+android
+alias:
+idlecyberpunk
+password:
+android
+Данные keystore:
+Garden Of Dreams
+Garden Of Dreams
+Garden Of Dreams
+PP
+1234
+----------------------------
+
+Appodeal:
+e71ccb4211e751afdddac7bf22d1a3108c9c21d9b6d075ba
+
+Admob:
+ca-app-pub-1933591656142280~9652181622
