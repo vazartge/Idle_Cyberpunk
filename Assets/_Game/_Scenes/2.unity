@@ -1393,6 +1393,10 @@ PrefabInstance:
       propertyPath: RotationAngleZ
       value: -270
       objectReference: {fileID: 0}
+    - target: {fileID: 891832127957371558, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
+      propertyPath: _productStoreType
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1094417175592698769, guid: f2c3d7cdf8c74494aa6d3c9fe10a6b4b, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

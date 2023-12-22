@@ -7,7 +7,7 @@ namespace Assets._Game._Scripts._0.Data
 {
     [Serializable]
     public class ProductInfo {
-        public ProductType ProductType;
+        public ProductStoreType ProductStoreType;
         public Sprite ProductIcon;
     }
 }

@@ -31,7 +31,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
             if (!enough)
             {
                 _typeProduct.text =
-                    _viewModel.UiMode.GetStringNameByProductType(_viewModel.PrebuilderDesktop.ProductType);
+                    _viewModel.UiMode.GetStringNameByProductType(_viewModel.PrebuilderDesktop.ProductStoreType);
                 _cost.color = Color.red;
                 _buyButton.interactable = false;
             }

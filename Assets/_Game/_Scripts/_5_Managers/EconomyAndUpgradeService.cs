@@ -46,7 +46,7 @@ namespace Assets._Game._Scripts._5_Managers
 
         public bool TryBuyPrebuilder(PrebuilderDesktop prebuilderDesktop)
         {
-            ProductType productType = prebuilderDesktop.ProductType;
+            ProductStoreType productStoreType = prebuilderDesktop.ProductStoreType;
             int cost = prebuilderDesktop.Cost;
             if (cost <= Coins)
             {
@@ -62,8 +62,8 @@ namespace Assets._Game._Scripts._5_Managers
         public bool TryUpgradeDesktop(DesktopUnit desktop)
         {
             int level = desktop.Level;
-            ProductType productType = desktop.ProductType;
-            int cost = GameMode.DataMode.GetProductUpgradeSO(productType).Upgrades[level].Cost;
+            ProductStoreType productStoreType = desktop.ProductStoreType;
+            int cost = GameMode.DataMode.GetProductUpgradeSO(productStoreType).Upgrades[level].Cost;
             if (cost <= Coins)
             {
                 desktop.UpgradeLevelUp();
@@ -80,15 +80,18 @@ namespace Assets._Game._Scripts._5_Managers
         public void SellProductByStore(DesktopUnit desktop)
         {
             int level = desktop.Level;
-            ProductType productType = desktop.ProductType;
-            int income = GameMode.DataMode.GetProductUpgradeSO(productType).Upgrades[level-1].IncomeMoney;
-
+            ProductStoreType productStoreType = desktop.ProductStoreType;
+            int income = GameMode.DataMode.GetProductUpgradeSO(productStoreType).Upgrades[level-1].IncomeMoney;
+            if (Game.Instance.StoreStats.PurchasedIncreaseProfit)
+            {
+                income *= 2;
+            }
             AddMoney(income);
         }
 
-        public long SetCostBuyProductAndLevel(int level, ProductType productType)
+        public long SetCostBuyProductAndLevel(int level, ProductStoreType productStoreType)
         {
-            int cost = GameMode.DataMode.GetProductUpgradeSO(productType).Upgrades[level].Cost;
+            int cost = GameMode.DataMode.GetProductUpgradeSO(productStoreType).Upgrades[level].Cost;
 
 
             return cost;
@@ -96,7 +99,7 @@ namespace Assets._Game._Scripts._5_Managers
 
         private void CheckDesktopAfterUpgrade(DesktopUnit desktop)
         {
-            var eventData = GameMode.DataMode.GetProductUpgradeSO(desktop.ProductType).Upgrades[desktop.Level-1]
+            var eventData = GameMode.DataMode.GetProductUpgradeSO(desktop.ProductStoreType).Upgrades[desktop.Level-1]
                 .Events;
             if (!string.IsNullOrWhiteSpace(eventData))
             {

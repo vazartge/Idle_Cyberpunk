@@ -7,16 +7,16 @@ namespace Assets._Game._Scripts._6_Entities._Store {
     [Serializable]
     public class DesktopStats {
         //public Vector3 Position;
-        public ProductType ProductType;
+        public ProductStoreType ProductStoreType;
         public int UpgradeLevel;
         public DesktopType DesktopType;
         public bool IsAdditionalDesktop;
         public bool IsUpgradedForLevel;
 
         public DesktopStats(){}
-        public DesktopStats(/*Vector3 position,*/ ProductType productType, int upgradeLevel, DesktopType desktopType, bool isAdditionalDesktop, bool isUpgradedForLevel) {
+        public DesktopStats(/*Vector3 position,*/ ProductStoreType productStoreType, int upgradeLevel, DesktopType desktopType, bool isAdditionalDesktop, bool isUpgradedForLevel) {
            // Position = position;
-            ProductType = productType;
+            ProductStoreType = productStoreType;
             UpgradeLevel = upgradeLevel;
             DesktopType = desktopType;
             IsAdditionalDesktop = isAdditionalDesktop;

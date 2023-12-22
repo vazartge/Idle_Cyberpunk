@@ -12,7 +12,7 @@ namespace Assets._Game._Scripts._6_Entities._Store._Slots
             private set => _id = value;
         }
 
-        public virtual ProductType ProductType { get; set; }
+        public virtual ProductStoreType ProductStoreType { get; set; }
 
         public bool IsOccupied => _unit != null;
 
@@ -21,7 +21,7 @@ namespace Assets._Game._Scripts._6_Entities._Store._Slots
             set => _unit = value;
         }
 
-        [SerializeField]protected ProductType _productType;
+        [SerializeField]protected ProductStoreType _productStoreType;
         
         [SerializeField] int _id;
         private IUnitGame _unit;

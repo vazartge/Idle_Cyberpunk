@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
@@ -57,25 +58,25 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public int GetNumberOfOccupiedCustomerSlots() {
             return CustomerSlots.Count(slot => slot.IsOccupied);
         }
-        public int GetOrderCountByProductType(ProductType productType) {
-            return Orders.Count(order => order.ProductType == productType);
+        public int GetOrderCountByProductType(ProductStoreType productStoreType) {
+            return Orders.Count(order => order.ProductStoreType == productStoreType);
         }
-        public Dictionary<ProductType, int> GetOrderCountsByProductType() {
+        public Dictionary<ProductStoreType, int> GetOrderCountsByProductType() {
             return Orders
-                .GroupBy(order => order.ProductType) // Группировка по типу продукта
+                .GroupBy(order => order.ProductStoreType) // Группировка по типу продукта
                 .ToDictionary(group => group.Key, group => group.Count()); // Преобразование в словарь
         }
 
       
-        public List<ProductType> GetAvailableProductTypesWithDesks() {
+        public List<ProductStoreType> GetAvailableProductTypesWithDesks() {
             return DesktopSlots
-                .Select(slot => slot.ProductType) // Выбираем типы продуктов
+                .Select(slot => slot.ProductStoreType) // Выбираем типы продуктов
                 .Distinct() // Убираем дубликаты
                 .ToList();
         }
 
 
-        public ProductType GetAlternativeProductType() {
+        public ProductStoreType GetAlternativeProductType() {
             var orderCounts = GetOrderCountsByProductType();
 
             // Если заказов нет, возвращаем случайный доступный тип продукта
@@ -93,7 +94,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             }
 
             // Если нет доступных типов продуктов, то можно возвратить значение по умолчанию или выбросить исключение
-            throw new InvalidOperationException("No available product types found.");
+            throw new InvalidOperationException("No available productStore types found.");
         }
 
 
@@ -186,7 +187,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             foreach (var order in Orders) {
                 // Найти свободный DesktopSlot, который может обработать продукт этого заказа
                
-                suitableSlot = DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied && slot.ProductType == order.ProductType);
+                suitableSlot = DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied && slot.ProductStoreType == order.ProductStoreType);
 
                 if (suitableSlot != null) {
                     // Если подходящий слот найден, сохраняем ссылку на заказ
@@ -208,8 +209,8 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         // Доделать для разных продуктов
         public void DeliveredForSellProductSuccess(Order order)
         {
-            ProductType typeProduct = order.ProductType;
-            var desktop = _desktopsList.FirstOrDefault(desktops => desktops.ProductType == typeProduct);
+            ProductStoreType storeTypeProductStore = order.ProductStoreType;
+            var desktop = _desktopsList.FirstOrDefault(desktops => desktops.ProductStoreType == storeTypeProductStore);
             // взять  тип продукта и выбрать нужный уровень стола в массиве - сдклать метод
             GameMode.EconomyAndUpgrade.SellProductByStore(desktop);
 
@@ -235,16 +236,17 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             if (_desktopsList.Count == 0) return false;
                 // Проверяем, удовлетворяет ли каждый стол в списке _desktopsList условию IsUpgradedForLevel == true
                 int count = 0;
-            foreach (var desktop in _desktopsList)
-            {
-                if (desktop._desktopType == DesktopType.main &&
-                    desktop.IsUpgradedForLevel)
-                {
-                    count++;
-                }
-            }
+            // foreach (var desktop in _desktopsList)
+            // {
+            //     if (desktop._desktopType == DesktopType.main &&
+            //         desktop.IsUpgradedForLevel)
+            //     {
+            //         count++;
+            //     }
+            // }
             var countMainDesktop = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main).Count;
-            if (count == countMainDesktop)
+            var countUpgradedDesktops = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main &&  desktop.IsUpgradedForLevel).Count;
+            if (countUpgradedDesktops >= countMainDesktop)
             {
                 return true;
             }
@@ -257,5 +259,6 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             //return _desktopsList.All(desktop => desktop._mainDesktop._desktopType == DesktopUnit.DesktopType.main && desktop._mainDesktop.IsUpgradedForLevel) && _desktopsList.Count>0;
 
         }
+
     }
 }

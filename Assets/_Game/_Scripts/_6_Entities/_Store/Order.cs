@@ -13,22 +13,22 @@ namespace Assets._Game._Scripts._6_Entities._Store
         //public IProduct ProductOrder { get; private set; }
         public bool IsOrderInStore { get; set; }
         public bool IsOrderInCollecting { get; set; }
-        public ProductType ProductType { get; set; }
+        public ProductStoreType ProductStoreType { get; set; }
 
 
-        public Order(Customer customer, ProductType productType, int id)
+        public Order(Customer customer, ProductStoreType productStoreType, int id)
         {
             ID = id;
             Customer = customer;
 
-            ProductType = productType;
+            ProductStoreType = productStoreType;
             //Debug.Log($"{Customer.IDSprites}.OrderID: {IDSprites}");
 
         }
 
-        public ProductType GetProductType()
+        public ProductStoreType GetProductType()
         {
-            return ProductType;
+            return ProductStoreType;
         }
 
     }

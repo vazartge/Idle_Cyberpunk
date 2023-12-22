@@ -6,7 +6,7 @@ namespace Assets._Game._Scripts._6_Entities._Store
 {
     [Serializable]
     public class PrebuilderStats {
-        public ProductType ProductType;
+        public ProductStoreType ProductStoreType;
         public float RotationAngleZ;
         public bool IsActive;
         public bool IsDesktopPurchased;
@@ -15,8 +15,8 @@ namespace Assets._Game._Scripts._6_Entities._Store
         // Пустой приватный конструктор для Newtonsoft.Json
         private PrebuilderStats() { }
 
-        public PrebuilderStats(ProductType productType, float rotationAngleZ, bool isActive, bool isDesktopPurchased/*, Vector3 position*/) {
-            ProductType = productType;
+        public PrebuilderStats(ProductStoreType productStoreType, float rotationAngleZ, bool isActive, bool isDesktopPurchased/*, Vector3 position*/) {
+            ProductStoreType = productStoreType;
             RotationAngleZ = rotationAngleZ;
             IsActive = isActive;
             IsDesktopPurchased = isDesktopPurchased;

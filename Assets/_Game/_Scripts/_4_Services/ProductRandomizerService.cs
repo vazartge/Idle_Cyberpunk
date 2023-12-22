@@ -27,7 +27,7 @@ namespace Assets._Game._Scripts._4_Services {
             };
         }
 
-        public ProductType? GetRandomProductType(List<ProductType> availableProductTypes) {
+        public ProductStoreType? GetRandomProductType(List<ProductStoreType> availableProductTypes) {
             if (availableProductTypes == null || availableProductTypes.Count == 0) {
                 Debug.Log("Нет доступных типов продуктов.");
                 return null;

@@ -1,16 +1,15 @@
-﻿using System;
-using System.Linq;
-using Assets._Game._Scripts._5_Managers;
+﻿using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Desktop._Base;
 using UnityEngine;
 
+namespace Assets._Game._Scripts._6_Entities._Units._Desktop
+{
+    public enum DesktopType {
+        main, additional
+    }
 
-public enum DesktopType {
-    main, additional
-}
-namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
     public class DesktopUnit : DesktopBaseUnitBase {
         [SerializeField]
         public bool IsUpgradedForLevel = false;
@@ -20,9 +19,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             set => _gameMode = value;
         }
 
-        public ProductType ProductType {
-            get => _productType;
-            set => _productType = value;
+        public ProductStoreType ProductStoreType {
+            get => _productStoreType;
+            set => _productStoreType = value;
         }
 
         public long Cost {
@@ -58,7 +57,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] public Transform AdditionalDesktopPointTransform;
         [SerializeField] private bool _isAdditionalDesktop;
         [SerializeField] private int _level = 1;
-        [SerializeField] private ProductType _productType;
+        [SerializeField] private ProductStoreType _productStoreType;
         [SerializeField] private SpriteRenderer _spriteIconProductType;
 
         private GameMode _gameMode;
@@ -84,7 +83,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             _viewModel = new DesktopViewModel(this, _view);
             ViewModel = _viewModel;
             _economyAndUpgrade = _gameMode.EconomyAndUpgrade;
-            _spriteIconProductType.sprite = GameMode.DataMode.GetIconByProductType(ProductType);
+            _spriteIconProductType.sprite = GameMode.DataMode.GetIconByProductType(ProductStoreType);
             _gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
             _mainDesktop.UpdateViewAvailabilityIndicator();
         }
@@ -108,7 +107,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         private void UpdateViewAvailabilityIndicator() {
             if (this == _mainDesktop) {
                 bool res = GameMode.Coins >= GameMode.DataMode
-                    .GetProductUpgradeSO(_mainDesktop.ProductType).Upgrades[_mainDesktop.Level].Cost && !_mainDesktop.IsUpgradedForLevel;
+                    .GetProductUpgradeSO(_mainDesktop.ProductStoreType).Upgrades[_mainDesktop.Level].Cost && !_mainDesktop.IsUpgradedForLevel;
                 _mainDesktop.AvailabilityIndicator.SetActive(res);
                 if (_additionalDesktop != null) {
                     _additionalDesktop.AvailabilityIndicator.SetActive(res);
@@ -136,7 +135,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             _mainDesktop.Level++;
             //Level++;
             // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
-            var upgradeData = _gameMode.DataMode.DataForUpgradeDesktopsMap[_mainDesktop.ProductType];
+            var upgradeData = _gameMode.DataMode.DataForUpgradeDesktopsMap[_mainDesktop.ProductStoreType];
 
             // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
             var currentUpgradeData = upgradeData.Upgrades[_mainDesktop.Level];
@@ -154,7 +153,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
 
         private void SetCost() {
-            Cost = _mainDesktop._economyAndUpgrade.SetCostBuyProductAndLevel(_mainDesktop.Level, ProductType);
+            Cost = _mainDesktop._economyAndUpgrade.SetCostBuyProductAndLevel(_mainDesktop.Level, ProductStoreType);
 
         }
         // protected override void OnTouchAction() {

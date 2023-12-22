@@ -5,10 +5,10 @@ namespace Assets._Game._Scripts._4_Services
 {
     [System.Serializable]
     public class ProductWeight {
-        public ProductType ProductType;
+        public ProductStoreType ProductStoreType;
         public float Weight; // Массив весов для каждого уровня
-        public ProductWeight(ProductType product, float weight) {
-            ProductType = product;
+        public ProductWeight(ProductStoreType productStore, float weight) {
+            ProductStoreType = productStore;
             Weight = weight;
         }
     }

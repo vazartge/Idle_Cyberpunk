@@ -2,6 +2,7 @@
 using Assets._Game._Scripts._5_Managers;
 using System;
 using System.Linq;
+using Assets._Game._Scripts._2_Game;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Desktop
@@ -26,7 +27,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
             _desktopModel = desktopModelUnit;
             _view = view;
             _uiMode = _desktopModel.GameMode.UiMode;
-            _maxStars = _desktopModel.GameMode.DataMode.GetMaxStarsForProductType(_desktopModel.ProductType);
+            _maxStars = _desktopModel.GameMode.DataMode.GetMaxStarsForProductType(_desktopModel.ProductStoreType);
             _view.Construct(this, _maxStars);
             _view.Canvas.worldCamera = _desktopModel.GameMode.UiCamera;
         }
@@ -34,14 +35,18 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
        
         public void UpdateOnChangeMoney()
         {
-            var isButtonEnabled = _desktopModel.GameMode.DataMode.GameLevel >= _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType)
+            var isButtonEnabled = _desktopModel.GameMode.DataMode.GameLevel >= _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductStoreType)
                 .Upgrades[_desktopModel.Level].OpeningAtLevel;// проверка соответствует ли уровень игры уровню прокачки отдельного стола
-            _productName = _uiMode.GetStringNameByProductType(_desktopModel.ProductType);
-            _incomeValue = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType)
+            _productName = _uiMode.GetStringNameByProductType(_desktopModel.ProductStoreType);
+            _incomeValue = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductStoreType)
                 .Upgrades[_desktopModel.Level-1].IncomeMoney;
+            if (Game.Instance.StoreStats.PurchasedIncreaseProfit)
+            {
+                _incomeValue *=2;
+            }
             _progressStarsValue = CalculateProgressToNextStar();
             _view.UpdateOnChangeMoney(_desktopModel.Cost, _desktopModel.Level, _desktopModel.Money
-                , _productName, _incomeValue, _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType).Upgrades[_desktopModel.Level-1].Stars, _progressStarsValue, isButtonEnabled);
+                , _productName, _incomeValue, _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductStoreType).Upgrades[_desktopModel.Level-1].Stars, _progressStarsValue, isButtonEnabled);
 
         }
 
@@ -73,7 +78,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 
         public float CalculateProgressToNextStar() {
             var currentLevel = _desktopModel.Level; // Текущий уровень стола
-            var upgradesData = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductType).Upgrades;
+            var upgradesData = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductStoreType).Upgrades;
 
             // Находим текущее улучшение
             var currentUpgrade = upgradesData.FirstOrDefault(upgrade => upgrade.Level == currentLevel);

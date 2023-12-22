@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: ResourceData
   m_EditorClassIdentifier: 
   ProductsInfo:
-  - ProductType: 0
+  - ProductStoreType: 0
     ProductIcon: {fileID: 21300000, guid: 3c0afbf3fd59d374696a3c66f069e596, type: 3}
-  - ProductType: 1
+  - ProductStoreType: 1
     ProductIcon: {fileID: 21300000, guid: 3bc4da435c4a38944abe91077bfdd0ee, type: 3}
-  - ProductType: 2
+  - ProductStoreType: 2
     ProductIcon: {fileID: 21300000, guid: 5fa2bf1b20a701243918da065866c4b3, type: 3}
-  - ProductType: 3
+  - ProductStoreType: 3
     ProductIcon: {fileID: 21300000, guid: c3724e2eeeeb9d04199dfef402a9d270, type: 3}
   BaseIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}

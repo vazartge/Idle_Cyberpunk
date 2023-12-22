@@ -9,7 +9,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         public GameObject AvailableIndicator;
 
         [Header("Тип продукта - ОБЯЗАТЕЛЬНО ЗАПОЛНИТЬ")]
-        [SerializeField] private ProductType _productType;
+        [SerializeField] private ProductStoreType _productStoreType;
         [Header("Угол поворота для стола против часовой стрелки")]
         public float RotationAngleZ = 0f;
         private GameMode _gameMode;
@@ -30,9 +30,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             set => _cost = value;
         }
 
-        public ProductType ProductType {
-            get => _productType;
-            set => _productType = value;
+        public ProductStoreType ProductStoreType {
+            get => _productStoreType;
+            set => _productStoreType = value;
         }
 
         public GameMode GameMode {
@@ -57,7 +57,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             ViewModel = _viewModel;
             _view.Construct(_viewModel);
             _gameMode.OnChangedStatsOrMoney  += UpdateOnChangeStatsOrMoney;
-            Cost = GameMode.DataMode.GetProductUpgradeSO(ProductType).Upgrades[0].Cost;
+            Cost = GameMode.DataMode.GetProductUpgradeSO(ProductStoreType).Upgrades[0].Cost;
 
             UpdateOnChangeStatsOrMoney();
         }
@@ -67,7 +67,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         }
 
         private void UpdateViewAvailabilityIndicator() {
-            AvailableIndicator.SetActive(IsActive && GameMode.Coins >= GameMode.DataMode.GetProductUpgradeSO(ProductType).Upgrades[0].Cost);
+            AvailableIndicator.SetActive(IsActive && GameMode.Coins >= GameMode.DataMode.GetProductUpgradeSO(ProductStoreType).Upgrades[0].Cost);
         }
 
         public void OnButtonBuyDesktop() {

@@ -57,8 +57,8 @@ namespace Assets._Game._Scripts._5_Managers {
 
         [SerializeField] private List<PrebuilderDesktop> _prebuilderDesktopsList;
 
-        public bool IsOpenedAllPrebuilders => _prebuildersGO.Length <= _counterForUpgradelEvelOpenedPrebuilder;
-        public int _counterForUpgradelEvelOpenedPrebuilder = 0;
+        public bool IsOpenedAllPrebuilders => _prebuildersGO.Length <= _counterForUpgradeLevelOpenedPrebuilder;
+        public int _counterForUpgradeLevelOpenedPrebuilder = 0;
         private int _countOpenedPrebuilder = 0;
 
         [Header("Desktops")]
@@ -192,7 +192,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public void RestoreGameFromSaveData() {
             // Восстановление состояния пребилдеров
             foreach (var prebuilderData in Game.Instance.StoreStats.PrebuilderStats) {
-                var prebuilder = _prebuilderDesktopsList.FirstOrDefault(p => p.ProductType == prebuilderData.ProductType);
+                var prebuilder = _prebuilderDesktopsList.FirstOrDefault(p => p.ProductStoreType == prebuilderData.ProductStoreType);
                 if (prebuilder != null) {
                     prebuilder.RotationAngleZ = prebuilderData.RotationAngleZ;
                    // prebuilder.transform.position = prebuilderData.Position;
@@ -206,7 +206,7 @@ namespace Assets._Game._Scripts._5_Managers {
             foreach (var prebuilderData in Game.Instance.StoreStats.PrebuilderStats) {
 
                 if ( prebuilderData.IsDesktopPurchased) {
-                    var prebuilder = _prebuilderDesktopsList.FirstOrDefault(p => p.ProductType == prebuilderData.ProductType);
+                    var prebuilder = _prebuilderDesktopsList.FirstOrDefault(p => p.ProductStoreType == prebuilderData.ProductStoreType);
                     if (prebuilder != null) {
                         CreateDesktopFromPrebuilder(prebuilder);
                         
@@ -216,13 +216,13 @@ namespace Assets._Game._Scripts._5_Managers {
 
             // Создание дополнительных столов
             foreach (var desktopData in Game.Instance.StoreStats.DesktopStatsList) {
-                Debug.Log($"Restoring desktop: ProductType={desktopData.ProductType}, UpgradeLevel={desktopData.UpgradeLevel}, DesktopType={desktopData.DesktopType}, IsAdditionalDesktop={desktopData.IsAdditionalDesktop}, IsUpgradedForLevel={desktopData.IsUpgradedForLevel}");
+                Debug.Log($"Restoring desktop: ProductStoreType={desktopData.ProductStoreType}, UpgradeLevel={desktopData.UpgradeLevel}, DesktopType={desktopData.DesktopType}, IsAdditionalDesktop={desktopData.IsAdditionalDesktop}, IsUpgradedForLevel={desktopData.IsUpgradedForLevel}");
 
                 if (desktopData.DesktopType == DesktopType.main )
                 {
                     var mainDesktop = Store.GetDesktopUnitsList()
-                        .FirstOrDefault(d => d.ProductType == desktopData.ProductType);// && d.Level == desktopData.UpgradeLevel);
-                    mainDesktop._mainDesktop.ProductType = desktopData.ProductType;
+                        .FirstOrDefault(d => d.ProductStoreType == desktopData.ProductStoreType);// && d.Level == desktopData.UpgradeLevel);
+                    mainDesktop._mainDesktop.ProductStoreType = desktopData.ProductStoreType;
                     mainDesktop._mainDesktop.Level = desktopData.UpgradeLevel;
                     mainDesktop._mainDesktop.CurDesktopType = desktopData.DesktopType;
                     mainDesktop._mainDesktop.IsAdditionalDesktop = desktopData.IsAdditionalDesktop;
@@ -369,11 +369,11 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         // Метод для получения текущего количества заказов по типам продуктов у активных покупателей
-        private Dictionary<ProductType, int> GetCurrentOrdersCountByType() {
+        private Dictionary<ProductStoreType, int> GetCurrentOrdersCountByType() {
             // Возвращаем словарь с количеством текущих заказов по каждому типу продукта
             return ActiveCustomers
                 .SelectMany(c => c?.Orders ?? Enumerable.Empty<Order>()) // Проверяем на null и используем пустую последовательность, если Orders == null
-                .GroupBy(o => o.ProductType)
+                .GroupBy(o => o.ProductStoreType)
                 .ToDictionary(g => g.Key, g => g.Count());
         }
 
@@ -412,26 +412,26 @@ namespace Assets._Game._Scripts._5_Managers {
             //     Debug.Log($"Тип продукта: {type}, Текущее количество заказов: {orderCount}");
             // }
             //
-            // ProductType? selectedType;
+            // ProductStoreType? selectedStoreType;
             // Используем System.Random для генерации разнообразного результата
             var random = new System.Random(Guid.NewGuid().GetHashCode()); // Уникальный сид для каждого вызова
             int randomIndex = random.Next(availableProductTypesWithDesks.Count);
-            ProductType selectedType = availableProductTypesWithDesks[randomIndex];
+            ProductStoreType selectedStoreType = availableProductTypesWithDesks[randomIndex];
 
             //
             // if (eligibleProductTypes.Count > 0) {
             //     // Пытаемся выбрать случайный тип продукта из подходящих
-            //     selectedType = _productRandomizerService.GetRandomProductType(eligibleProductTypes);
-            //     Debug.Log($"Итоговый заказ: Заказ для покупателя {customer.ID} успешно создан: Тип продукта - {selectedType.Value}, Количество - {maxProductsPerCustomer}");
+            //     selectedStoreType = _productRandomizerService.GetRandomProductType(eligibleProductTypes);
+            //     Debug.Log($"Итоговый заказ: Заказ для покупателя {customer.ID} успешно создан: Тип продукта - {selectedStoreType.Value}, Количество - {maxProductsPerCustomer}");
             //
             // } else {
-            //     selectedType = Store.GetAlternativeProductType();
-            //     Debug.Log($"Альтернативный заказ: Заказ для покупателя {customer.ID} успешно создан: Тип продукта - {selectedType.Value}, Количество - {maxProductsPerCustomer}");
+            //     selectedStoreType = Store.GetAlternativeProductType();
+            //     Debug.Log($"Альтернативный заказ: Заказ для покупателя {customer.ID} успешно создан: Тип продукта - {selectedStoreType.Value}, Количество - {maxProductsPerCustomer}");
             //
             // }
 
             // Создаем заказы
-            var orders = CreateOrders(customer, selectedType/*.Value*/, maxProductsPerCustomer);
+            var orders = CreateOrders(customer, selectedStoreType/*.Value*/, maxProductsPerCustomer);
             customer.SetupCustomer(freeSlot, orders);
             customer.characterSpritesAndAnimationController.GetCharacterSprites();
             // Увеличиваем количество активных покупателей
@@ -446,8 +446,8 @@ namespace Assets._Game._Scripts._5_Managers {
 
             Debug.Log($"Количество продавцов: {Sellers.Count}, Порог заказов на тип продукта: {sellerThreshold}");
 
-            foreach (var productType in Enum.GetValues(typeof(ProductType))) {
-                int currentOrderCount = orderCounts.ContainsKey((ProductType)productType) ? orderCounts[(ProductType)productType] : 0;
+            foreach (var productType in Enum.GetValues(typeof(ProductStoreType))) {
+                int currentOrderCount = orderCounts.ContainsKey((ProductStoreType)productType) ? orderCounts[(ProductStoreType)productType] : 0;
                 Debug.Log($"Тип продукта: {productType}, Количество заказов: {currentOrderCount}, Порог: {sellerThreshold}");
             }
         }
@@ -465,11 +465,11 @@ namespace Assets._Game._Scripts._5_Managers {
             }
         }
 
-        private List<Order> CreateOrders(Customer customer, ProductType typeProduct, int count) {
+        private List<Order> CreateOrders(Customer customer, ProductStoreType storeTypeProductStore, int count) {
             List<Order> orders = new List<Order>();
             for (int i = 0; i < count; i++) {
                 _idOrder++;
-                orders.Add(new Order(customer, typeProduct, _idOrder));
+                orders.Add(new Order(customer, storeTypeProductStore, _idOrder));
             }
             // Дебаг-лог для вывода информации о заказах
             return orders;
@@ -520,7 +520,7 @@ namespace Assets._Game._Scripts._5_Managers {
             newDesktopObj.transform.parent = Store.DesktopsParentTransform;
             var newDesktop = newDesktopObj.GetComponentInChildren<DesktopUnit>();
             newDesktop.ContainerForRotate.transform.rotation =  Quaternion.Euler(0f, 0f, prebuilderDesktop.RotationAngleZ);
-            newDesktop.ProductType = prebuilderDesktop.ProductType;
+            newDesktop.ProductStoreType = prebuilderDesktop.ProductStoreType;
             newDesktop.ConstructMain(this);
             SetupNewDesktopAndSlot(newDesktop, newDesktopObj);
             // prebuilderDesktop.ViewModel.HideWindow();
@@ -529,7 +529,7 @@ namespace Assets._Game._Scripts._5_Managers {
             prebuilderDesktop.PurchasedDesktopSetBool();
             //prebuilderDesktop.gameObject.SetActive(false);
             prebuilderDesktop.SetDeactivateChildTransform(false);
-            _counterForUpgradelEvelOpenedPrebuilder++;
+            _counterForUpgradeLevelOpenedPrebuilder++;
 
             CheckFirstDesktopAndCreateCustomers();
 
@@ -539,7 +539,7 @@ namespace Assets._Game._Scripts._5_Managers {
         private void SetupNewDesktopAndSlot(DesktopUnit newDesktop, GameObject newDesktopObj)
         {
             var newDesktopSlot = newDesktopObj.GetComponentInChildren<DesktopSlot>();
-            newDesktopSlot.ProductType = newDesktop.ProductType;
+            newDesktopSlot.ProductStoreType = newDesktop.ProductStoreType;
             Store.AddDesktop(newDesktop);
             Store.DesktopSlots.Add(newDesktopSlot);
             newDesktopObj.SetActive(true);
@@ -588,7 +588,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
             newDesktop.ConstructAdditional(desktopMain);
             var newDesktopSlot = newDesktopObj.GetComponentInChildren<DesktopSlot>();
-            newDesktopSlot.ProductType = desktopMain.ProductType;
+            newDesktopSlot.ProductStoreType = desktopMain.ProductStoreType;
             Store.AddDesktop(newDesktop);
             Store.DesktopSlots.Add(newDesktopSlot);
             newDesktopObj.SetActive(true);

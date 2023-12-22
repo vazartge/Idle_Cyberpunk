@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
+using Assets._Game._Scripts._6_Entities._Store;
 using UnityEngine;
 
-namespace Assets._Game._Scripts._6_Entities._Store {
+namespace Assets._Game._Scripts._2_Game {
     [Serializable]
     public class StoreStats
     {
@@ -14,6 +15,9 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         [SerializeField] private float speedMoveSeller = 5f;
         [SerializeField] private float productionSpeed = 2f;
         [SerializeField] private float takingOrder = 2f;
+        [SerializeField] private bool purchasedDisabledADS = false;
+        [SerializeField] private bool purchasedIncreaseProfit = false;
+        
 
 
         [SerializeField] private LevelUpgrade levelUpgrade = new LevelUpgrade(); // без начального значения
@@ -72,6 +76,18 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         {
             get => desktopStatsList;
             set => desktopStatsList = value;
+        }
+
+        public bool PurchasedDisabledAds
+        {
+            get => purchasedDisabledADS;
+            set => purchasedDisabledADS = value;
+        }
+
+        public bool PurchasedIncreaseProfit
+        {
+            get => purchasedIncreaseProfit;
+            set => purchasedIncreaseProfit = value;
         }
     }
 }

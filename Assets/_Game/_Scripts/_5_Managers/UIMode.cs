@@ -41,7 +41,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject UpgradeButtonPrefab;
         private UpgradeButton[] _upgradeButtons;
         private bool _isInitUpdateButtons;
-        public Dictionary<ProductType, string> ProductTypeAndNameMap;
+        public Dictionary<ProductStoreType, string> ProductTypeAndNameMap;
 
         private UnitViewModel _currentUnitViewModel;
         [SerializeField] private GameObject _closeWindowsButton;
@@ -93,12 +93,12 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public void Construct(DataMode_ dataMode, GameMode gameMode) {
 
-            ProductTypeAndNameMap = new Dictionary<ProductType, string>
+            ProductTypeAndNameMap = new Dictionary<ProductStoreType, string>
             {
-                {ProductType.MechanicalEyeProduct, "Механический глаз"},
-                {ProductType.RoboticArmProduct, "Роботизированная рука"},
-                {ProductType.IronHeartProduct, "Железное сердце"},
-                {ProductType.NeurochipProduct, "Нейрочип"},
+                {ProductStoreType.MechanicalEyeProduct, "Механический глаз"},
+                {ProductStoreType.RoboticArmProduct, "Роботизированная рука"},
+                {ProductStoreType.IronHeartProduct, "Железное сердце"},
+                {ProductStoreType.NeurochipProduct, "Нейрочип"},
                 // остальные заполнить
             };
             _dataMode = dataMode;
@@ -196,8 +196,8 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
 
-        public string GetStringNameByProductType(ProductType productType) {
-            return ProductTypeAndNameMap.GetValueOrDefault(productType);
+        public string GetStringNameByProductType(ProductStoreType productStoreType) {
+            return ProductTypeAndNameMap.GetValueOrDefault(productStoreType);
         }
 
         public void OpenUpgradeWindow() {

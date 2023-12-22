@@ -2,7 +2,7 @@
 
 namespace Assets._Game._Scripts._6_Entities._Store._Products
 {
-    public enum ProductType {
+    public enum ProductStoreType {
         MechanicalEyeProduct,
         RoboticArmProduct,
         IronHeartProduct,
@@ -10,15 +10,15 @@ namespace Assets._Game._Scripts._6_Entities._Store._Products
     }
 
     public static class ProductTypeExtensions {
-        private static readonly Dictionary<ProductType, int> Priorities = new Dictionary<ProductType, int> {
-            { ProductType.MechanicalEyeProduct, 1 },
-            { ProductType.RoboticArmProduct, 2 },
-            { ProductType.IronHeartProduct, 3 },
-            { ProductType.NeurochipProduct, 4 }
+        private static readonly Dictionary<ProductStoreType, int> Priorities = new Dictionary<ProductStoreType, int> {
+            { ProductStoreType.MechanicalEyeProduct, 1 },
+            { ProductStoreType.RoboticArmProduct, 2 },
+            { ProductStoreType.IronHeartProduct, 3 },
+            { ProductStoreType.NeurochipProduct, 4 }
         };
 
-        public static int GetPriority(this ProductType productType) {
-            return Priorities[productType];
+        public static int GetPriority(this ProductStoreType productStoreType) {
+            return Priorities[productStoreType];
         }
     }
 }

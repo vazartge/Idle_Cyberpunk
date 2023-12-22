@@ -3,7 +3,7 @@ using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using DG.Tweening;
 using System.Collections.Generic;
-using System.Linq;
+using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -50,8 +50,7 @@ namespace Assets._Game._Scripts._2_Game {
             set => Game.Instance._storeStats = value;
         }
 
-        public int CountRegister
-        {
+        public int CountRegister {
             get => Game.Instance._countRegister;
             set => Game.Instance._countRegister = value;
         }
@@ -68,8 +67,10 @@ namespace Assets._Game._Scripts._2_Game {
 
         }
 
-        private void Start()
-        {
+        private void Start() {
+
+        }
+        public void OnIAPInitialized() {
             InitializeGame();
         }
 
@@ -80,8 +81,8 @@ namespace Assets._Game._Scripts._2_Game {
             //  ClearPrebuildersList();
 
             StoreStats = LoadGame(); // Загрузка или создание StoreStats
-            //SceneManager.sceneLoaded += OnSceneLoaded; // Подписка на событие загрузки сцены
-            LoadLevel();
+            IAPManager.Instance.RestorePurchases();
+           
 
         }
 
@@ -125,9 +126,8 @@ namespace Assets._Game._Scripts._2_Game {
             SaveGame();
         }
 
-        public void OnButtonLoadGame()
-        {
-            
+        public void OnButtonLoadGame() {
+
             SceneManager.LoadScene("Boot");
             Debug.Log($"CountRegister = {CountRegister}");
             InitializeGame();
@@ -175,17 +175,19 @@ namespace Assets._Game._Scripts._2_Game {
         public void NextLevelStart() {
             IsPaused = true;
             DOTween.CompleteAll();
-         
+
             var coins = StoreStats.Coins;
             var levelGame = StoreStats.LevelGame;
+            StoreStats = null;
             StoreStats = new StoreStats();
             StoreStats.Coins = coins;
             StoreStats.LevelGame = levelGame;
             ChangeLevel(levelGame);
 
-            SaveGame();
+
             SceneManager.LoadScene(StoreStats.LevelGame); // Загрузка соответствующей сцены
-            LoadLevel();
+            SaveGame();
+            // LoadLevel();
 
         }
 
@@ -203,23 +205,22 @@ namespace Assets._Game._Scripts._2_Game {
             var prebuilderData = new List<PrebuilderStats>();
             var prebuilders = _gameMode.GetPrebuildersList();
             //   if (prebuilders != null) {
-            foreach (var prebuilder in prebuilders)
-            {
+            foreach (var prebuilder in prebuilders) {
                 var stats = new PrebuilderStats(
-                    prebuilder.ProductType,
+                    prebuilder.ProductStoreType,
                     prebuilder.RotationAngleZ,
                     prebuilder.IsActive,
                     prebuilder.IsDesktopPurchased
                 );
-                prebuilderData.Add( stats );
+                prebuilderData.Add(stats);
                 Debug.Log($"stats.RotationAngleZ ={stats.RotationAngleZ}, stats.RotationAngleZ = {stats.RotationAngleZ}, stats.IsActive = {stats.IsActive}, stats.IsDesktopPurchased = {stats.IsDesktopPurchased}");
             }
-           // prebuilderData = prebuilders.Select(p => new PrebuilderStats(p.ProductType, p.RotationAngleZ, p.IsActive, p.IsDesktopPurchased/*, p.transform.position*/)).ToList();
+            // prebuilderData = prebuilders.Select(p => new PrebuilderStats(p.ProductStoreType, p.RotationAngleZ, p.IsActive, p.IsDesktopPurchased/*, p.transform.position*/)).ToList();
             StoreStats.PrebuilderStats = prebuilderData;
             // }
             //  else
             //   {
-            
+
             //   }
 
             //---------------------------------
@@ -233,14 +234,14 @@ namespace Assets._Game._Scripts._2_Game {
                 if (desktop._mainDesktop.CurDesktopType == DesktopType.main) {
                     var stats = new DesktopStats(
                         /*desktop.transform.position,*/
-                        desktop._mainDesktop.ProductType,
+                        desktop._mainDesktop.ProductStoreType,
                         desktop._mainDesktop.Level,
                         desktop._mainDesktop.CurDesktopType,
                         desktop._mainDesktop.IsAdditionalDesktop,
                         desktop._mainDesktop.IsUpgradedForLevel
                     );
                     desktopStatsList.Add(stats);
-                    Debug.Log($"desktop.ProductType = {desktop._mainDesktop.ProductType} , desktop.Level = {desktop._mainDesktop.Level} , desktop._mainDesktop.CurDesktopType = {desktop._mainDesktop.CurDesktopType} , desktop._mainDesktop.AdditionalDesktop = {desktop._mainDesktop.IsAdditionalDesktop}, desktop._mainDesktop.IsUpgradedForLevel = {desktop._mainDesktop.IsUpgradedForLevel} ");
+                    Debug.Log($"desktop.ProductStoreType = {desktop._mainDesktop.ProductStoreType} , desktop.Level = {desktop._mainDesktop.Level} , desktop._mainDesktop.CurDesktopType = {desktop._mainDesktop.CurDesktopType} , desktop._mainDesktop.AdditionalDesktop = {desktop._mainDesktop.IsAdditionalDesktop}, desktop._mainDesktop.IsUpgradedForLevel = {desktop._mainDesktop.IsUpgradedForLevel} ");
                 }
             }
             StoreStats.DesktopStatsList = desktopStatsList;
@@ -257,33 +258,59 @@ namespace Assets._Game._Scripts._2_Game {
 
         // Вызывается при выходе из приложения
         private void OnApplicationQuit() {
-         //   SaveGame();
+            //   SaveGame();
         }
 
         // Вызывается при паузе приложения (например, при сворачивании на мобильном устройстве)
         private void OnApplicationPause(bool pauseStatus) {
-             // if (pauseStatus) {
-             //     SaveGame();
-             // }
+            // if (pauseStatus) {
+            //     SaveGame();
+            // }
         }
 
-        public void OnOpenShopButton()
-        {
+        public void OnOpenShopButton() {
             Debug.Log("Open Shop");
         }
-        public void OnRewardedButtonFor5LevelsUpgrade()
-        {
+        public void OnRewardedButtonFor5LevelsUpgrade() {
             Debug.Log("Start RewardedFor5LevelsUpgrade");
         }
 
-        public void OnRewardedButtonForBoostProduction()
-        {
+        public void OnRewardedButtonForBoostProduction() {
             Debug.Log("Start RewardedForBoosProduction");
         }
 
-        public void OnOpenSettingsButton()
-        {
+        public void OnOpenSettingsButton() {
             Debug.Log("Open Settings Window");
         }
+
+        #region IAP Purchase
+
+
+        public void OnSuccessPurchasedDisabledADS() {
+            StoreStats.PurchasedDisabledAds = true;
+        }
+        public void OnSuccessPurchasedIncreaseProfit() {
+            StoreStats.PurchasedIncreaseProfit = true;
+        }
+
+        public void OnPurchasesRestored(bool success) {
+            if (success) {
+                Debug.Log($"OnPurchasesRestored(bool success) = {success}");
+
+                // Здесь можно вызвать методы, которые обновят игровой интерфейс или состояние игры в соответствии с восстановленными покупками.
+                // Например, если реклама была отключена, обновить UI, чтобы отразить это.
+            } else {
+                Debug.Log($"OnPurchasesRestored(bool success) = {success}");
+                // Обработать случай, если покупки не были восстановлены.
+                // Например, показать сообщение пользователю.
+            }
+
+            //SceneManager.sceneLoaded += OnSceneLoaded; // Подписка на событие загрузки сцены
+            LoadLevel();
+        }
+        #endregion
+
+
+
     }
 }

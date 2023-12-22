@@ -30,7 +30,7 @@ namespace Assets._Game._Scripts._5_Managers {
         [SerializeField] private CharacterSpritesDataSO _characterSpritesDataSo;
  
         [SerializeField] private LevelsUpgradesSO _levelsUpgrades;
-        public Dictionary<ProductType, BaseUpgradeSO> _dataForUpgradeDesktopsMap;
+        public Dictionary<ProductStoreType, BaseUpgradeSO> _dataForUpgradeDesktopsMap;
         [SerializeField] private IronHeartUpgradeSO _ironHeartUpgradeSO;
         [SerializeField] private MechanicalEyeUpgradeSO _mechanicalEyeUpgradeSo;
         [SerializeField] private NeurochipUpgradeSO _neurochipUpgradeSo;
@@ -46,8 +46,8 @@ namespace Assets._Game._Scripts._5_Managers {
         [SerializeField] private UIMode _uiMode;
         private List<LevelInfo> _levels;
 
-        public Dictionary<ProductType, BaseUpgradeSO> DataForUpgradeDesktopsMap => _dataForUpgradeDesktopsMap;
-        public Dictionary<ProductType, int> MaxStarsOnLevelMap;
+        public Dictionary<ProductStoreType, BaseUpgradeSO> DataForUpgradeDesktopsMap => _dataForUpgradeDesktopsMap;
+        public Dictionary<ProductStoreType, int> MaxStarsOnLevelMap;
         public LevelsUpgradesSO LevelsUpgrades => _levelsUpgrades;
 
         public GameObject PrefabsForCreateDesktop => _desktopPrefab;
@@ -63,15 +63,15 @@ namespace Assets._Game._Scripts._5_Managers {
             Game.Instance.RegisterDataMode_(this);
 
             //словарь данных для обновления столов 
-            _dataForUpgradeDesktopsMap = new Dictionary<ProductType, BaseUpgradeSO>()
+            _dataForUpgradeDesktopsMap = new Dictionary<ProductStoreType, BaseUpgradeSO>()
             {
-                { ProductType.IronHeartProduct , _ironHeartUpgradeSO},
-                { ProductType.MechanicalEyeProduct , _mechanicalEyeUpgradeSo},
-                { ProductType.NeurochipProduct , _neurochipUpgradeSo},
-                { ProductType.RoboticArmProduct , _roboticArmUpgradeSO},
+                { ProductStoreType.IronHeartProduct , _ironHeartUpgradeSO},
+                { ProductStoreType.MechanicalEyeProduct , _mechanicalEyeUpgradeSo},
+                { ProductStoreType.NeurochipProduct , _neurochipUpgradeSo},
+                { ProductStoreType.RoboticArmProduct , _roboticArmUpgradeSO},
             };
             // Словарь для определения количества звезд в тултипе
-            MaxStarsOnLevelMap =  new Dictionary<ProductType, int>();
+            MaxStarsOnLevelMap =  new Dictionary<ProductStoreType, int>();
             UpdateMaxStarsOnLevel();
             // Инициализация уровней
             _levels = new List<LevelInfo>
@@ -99,8 +99,8 @@ namespace Assets._Game._Scripts._5_Managers {
                 MaxStarsOnLevelMap[kvp.Key] = kvp.Value.GetMaxStarsForLevel(GameLevel);
             }
         }
-        public int GetMaxStarsForProductType(ProductType productType) {
-            if (MaxStarsOnLevelMap.TryGetValue(productType, out int maxStars)) {
+        public int GetMaxStarsForProductType(ProductStoreType productStoreType) {
+            if (MaxStarsOnLevelMap.TryGetValue(productStoreType, out int maxStars)) {
                 return maxStars;
             }
             return 0; // Возвращаем 0, если в словаре нет записи для данного типа продукта
@@ -111,14 +111,14 @@ namespace Assets._Game._Scripts._5_Managers {
         //     return _starForTooltipPrafab;
         // }
 
-        public Sprite GetIconByProductType(ProductType productType) {
-            var productInfo = ResData.ProductsInfo.FirstOrDefault(p => p.ProductType.ToString() == productType.ToString());
+        public Sprite GetIconByProductType(ProductStoreType productStoreType) {
+            var productInfo = ResData.ProductsInfo.FirstOrDefault(p => p.ProductStoreType.ToString() == productStoreType.ToString());
             return productInfo != null ? productInfo.ProductIcon : ResData.BaseIcon;
         }
 
 
-        public BaseUpgradeSO GetProductUpgradeSO(ProductType productType) {
-            return DataForUpgradeDesktopsMap[productType];
+        public BaseUpgradeSO GetProductUpgradeSO(ProductStoreType productStoreType) {
+            return DataForUpgradeDesktopsMap[productStoreType];
         }
 
         // public GameObject GetPrefabForPrebuilderDesktop() {
