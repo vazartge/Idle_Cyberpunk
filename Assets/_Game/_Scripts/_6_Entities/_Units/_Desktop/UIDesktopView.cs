@@ -24,10 +24,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] private Button _buyButton;
        
         private int maxStarsForCurrentLevel;
-
+        // Создание цвета
+        Color activeColor = new Color(0.761f, 0.957f, 0.980f, 1.0f);
 
         private void Awake() {
-            
+          
         }
 
 
@@ -96,7 +97,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
                  _textCost.color = Color.red;
                  _buyButton.interactable = false;
              } else {
-                 _textCost.color = Color.black;
+                 _textCost.color =activeColor;
                  _buyButton.interactable = true;
              }
 

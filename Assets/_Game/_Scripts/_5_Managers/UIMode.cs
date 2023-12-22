@@ -84,6 +84,8 @@ namespace Assets._Game._Scripts._5_Managers {
             }
 
             _isInitUpdateButtons = true;
+            GenerateButtons(Game.Instance.StoreStats);
+            UpdateAllUpgradeButtons();
             CheckUpgradesAvailability();
             UpdateOnChangedStatsOrMoney();
         }
@@ -107,6 +109,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
             BeginPlay();
             InitializeUpgradeButtons();
+
         }
 
         private void BeginPlay() {
@@ -117,6 +120,8 @@ namespace Assets._Game._Scripts._5_Managers {
             UpdateOnChangedStatsOrMoney();
             CheckAvailabilityIndicatorForNextLevelButton();
             _gameMode.ChangedStatsOrMoney();
+          
+
         }
 
         public void OpenNewView(IUiUnitView view) {

@@ -23,7 +23,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         private UIPrebuilderView _view;
 
         private DataMode_ _dataMode;
-        public bool IsActive;
+        public bool IsActive = true;
 
         public int Cost {
             get => _cost;
@@ -40,7 +40,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             set => _gameMode = value;
         }
 
-        public bool IsDesktopPurchased { get; set; }
+        public bool IsDesktopPurchased = false;
 
         private void Awake() {
             _view = GetComponentInChildren<UIPrebuilderView>();
@@ -67,7 +67,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         }
 
         private void UpdateViewAvailabilityIndicator() {
-            AvailableIndicator.SetActive(GameMode.Coins >= GameMode.DataMode.GetProductUpgradeSO(ProductType).Upgrades[0].Cost);
+            AvailableIndicator.SetActive(IsActive && GameMode.Coins >= GameMode.DataMode.GetProductUpgradeSO(ProductType).Upgrades[0].Cost);
         }
 
         public void OnButtonBuyDesktop() {

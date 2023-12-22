@@ -200,15 +200,26 @@ namespace Assets._Game._Scripts._2_Game {
 
             _gameMode = FindObjectOfType<GameMode>();
 
-
+            var prebuilderData = new List<PrebuilderStats>();
             var prebuilders = _gameMode.GetPrebuildersList();
             //   if (prebuilders != null) {
-            var prebuilderData = prebuilders.Select(p => new PrebuilderStats(p.ProductType, p.RotationAngleZ, p.IsActive, p.IsDesktopPurchased/*, p.transform.position*/)).ToList();
+            foreach (var prebuilder in prebuilders)
+            {
+                var stats = new PrebuilderStats(
+                    prebuilder.ProductType,
+                    prebuilder.RotationAngleZ,
+                    prebuilder.IsActive,
+                    prebuilder.IsDesktopPurchased
+                );
+                prebuilderData.Add( stats );
+                Debug.Log($"stats.RotationAngleZ ={stats.RotationAngleZ}, stats.RotationAngleZ = {stats.RotationAngleZ}, stats.IsActive = {stats.IsActive}, stats.IsDesktopPurchased = {stats.IsDesktopPurchased}");
+            }
+           // prebuilderData = prebuilders.Select(p => new PrebuilderStats(p.ProductType, p.RotationAngleZ, p.IsActive, p.IsDesktopPurchased/*, p.transform.position*/)).ToList();
             StoreStats.PrebuilderStats = prebuilderData;
             // }
             //  else
             //   {
-            Debug.Log($"_gameMode.GetPrebuildersList() == null {_gameMode.GetPrebuildersList() == null}");
+            
             //   }
 
             //---------------------------------
@@ -246,14 +257,14 @@ namespace Assets._Game._Scripts._2_Game {
 
         // Вызывается при выходе из приложения
         private void OnApplicationQuit() {
-            SaveGame();
+         //   SaveGame();
         }
 
         // Вызывается при паузе приложения (например, при сворачивании на мобильном устройстве)
         private void OnApplicationPause(bool pauseStatus) {
-             if (pauseStatus) {
-                 SaveGame();
-             }
+             // if (pauseStatus) {
+             //     SaveGame();
+             // }
         }
 
         public void OnOpenShopButton()

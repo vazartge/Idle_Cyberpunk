@@ -86,6 +86,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             _economyAndUpgrade = _gameMode.EconomyAndUpgrade;
             _spriteIconProductType.sprite = GameMode.DataMode.GetIconByProductType(ProductType);
             _gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
+            _mainDesktop.UpdateViewAvailabilityIndicator();
         }
         public void ConstructAdditional(DesktopUnit desktopMain) {
 
@@ -100,7 +101,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             // _gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
             _spriteIconProductType.sprite = _mainDesktop._spriteIconProductType.sprite;
             _mainDesktop._gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
-
+            _mainDesktop.UpdateViewAvailabilityIndicator();
 
 
         }

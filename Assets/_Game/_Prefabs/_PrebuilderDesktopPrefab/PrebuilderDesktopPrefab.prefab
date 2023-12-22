@@ -1248,7 +1248,7 @@ MonoBehaviour:
   AvailableIndicator: {fileID: 7919170347024381840}
   _productType: 0
   RotationAngleZ: 0
-  IsActive: 0
+  IsActive: 1
 --- !u!1 &8544090971725810007
 GameObject:
   m_ObjectHideFlags: 0

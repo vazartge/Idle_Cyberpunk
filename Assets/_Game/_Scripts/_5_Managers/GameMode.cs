@@ -165,6 +165,7 @@ namespace Assets._Game._Scripts._5_Managers {
             _isInitialized = true;
 
             Debug.Log("_gameMode Start");
+           
             
         }
 
@@ -178,7 +179,7 @@ namespace Assets._Game._Scripts._5_Managers {
                 var prebuilderDesktop = prebuilderGO.GetComponent<PrebuilderDesktop>();
                 prebuilderDesktop.Construct(this, DataMode);
                 //prebuilderDesktop.IsActive = true;
-                prebuilderGO.SetActive(true);
+               // prebuilderGO.SetActive(true);
                 _prebuilderDesktopsList.Add(prebuilderDesktop);
 
             }

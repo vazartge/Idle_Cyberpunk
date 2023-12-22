@@ -16,7 +16,8 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
         [SerializeField] private Button _buyButton;
         private UICameraScript _uiCamera;
 
-
+        // Создание цвета
+        Color activeColor = new Color(0.761f, 0.957f, 0.980f, 1.0f);
         public void Construct(PrebuilderViewModel viewModel)
         {
             _viewModel = viewModel;
@@ -36,7 +37,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
             }
             else
             {
-                _cost.color = Color.black;
+                _cost.color = activeColor;
                 _buyButton.interactable = true;
             }
             _cost.text = NumberFormatterService.FormatNumber(cost);

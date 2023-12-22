@@ -15,6 +15,8 @@ namespace Assets._Game._Scripts._3_UI._UpgradeButton {
         private UIMode _uiMode;
         
         public IUpgradeItem _upgradeItem;
+        // Создание цвета
+        Color activeColor = new Color(0.761f, 0.957f, 0.980f, 1.0f);
 
         private void OnEnable()
         {
@@ -39,7 +41,7 @@ namespace Assets._Game._Scripts._3_UI._UpgradeButton {
         public void SetupTextsButton(string upgradeName, int cost, bool enoughCoins, bool hasDesktops = true) {
             UpgradeNameText.text = upgradeName;
             PriceText.text = NumberFormatterService.FormatNumber(cost);
-            PriceText.color = enoughCoins ? Color.black : Color.red;
+            PriceText.color = enoughCoins ? activeColor : Color.red;
 
             // Дополнительная проверка для UpgradeCustomer
             if (_upgradeItem is UpgradeCustomer && !hasDesktops) {
@@ -63,7 +65,7 @@ namespace Assets._Game._Scripts._3_UI._UpgradeButton {
             
 
             // Обновление цвета текста цены
-            PriceText.color = enoughCoins ? Color.black : Color.red;
+            PriceText.color = enoughCoins ? activeColor : Color.red;
 
             // Если элемент - UpgradeCustomer и нет рабочих столов, кнопка неактивна
             if (_upgradeItem is UpgradeCustomer && !hasDesktops) {
