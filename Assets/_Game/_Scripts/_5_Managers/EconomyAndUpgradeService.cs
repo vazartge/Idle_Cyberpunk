@@ -40,7 +40,7 @@ namespace Assets._Game._Scripts._5_Managers
         {
             GameMode = gameMode;
             Store = store;
-            //_gameMode.ChangedStatsOrMoney();
+            //_gameMode.UpdateOnChangedStatsOrMoney();
             _gameMode.InitializeComponents();
         }
 
@@ -115,14 +115,14 @@ namespace Assets._Game._Scripts._5_Managers
         }
         public bool AddMoney(long amount) {
             Coins += amount;
-            _gameMode.ChangedStatsOrMoney();
+            _gameMode.UpdateOnChangedStatsOrMoney();
             return true;
         }
 
         public bool RemoveMoney(long amount) {
             if (Coins >= 0) {
                 Coins -= amount;
-                _gameMode.ChangedStatsOrMoney();
+                _gameMode.UpdateOnChangedStatsOrMoney();
                 return true;
             }
             return false;
@@ -131,7 +131,7 @@ namespace Assets._Game._Scripts._5_Managers
         public bool AddLevelGame() {
             // _gameMode.ChangeLevel();
 
-            _gameMode.ChangedStatsOrMoney();
+            _gameMode.UpdateOnChangedStatsOrMoney();
             return true;
         }
 
@@ -142,7 +142,7 @@ namespace Assets._Game._Scripts._5_Managers
                 RemoveMoney(upgradeSeller.Price);
                 upgradeSeller.IsPurchased = true;
                 GameMode.AddSeller();
-                _gameMode.ChangedStatsOrMoney();
+                _gameMode.UpdateOnChangedStatsOrMoney();
                 Debug.Log("покупка продавца в сервисе");
             }
         }
@@ -152,7 +152,7 @@ namespace Assets._Game._Scripts._5_Managers
                 RemoveMoney(upgradeCustomer.Price);
                 upgradeCustomer.IsPurchased = true;
                 GameMode.AddCustomer();
-                _gameMode.ChangedStatsOrMoney();
+                _gameMode.UpdateOnChangedStatsOrMoney();
             }
         }
         public void OnBuyUpgradeProductionBoost(ProductBoost productBoost)
@@ -161,7 +161,7 @@ namespace Assets._Game._Scripts._5_Managers
                 RemoveMoney(productBoost.Price);
                 productBoost.IsPurchased = true;
                 Game.Instance.StoreStats.ProductionSpeed *= productBoost.ProductMultiplier;
-                _gameMode.ChangedStatsOrMoney();
+                _gameMode.UpdateOnChangedStatsOrMoney();
             }
         }
 
@@ -170,7 +170,7 @@ namespace Assets._Game._Scripts._5_Managers
                 RemoveMoney(speedBoost.Price);
                 speedBoost.IsPurchased = true;
                 Game.Instance.StoreStats.SpeedMoveSeller *= speedBoost.SpeedMultiplier;
-                _gameMode.ChangedStatsOrMoney();
+                _gameMode.UpdateOnChangedStatsOrMoney();
             }
         }
 

@@ -247,6 +247,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: af67666243d43544296001a77899c9f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NOADSButton: {fileID: 8826990720214285720}
+  Profitx2Button: {fileID: 2143405067600346089}
 --- !u!1 &2143405067600346089
 GameObject:
   m_ObjectHideFlags: 0

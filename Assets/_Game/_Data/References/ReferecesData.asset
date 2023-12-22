@@ -15,3 +15,22 @@ MonoBehaviour:
   DataMode: {fileID: 0}
   UiMode: {fileID: 0}
   GameMode: {fileID: 0}
+  StoreStats:
+    coins: 10
+    levelGame: 1
+    speedMoveCustomer: 5
+    speedMoveSeller: 5
+    productionSpeed: 2
+    takingOrder: 2
+    purchasedDisabledADS: 1
+    purchasedIncreaseProfit: 0
+    prebuilderStats:
+    - ProductStoreType: 0
+      RotationAngleZ: 0
+      IsActive: 1
+      IsDesktopPurchased: 0
+    desktopStatsList: []
+  LevelsUpgradesSO: {fileID: 11400000, guid: 148bbba99ce1d38479f7ea9e29d04c70, type: 2}
+  IAPManager: {fileID: 829334781187047900, guid: c0c10a8c98bbb5a468dc0b2c999846c2, type: 3}
+  AdsAppodeal: {fileID: 2133262417879216560, guid: 10d12cbf430cadc4da186f89b5444db0, type: 3}
+  CountRegister: 0

@@ -1,5 +1,6 @@
 ﻿using Assets._Game._Scripts._2_Game;
 using System;
+using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
@@ -22,9 +23,13 @@ namespace Assets._Game._Scripts._5_Managers
 
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
+            
         }
 
-        void Start() {
+        private async void Start() {
+            // Инициализация Unity Gaming Services здесь
+            await UnityServices.InitializeAsync();
+            Debug.Log("Unity Services Initialized");
             if (m_StoreController == null) {
                 InitializePurchasing();
             }
@@ -76,6 +81,7 @@ namespace Assets._Game._Scripts._5_Managers
             m_StoreController = controller;
             m_StoreExtensionProvider = extensions;
             Game.Instance.OnIAPInitialized(); // Уведомление Game, что IAP инициализирован
+            Debug.Log("Initialized Unity Purchasing");
         }
 
         public void OnInitializeFailed(InitializationFailureReason error) {
@@ -91,12 +97,14 @@ namespace Assets._Game._Scripts._5_Managers
             if (String.Equals(args.purchasedProduct.definition.id, PRODUCT_DISABLE_AD, StringComparison.Ordinal)) {
                 Debug.Log("Purchase Successful: " + args.purchasedProduct.definition.id);
                 Game.Instance.StoreStats.PurchasedDisabledAds = true;
+                Game.Instance.GameMode.UpdateOnChangedStatsOrMoney();
                 // Сохранение состояния после восстановления покупок
                 Game.Instance.OnSaveGameButton();
                 // Любая дополнительная логика, связанная с отключением рекламы
             } else if (String.Equals(args.purchasedProduct.definition.id, PRODUCT_INCREASE_PROFIT, StringComparison.Ordinal)) {
                 Debug.Log("Purchase Successful: " + args.purchasedProduct.definition.id);
                 Game.Instance.StoreStats.PurchasedIncreaseProfit = true;
+                Game.Instance.GameMode.UpdateOnChangedStatsOrMoney();
                 // Сохранение состояния после восстановления покупок
                 Game.Instance.OnSaveGameButton();
                 // Любая дополнительная логика, связанная с увеличением прибыли

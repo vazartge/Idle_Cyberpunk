@@ -6,11 +6,9 @@ using Assets._Game._Scripts._3_UI._HUD;
 using Assets._Game._Scripts._3_UI._HUD._Windows;
 using Assets._Game._Scripts._3_UI._UIUnits._Base;
 using Assets._Game._Scripts._3_UI._UpgradeButton;
-using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Assets._Game._Scripts._5_Managers {
     public class UIMode : MonoBehaviour {
@@ -36,6 +34,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject UpgradeWindowGO;
         public GameObject NextLevelWindowGO;
         public GameObject PurchaseWindowsGO;
+        public GameObject OpenShopPurchaseButton;
         private UIWindowUpgradeView _upgradeWindowView;
         private UIWindowNextLevelView _nextLevelWinodwView;
         private UIWindowPurchaseView _uiWindowPurchaseView;
@@ -123,7 +122,7 @@ namespace Assets._Game._Scripts._5_Managers {
             // _gameMode.OnChangedLevelPlayer += UpdateOnChangedLevelPlayer;
             UpdateOnChangedStatsOrMoney();
             CheckAvailabilityIndicatorForNextLevelButton();
-            _gameMode.ChangedStatsOrMoney();
+            _gameMode.UpdateOnChangedStatsOrMoney();
           
 
         }
@@ -197,6 +196,23 @@ namespace Assets._Game._Scripts._5_Managers {
             CheckUpgradesAvailability();
             UpdateAllUpgradeButtons();
             CheckAvailabilityIndicatorForNextLevelButton();
+            CheckShopPurchaseButton();
+            CheckShopWindowButtons();
+        }
+
+        private void CheckShopWindowButtons()
+        {
+            if(!PurchaseWindowsGO.activeSelf) return;
+            _uiWindowPurchaseView.UpdateState();
+        }
+
+        private void CheckShopPurchaseButton()
+        {
+            if (Game.Instance.StoreStats.PurchasedIncreaseProfit && Game.Instance.StoreStats.PurchasedDisabledAds)
+            {
+                if(!OpenShopPurchaseButton.activeSelf) return;
+                OpenShopPurchaseButton.SetActive(false);
+            }
         }
 
 

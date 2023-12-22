@@ -1137,6 +1137,7 @@ MonoBehaviour:
   UpgradeWindowGO: {fileID: 767015159980131985}
   NextLevelWindowGO: {fileID: 2545579671074294495}
   PurchaseWindowsGO: {fileID: 1730379989640145463}
+  OpenShopPurchaseButton: {fileID: 7759404864950555687}
   OpenNextLevelWindowButton: {fileID: 4443795246406875501}
   UpgradeButtonPrefab: {fileID: 838480487262861668, guid: 0308d7e3dd92b6e4e875a2dd0abd611c, type: 3}
   _closeWindowsButton: {fileID: 8716597301472409017}
@@ -3324,5 +3325,10 @@ PrefabInstance:
 --- !u!224 &4087266989397216370 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5074512445171060638, guid: 49e74763e09b3bd4ba3e2a562fddbed4, type: 3}
+  m_PrefabInstance: {fileID: 9139115933536338924}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7759404864950555687 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1547646282734704587, guid: 49e74763e09b3bd4ba3e2a562fddbed4, type: 3}
   m_PrefabInstance: {fileID: 9139115933536338924}
   m_PrefabAsset: {fileID: 0}

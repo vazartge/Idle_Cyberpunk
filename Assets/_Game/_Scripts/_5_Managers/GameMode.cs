@@ -295,7 +295,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         #region EventsUpdate
 
-        public void ChangedStatsOrMoney() {
+        public void UpdateOnChangedStatsOrMoney() {
 
             OnChangedStatsOrMoney?.Invoke();
             CheckPrebuilders();

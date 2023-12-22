@@ -3,21 +3,22 @@ using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using DG.Tweening;
 using System.Collections.Generic;
+using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
 namespace Assets._Game._Scripts._2_Game {
-    public class Game : MonoBehaviour {
+    public class Game : MonoBehaviour
+    {
+        [SerializeField]private ReferencesData _referencesData;
         public static Game Instance;
-        private GameMode _gameMode;
-        private UIMode _uiMode;
-        private DataMode_ _dataMode;
+       
         private StoreStatsService _storeStatsService;
-        [SerializeField] private StoreStats _storeStats;
-        public LevelsUpgradesSO levelsUpgradesSO;
-        [SerializeField] private int Level = 1;
+       // [SerializeField] private StoreStats _storeStats;
+       // public LevelsUpgradesSO levelsUpgradesSO;
+       // [SerializeField] private int Level = 1;
         public bool IsDataLoaded { get; private set; }
 
         // public List<PrebuilderDesktop> prebuilders = new List<PrebuilderDesktop>();
@@ -39,20 +40,38 @@ namespace Assets._Game._Scripts._2_Game {
             }
         }
 
-        public GameMode GameMode => _gameMode;
+        public GameMode GameMode
+        {
+            get => _referencesData.GameMode;
+            set => _referencesData.GameMode = value;
+        }
 
-        public UIMode UiMode => _uiMode;
+        public UIMode UIMode
+        {
+            get => _referencesData.UiMode;
+            set => _referencesData.UiMode = value;
+        }
 
-        public DataMode_ DataMode => _dataMode;
+        public DataMode_ DataMode
+        {
+            get => _referencesData.DataMode;
+            set => _referencesData.DataMode = value;
+        }
 
         public StoreStats StoreStats {
-            get => Game.Instance._storeStats;
-            set => Game.Instance._storeStats = value;
+            get => _referencesData.StoreStats;
+            set => _referencesData.StoreStats = value;
         }
 
         public int CountRegister {
-            get => Game.Instance._countRegister;
-            set => Game.Instance._countRegister = value;
+            get => _referencesData.CountRegister;
+            set => _referencesData.CountRegister = value;
+        }
+
+        public LevelsUpgradesSO LevelsUpgradesSo
+        {
+            get => _referencesData.LevelsUpgradesSO;
+            set => _referencesData.LevelsUpgradesSO = value;
         }
 
 
@@ -82,14 +101,15 @@ namespace Assets._Game._Scripts._2_Game {
             this._storeStatsService = new StoreStatsService();
 
             //  ClearPrebuildersList();
-            if (Application.platform == RuntimePlatform.Android) {
-                StoreStats = LoadGame(); // Загрузка или создание StoreStats
-                IAPManager.Instance.RestorePurchases();
-            } else {
-                StoreStats = LoadGame(); // Загрузка или создание StoreStats
-                LoadLevel();
-            }
-            
+            // if (Application.platform == RuntimePlatform.Android) {
+            //     StoreStats = LoadGame(); // Загрузка или создание StoreStats
+            //     IAPManager.Instance.RestorePurchases();
+            // } else {
+            //     StoreStats = LoadGame(); // Загрузка или создание StoreStats
+            //     LoadLevel();
+            // }
+            StoreStats = LoadGame(); // Загрузка или создание StoreStats
+            LoadLevel();
 
 
         }
@@ -105,18 +125,18 @@ namespace Assets._Game._Scripts._2_Game {
         }
 
         public void RegisterGameMode(GameMode gameMode) {
-            _gameMode = gameMode;
+            GameMode = gameMode;
             CountRegister++;
             CheckCountRegister();
         }
         public void RegisterUIMode(UIMode uiMode) {
-            _uiMode= uiMode;
+            UIMode= uiMode;
             CountRegister++;
             CheckCountRegister();
         }
 
         public void RegisterDataMode_(DataMode_ dataMode) {
-            _dataMode = dataMode;
+            DataMode = dataMode;
             CountRegister++;
             CheckCountRegister();
         }
@@ -124,8 +144,8 @@ namespace Assets._Game._Scripts._2_Game {
             Debug.Log($"CountRegister = {CountRegister}");
             if (CountRegister >= 3) {
                 Debug.Log("Game Start And Registered");
-                _dataMode.Construct(_gameMode, _uiMode);
-                _gameMode.Construct(_dataMode, _uiMode, StoreStats);
+                DataMode.Construct(GameMode, UIMode);
+                GameMode.Construct(DataMode, UIMode, StoreStats);
                 CountRegister = 0;
             }
         }
@@ -168,7 +188,7 @@ namespace Assets._Game._Scripts._2_Game {
         }
         private LevelUpgrade GetLevelUpgradeForLevel(int level) {
             // предполагая, что у тебя есть доступ к экземпляру LevelsUpgradesSO
-            if (levelsUpgradesSO.LevelUpgrades.TryGetValue(level, out LevelUpgrade levelUpgrade)) {
+            if (LevelsUpgradesSo.LevelUpgrades.TryGetValue(level, out LevelUpgrade levelUpgrade)) {
                 return levelUpgrade;
             } else {
                 // Обработка случая, когда нет данных для уровня
@@ -208,10 +228,10 @@ namespace Assets._Game._Scripts._2_Game {
 
         public void CollectDataForSave() {
 
-            _gameMode = FindObjectOfType<GameMode>();
+           // GameMode = FindObjectOfType<GameMode>();
 
             var prebuilderData = new List<PrebuilderStats>();
-            var prebuilders = _gameMode.GetPrebuildersList();
+            var prebuilders = GameMode.GetPrebuildersList();
             //   if (prebuilders != null) {
             foreach (var prebuilder in prebuilders) {
                 var stats = new PrebuilderStats(
@@ -237,8 +257,8 @@ namespace Assets._Game._Scripts._2_Game {
 
             //if (_gameMode.Store.GetDesktopUnitsList() != null) {
             var desktopStatsList = new List<DesktopStats>();
-            foreach (var desktop in _gameMode.Store.GetDesktopUnitsList()) {
-                Debug.Log($"_gameMode.Store.GetDesktopUnitsList() == null {_gameMode.Store.GetDesktopUnitsList() == null}");
+            foreach (var desktop in GameMode.Store.GetDesktopUnitsList()) {
+                Debug.Log($"_gameMode.Store.GetDesktopUnitsList() == null {GameMode.Store.GetDesktopUnitsList() == null}");
                 if (desktop._mainDesktop.CurDesktopType == DesktopType.main) {
                     var stats = new DesktopStats(
                         /*desktop.transform.position,*/
@@ -255,7 +275,7 @@ namespace Assets._Game._Scripts._2_Game {
             StoreStats.DesktopStatsList = desktopStatsList;
 
 
-            Debug.Log($"_gameMode.Store.GetDesktopUnitsList() == null  {_gameMode.Store.GetDesktopUnitsList() == null}");
+            Debug.Log($"_gameMode.Store.GetDesktopUnitsList() == null  {GameMode.Store.GetDesktopUnitsList() == null}");
 
 
 
@@ -290,33 +310,35 @@ namespace Assets._Game._Scripts._2_Game {
 
         public void OnButtonPurchaseNOADS()
         {
-#if UNITY_EDITOR
-            Debug.Log("Purchase NOADS");
-            Game.Instance.StoreStats.PurchasedDisabledAds = true;
-            Game.Instance.SaveGame();
-#endif
-#if !UNITY_EDITOR && PLATFORM_ANDROID
+//#if UNITY_EDITOR
+            Debug.Log("Try Purchase NOADS");
+          //  Game.Instance.StoreStats.PurchasedDisabledAds = true;
+         //   Game.Instance.SaveGame();
+            
+            //#endif
+            //#if !UNITY_EDITOR && PLATFORM_ANDROID
             IAPManager.Instance.BuyDisableADS();
-#endif
+//#endif
         }
 
         public void OnButtonPurchaseIncrease2xProfit()
         {
-#if UNITY_EDITOR
-            Debug.Log("Purchase NOADS");
-            Game.Instance.StoreStats.PurchasedDisabledAds = true;
-            Game.Instance.SaveGame();
-#endif
-#if !UNITY_EDITOR && PLATFORM_ANDROID
+//#if UNITY_EDITOR
+            Debug.Log("Try Purchase PurchaseIncrease2xProfit");
+            //Game.Instance.StoreStats.PurchasedIncreaseProfit = true;
+          //  Game.Instance.SaveGame();
+            
+//#endif
+//#if !UNITY_EDITOR && PLATFORM_ANDROID
             IAPManager.Instance.BuyIncreaseProfit();
-#endif
+//#endif
         }
-        public void OnSuccessPurchasedDisabledADS() {
-            StoreStats.PurchasedDisabledAds = true;
-        }
-        public void OnSuccessPurchasedIncreaseProfit() {
-            StoreStats.PurchasedIncreaseProfit = true;
-        }
+        // public void OnSuccessPurchasedDisabledADS() {
+        //     StoreStats.PurchasedDisabledAds = true;
+        // }
+        // public void OnSuccessPurchasedIncreaseProfit() {
+        //     StoreStats.PurchasedIncreaseProfit = true;
+        // }
 
         public void OnPurchasesRestored(bool success) {
             if (success) {
