@@ -1,4 +1,6 @@
 Idle Cyberpunk
+Package name:
+com.clicker.cyberpunk_idle_2d_survival
 ------------------------------
 keystore:
 idlecyberpunk

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "370986366459",
+    "project_id": "idle-cyberpunk-android",
+    "storage_bucket": "idle-cyberpunk-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370986366459:android:f00d35cc490d60b7d7475e",
+        "android_client_info": {
+          "package_name": "com.clicker.cyberpunk_idle_2d_survival"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAVGGJmFHLWBbMVC-A_WFTA3ppw2EMwGOk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
