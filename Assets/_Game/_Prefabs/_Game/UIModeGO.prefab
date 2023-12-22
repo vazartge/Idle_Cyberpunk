@@ -1995,6 +1995,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: UpgradingWindow
       objectReference: {fileID: 0}
+    - target: {fileID: 2035364068279309173, guid: d9ac9a2b622bd7543a85d8498953d003, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3437485576280000483, guid: d9ac9a2b622bd7543a85d8498953d003, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -2074,6 +2078,10 @@ PrefabInstance:
     - target: {fileID: 3437485576280000483, guid: d9ac9a2b622bd7543a85d8498953d003, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4815468252766756003, guid: d9ac9a2b622bd7543a85d8498953d003, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -732.7
       objectReference: {fileID: 0}
     - target: {fileID: 5707944839266274880, guid: d9ac9a2b622bd7543a85d8498953d003, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
