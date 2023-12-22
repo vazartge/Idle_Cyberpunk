@@ -68,7 +68,9 @@ namespace Assets._Game._Scripts._2_Game {
         }
 
         private void Start() {
-
+#if UNITY_EDITOR
+            InitializeGame();
+#endif
         }
         public void OnIAPInitialized() {
             InitializeGame();
@@ -79,10 +81,15 @@ namespace Assets._Game._Scripts._2_Game {
             this._storeStatsService = new StoreStatsService();
 
             //  ClearPrebuildersList();
+            if (Application.platform == RuntimePlatform.Android) {
+                StoreStats = LoadGame(); // Загрузка или создание StoreStats
+                IAPManager.Instance.RestorePurchases();
+            } else {
+                StoreStats = LoadGame(); // Загрузка или создание StoreStats
+                LoadLevel();
+            }
+            
 
-            StoreStats = LoadGame(); // Загрузка или создание StoreStats
-            IAPManager.Instance.RestorePurchases();
-           
 
         }
 
@@ -268,9 +275,7 @@ namespace Assets._Game._Scripts._2_Game {
             // }
         }
 
-        public void OnOpenShopButton() {
-            Debug.Log("Open Shop");
-        }
+       
         public void OnRewardedButtonFor5LevelsUpgrade() {
             Debug.Log("Start RewardedFor5LevelsUpgrade");
         }
@@ -278,14 +283,19 @@ namespace Assets._Game._Scripts._2_Game {
         public void OnRewardedButtonForBoostProduction() {
             Debug.Log("Start RewardedForBoosProduction");
         }
-
-        public void OnOpenSettingsButton() {
-            Debug.Log("Open Settings Window");
-        }
+       
 
         #region IAP Purchase
 
+        public void OnButtonPurchaseNOADS()
+        {
+            IAPManager.Instance.BuyDisableADS();
+        }
 
+        public void OnButtonPurchaseIncrease2xProfit()
+        {
+            IAPManager.Instance.BuyIncreaseProfit();
+        }
         public void OnSuccessPurchasedDisabledADS() {
             StoreStats.PurchasedDisabledAds = true;
         }

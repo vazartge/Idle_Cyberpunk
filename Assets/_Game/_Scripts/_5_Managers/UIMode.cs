@@ -35,8 +35,10 @@ namespace Assets._Game._Scripts._5_Managers {
         [SerializeField] private Transform upgradeButtonsContainer; // Родительский элемент для кнопок
         public GameObject UpgradeWindowGO;
         public GameObject NextLevelWindowGO;
+        public GameObject PurchaseWindowsGO;
         private UIWindowUpgradeView _upgradeWindowView;
         private UIWindowNextLevelView _nextLevelWinodwView;
+        private UIWindowPurchaseView _uiWindowPurchaseView;
         public GameObject OpenNextLevelWindowButton;
         public GameObject UpgradeButtonPrefab;
         private UpgradeButton[] _upgradeButtons;
@@ -73,6 +75,8 @@ namespace Assets._Game._Scripts._5_Managers {
             _upgradeWindowView = UpgradeWindowGO.GetComponent<UIWindowUpgradeView>();
             _nextLevelWinodwView = NextLevelWindowGO.GetComponent<UIWindowNextLevelView>();
             _nextLevelWinodwView.Construct(this);
+            _uiWindowPurchaseView = PurchaseWindowsGO.GetComponent<UIWindowPurchaseView>();
+            
         }
         private void InitializeUpgradeButtons() {
             // Инициализация массива кнопок
@@ -353,6 +357,14 @@ namespace Assets._Game._Scripts._5_Managers {
         public bool GetEnoughMoney()
         {
             return EconomyAndUpgrade.Coins >= GetCostBuyNextLevel();
+        }
+
+        public void OnOpenShopPurchaseButton() {
+            Debug.Log("Open Shop");
+            OpenNewView(_uiWindowPurchaseView);
+        }
+        public void OnOpenSettingsButton() {
+            Debug.Log("Open Settings Window");
         }
     }
 }
