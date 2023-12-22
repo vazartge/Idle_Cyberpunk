@@ -68,12 +68,13 @@ namespace Assets._Game._Scripts._2_Game {
         }
 
         private void Start() {
-#if UNITY_EDITOR
+
             InitializeGame();
-#endif
+
+
         }
         public void OnIAPInitialized() {
-            InitializeGame();
+          //  InitializeGame();
         }
 
         private void InitializeGame() {
@@ -289,12 +290,26 @@ namespace Assets._Game._Scripts._2_Game {
 
         public void OnButtonPurchaseNOADS()
         {
+#if UNITY_EDITOR
+            Debug.Log("Purchase NOADS");
+            Game.Instance.StoreStats.PurchasedDisabledAds = true;
+            Game.Instance.SaveGame();
+#endif
+#if !UNITY_EDITOR && PLATFORM_ANDROID
             IAPManager.Instance.BuyDisableADS();
+#endif
         }
 
         public void OnButtonPurchaseIncrease2xProfit()
         {
+#if UNITY_EDITOR
+            Debug.Log("Purchase NOADS");
+            Game.Instance.StoreStats.PurchasedDisabledAds = true;
+            Game.Instance.SaveGame();
+#endif
+#if !UNITY_EDITOR && PLATFORM_ANDROID
             IAPManager.Instance.BuyIncreaseProfit();
+#endif
         }
         public void OnSuccessPurchasedDisabledADS() {
             StoreStats.PurchasedDisabledAds = true;
@@ -318,7 +333,7 @@ namespace Assets._Game._Scripts._2_Game {
             //SceneManager.sceneLoaded += OnSceneLoaded; // Подписка на событие загрузки сцены
             LoadLevel();
         }
-        #endregion
+#endregion
 
 
 
