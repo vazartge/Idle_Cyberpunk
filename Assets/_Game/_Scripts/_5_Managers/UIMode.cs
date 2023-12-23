@@ -34,10 +34,12 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject UpgradeWindowGO;
         public GameObject NextLevelWindowGO;
         public GameObject PurchaseWindowsGO;
+        public GameObject UIWindowSettingsToggleViewGO;
         public GameObject OpenShopPurchaseButton;
         private UIWindowUpgradeView _upgradeWindowView;
         private UIWindowNextLevelView _nextLevelWinodwView;
         private UIWindowPurchaseView _uiWindowPurchaseView;
+        private UIWindowSettingsToggleView _uiWindowSettingsToggleView;
         public GameObject OpenNextLevelWindowButton;
         public GameObject UpgradeButtonPrefab;
         private UpgradeButton[] _upgradeButtons;
@@ -75,7 +77,9 @@ namespace Assets._Game._Scripts._5_Managers {
             _nextLevelWinodwView = NextLevelWindowGO.GetComponent<UIWindowNextLevelView>();
             _nextLevelWinodwView.Construct(this);
             _uiWindowPurchaseView = PurchaseWindowsGO.GetComponent<UIWindowPurchaseView>();
-            
+            _uiWindowSettingsToggleView = UIWindowSettingsToggleViewGO.GetComponent<UIWindowSettingsToggleView>();
+
+
         }
         private void InitializeUpgradeButtons() {
             // Инициализация массива кнопок
@@ -381,6 +385,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
         public void OnOpenSettingsButton() {
             Debug.Log("Open Settings Window");
+            OpenNewView(_uiWindowSettingsToggleView);
         }
     }
 }

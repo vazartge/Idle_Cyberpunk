@@ -14,7 +14,8 @@ namespace Assets._Game._Scripts._2_Game {
     {
         [SerializeField]private ReferencesData _referencesData;
         public static Game Instance;
-       
+        
+        private AudioSource _audioSource;
         private StoreStatsService _storeStatsService;
        // [SerializeField] private StoreStats _storeStats;
        // public LevelsUpgradesSO levelsUpgradesSO;
@@ -83,13 +84,16 @@ namespace Assets._Game._Scripts._2_Game {
             DontDestroyOnLoad(this.gameObject);
             Application.targetFrameRate = 30; // оставить только в Boot
 
+            _audioSource = GetComponent<AudioSource>();
+            _audioSource.clip = _referencesData.BackGroundMusicClip;
+            
 
         }
 
         private void Start() {
 
             InitializeGame();
-
+            PlayMusic();
 
         }
         public void OnIAPInitialized() {
@@ -355,9 +359,25 @@ namespace Assets._Game._Scripts._2_Game {
             //SceneManager.sceneLoaded += OnSceneLoaded; // Подписка на событие загрузки сцены
             LoadLevel();
         }
-#endregion
+        #endregion
 
+        #region Settings Music
 
+        public void PlayMusic()
+        {
+            _audioSource.Play();
+           
+        }
+        public void PauseMusic() {
+            _audioSource.Pause();
 
+        }
+
+        #endregion
+
+        public bool IsMusicPlaying()
+        {
+            return _audioSource.isPlaying;
+        }
     }
 }

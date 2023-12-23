@@ -17,6 +17,8 @@ namespace Assets._Game._Scripts._2_Game {
         [SerializeField] private float takingOrder = 2f;
         [SerializeField] private bool purchasedDisabledADS = false;
         [SerializeField] private bool purchasedIncreaseProfit = false;
+
+        [SerializeField] private bool IsPlayingMusic = true;
         
 
 
