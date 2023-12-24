@@ -22,16 +22,13 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] private TMP_Text _incomeText;
         [SerializeField] private TMP_Text _textCost;
         [SerializeField] private Button _buyButton;
+        [SerializeField] private GameObject RewardButton;
        
         private int maxStarsForCurrentLevel;
         // Создание цвета
         Color activeColor = new Color(0.761f, 0.957f, 0.980f, 1.0f);
 
-        private void Awake() {
-          
-        }
-
-
+       
         public void Construct(DesktopViewModel viewModel, int maxStars) {
             _viewModel = viewModel;
             maxStarsForCurrentLevel=maxStars;
@@ -103,6 +100,13 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
              _buyButton.interactable = isButtonEnabled;// проверка достиг ли уровень прокачки стола предела для данного уровня игры
              // Заполнение рекламы
+             if (_viewModel._desktop.IsUpgradedForLevel)
+             {
+                 if (RewardButton.activeSelf)
+                 {
+                     RewardButton.SetActive(false);
+                 }
+             }
         }
         // Обновляет количество активных звезд
         public void UpdateStars(int starsAmount) {
@@ -114,17 +118,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
                 }
             }
         }
-        // Обновляет количество активных звезд
-        // public void UpdateStars(int starsAmount) {
-        //     for (int i = 0; i < _starsImages.Length; i++) {
-        //         // Если индекс звезды меньше количества активных звезд, делаем её жёлтой
-        //         if (i < starsAmount) {
-        //             _starsImages[i].color = Color.yellow;
-        //         } else {
-        //             _starsImages[i].color = Color.gray; // Остальные звезды делаем серыми
-        //         }
-        //     }
-        // }
+
+        public void OnRewardedButton()
+        {
+            _viewModel._desktop.GameMode.OnRewardedButton(_viewModel._desktop);
+        }
     }
 }
 

@@ -16,7 +16,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public Transform DesktopsParentTransform;
         public Transform CustomersParentTransform;
         public Transform SellersParentTransform;
-
+        public Transform PrebuilderParentTransform;
         public GameMode GameMode;
        // public StoreStats StoreStats;
         
@@ -27,6 +27,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public  List<Order> Orders { get; set; }
         private Queue<Customer> _waitingOrderCustomer;
         private List< DesktopUnit> _desktopsList;
+       
         public bool IsCustomerAvailable => _waitingOrderCustomer != null && _waitingOrderCustomer.Count > 0;
         public bool IsDesktopAvailable => DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied);
         //[SerializeField] private int CountOrderList;
@@ -232,7 +233,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
         public bool AreAllDesktopsUpgradedForLevel()
         {
-            if(!GameMode.IsOpenedAllPrebuilders) return false;
+            //if(!GameMode.IsOpenedAllPrebuilders) return false;
             if (_desktopsList.Count == 0) return false;
                 // Проверяем, удовлетворяет ли каждый стол в списке _desktopsList условию IsUpgradedForLevel == true
                 int count = 0;
@@ -244,9 +245,11 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             //         count++;
             //     }
             // }
-            var countMainDesktop = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main).Count;
-            var countUpgradedDesktops = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main &&  desktop.IsUpgradedForLevel).Count;
-            if (countUpgradedDesktops >= countMainDesktop)
+            // var countMainDesktop = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main).Count;
+            // var countUpgradedDesktops = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main &&  desktop.IsUpgradedForLevel).Count;
+            var countUpgradedDesktops = _desktopsList.FindAll(desktop => desktop.IsUpgradedForLevel).Count;
+            var countAnyDesktops = _desktopsList.Count;
+            if (countUpgradedDesktops >= countAnyDesktops)
             {
                 return true;
             }
@@ -260,5 +263,9 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
         }
 
+        public void AddDesktopSlots(DesktopSlot slot)
+        {
+            DesktopSlots.Add(slot);
+        }
     }
 }

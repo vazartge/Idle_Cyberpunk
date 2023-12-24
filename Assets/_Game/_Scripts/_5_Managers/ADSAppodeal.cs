@@ -1,18 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ADSAppodeal : MonoBehaviour
+namespace Assets._Game._Scripts._5_Managers
 {
-    // Start is called before the first frame update
-    void Start()
+    public class ADSAppodeal : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+      
     }
 }

@@ -248,7 +248,7 @@ namespace Assets._Game._Scripts._5_Managers {
         // private void CheckUpgradesAvailability() {
         //     if(!_isInitUpdateButtons) return;
         //     // Проверка наличия доступных улучшений
-        //     bool hasAvailableUpgrades = _upgradeButtons.Any(button => button.gameObject.activeSelf && !button._upgradeItem.IsPurchased && button._upgradeItem.Price <= _economyAndUpgrade.Coins);
+        //     bool hasAvailableUpgrades = _upgradeButtons.Any(button => button.gameObject.activeSelf && !button._upgradeItem.IsPurchased && button._upgradeItem.Price <= EconomyAndUpgrade.Coins);
         //
         //     // Активация индикатора доступности, если есть доступные улучшения
         //     AvailabilityIndicatorForUpgradeWindows.SetActive(hasAvailableUpgrades);

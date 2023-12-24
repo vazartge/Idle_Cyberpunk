@@ -21,6 +21,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
 
         public override void ShowWindow()
         {
+            if(_view == null) return;
             var cost = PrebuilderDesktop.Cost;
             var enough = PrebuilderDesktop.GameMode.EconomyAndUpgrade.Coins >= cost;
             PrebuilderDesktop.GameMode.UiMode.OpenNewViewModel(this);

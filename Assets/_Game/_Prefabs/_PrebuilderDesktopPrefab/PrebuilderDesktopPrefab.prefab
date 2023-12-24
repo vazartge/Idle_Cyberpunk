@@ -902,7 +902,7 @@ MonoBehaviour:
         - m_Target: {fileID: 2576955041675155996}
           m_TargetAssemblyTypeName: Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop.PrebuilderDesktop,
             Assembly-CSharp
-          m_MethodName: OnClick
+          m_MethodName: OnClickButton
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1246,8 +1246,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ID: Prebuilder
   AvailableIndicator: {fileID: 7919170347024381840}
-  _productType: 0
+  _productStoreType: 0
   RotationAngleZ: 0
+  _positionPrebuilder: {x: 0, y: 0, z: 0}
   IsActive: 1
   IsDesktopPurchased: 0
 --- !u!1 &8544090971725810007

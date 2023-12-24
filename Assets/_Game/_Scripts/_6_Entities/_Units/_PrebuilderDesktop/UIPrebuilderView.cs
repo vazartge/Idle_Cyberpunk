@@ -27,6 +27,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
 
         public void ShowWindow(int cost, bool enough)
         {
+
             _uiWindow.SetActive(true);
             if (!enough)
             {
@@ -45,6 +46,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
 
         public override void HideWindow()
         {
+            if(_uiWindow == null) return;
             _uiWindow.SetActive(false);
         }
 

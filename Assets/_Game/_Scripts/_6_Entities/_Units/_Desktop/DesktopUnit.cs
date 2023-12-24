@@ -1,149 +1,134 @@
 ﻿using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
+using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Desktop._Base;
 using UnityEngine;
 
-namespace Assets._Game._Scripts._6_Entities._Units._Desktop
-{
-    public enum DesktopType {
-        main, additional
-    }
+namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
     public class DesktopUnit : DesktopBaseUnitBase {
-        [SerializeField]
-        public bool IsUpgradedForLevel = false;
-        
-        public GameMode GameMode {
-            get => _gameMode;
-            set => _gameMode = value;
-        }
+        [SerializeField] public Vector3 Position;
+        [SerializeField] public float RotationAngleZ;
+        [SerializeField] public DesktopSlot DesktopSlot1;
+        [SerializeField] public DesktopSlot DesktopSlot2;
+        [SerializeField] public GameObject ContainerForRotateGO;
+        [SerializeField] public GameObject AvailabilityIndicatorMainGO;
+        [SerializeField] public GameObject AvailabilityIndicatorAdditionalGO;
+        [SerializeField] public GameObject AdditionalDesktopGO;
 
-        public ProductStoreType ProductStoreType {
-            get => _productStoreType;
-            set => _productStoreType = value;
-        }
-
-        public long Cost {
-            get => _cost;
-            set => _cost = value;
-        }
-
-        public int Level {
-            get => _level;
-            set => _level = value;
-        }
-
-        public long Money => GameMode.EconomyAndUpgrade.Coins;
-
-        public bool IsAdditionalDesktop {
-            get => _isAdditionalDesktop;
-            set => _isAdditionalDesktop = value;
-        }
-
-        public DesktopUnit AdditionalDesktop {
-            get => _additionalDesktop;
-            set => _additionalDesktop = value;
-        }
-
-        public DesktopType CurDesktopType{
-            get => _desktopType;
-            set => _desktopType = value;
-        }
-
-        public GameObject ContainerForRotate;
-        public GameObject AvailabilityIndicator;
-        [SerializeField] public DesktopType _desktopType;
         [SerializeField] public Transform AdditionalDesktopPointTransform;
-        [SerializeField] private bool _isAdditionalDesktop;
-        [SerializeField] private int _level = 1;
-        [SerializeField] private ProductStoreType _productStoreType;
-        [SerializeField] private SpriteRenderer _spriteIconProductType;
+        [SerializeField] public Transform UIPointTransformMain;
+        [SerializeField] public Transform UIPointTransformAdditional;
+        [SerializeField] public Transform UICanvasTransform;
 
-        private GameMode _gameMode;
-        //[SerializeField] private UIMode UiMode;
-        private Order _order;
-        private DesktopViewModel _viewModel;
-        private UIDesktopView _view;
-        // [SerializeField] private GameObject _additionalDesktopGO;
+        [SerializeField] public bool IsAdditionalDesktop;
+        [SerializeField] public int Level = 1;
+        [SerializeField] public ProductStoreType ProductStoreType;
+        [SerializeField] public SpriteRenderer[] SpriteIconProductTypes;
+        [SerializeField] public EconomyAndUpgradeService EconomyAndUpgrade;
+        [SerializeField] public GameMode GameMode;
+        // public Order Order;
+        [SerializeField] public DesktopViewModel ViewModel;
+        [SerializeField] public UIDesktopView View;
+        [SerializeField] public long Cost;
+        [SerializeField] public bool IsUpgradedForLevel;
 
-        private EconomyAndUpgradeService _economyAndUpgrade;
-        private DesktopUnit _additionalDesktop;
-        public DesktopUnit _mainDesktop;
-        private long _cost;
-
-
-        public void ConstructMain(GameMode gameMode) {
-            _mainDesktop = this;
-            _desktopType = DesktopType.main;
+       
+        public void ConstructMain(GameMode gameMode,
+            Vector3 position, 
+            float rotationAngleZ, 
+            ProductStoreType productStoreType, 
+            int upgradeLevel, 
+            bool isAdditionalDesktop,
+            bool isUpgradedForLevel) {
 
             GameMode = gameMode;
-
-            _view = GetComponentInChildren<UIDesktopView>();
-            _viewModel = new DesktopViewModel(this, _view);
-            ViewModel = _viewModel;
-            _economyAndUpgrade = _gameMode.EconomyAndUpgrade;
-            _spriteIconProductType.sprite = GameMode.DataMode.GetIconByProductType(ProductStoreType);
-            _gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
-            _mainDesktop.UpdateViewAvailabilityIndicator();
+            View = GetComponentInChildren<UIDesktopView>();
+            ViewModel = new DesktopViewModel(this, View);
+            EconomyAndUpgrade = GameMode.EconomyAndUpgrade;
+            
+            Position = position;
+            RotationAngleZ = rotationAngleZ;
+            ProductStoreType = productStoreType;
+            Level = upgradeLevel;
+            IsAdditionalDesktop = isAdditionalDesktop;
+            IsUpgradedForLevel = isUpgradedForLevel;
+            gameObject.transform.position = Position;
+            ContainerForRotateGO.transform.rotation =  Quaternion.Euler(0f, 0f, RotationAngleZ);
+            ProductStoreType = productStoreType;
+            SetupDesktopInStore();
+            SetupSlotInStore(DesktopSlot1);
+            foreach (var icon in SpriteIconProductTypes) {
+                icon.sprite = GameMode.DataMode.GetIconByProductType(ProductStoreType);
+            }
+            if (IsAdditionalDesktop)
+            {
+                SetupAdditionalDesktop();
+                
+            }
+            GameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
+            UpdateViewAvailabilityIndicator();
         }
-        public void ConstructAdditional(DesktopUnit desktopMain) {
 
-            _mainDesktop = desktopMain;
-            _mainDesktop.AdditionalDesktop = this;
-            _desktopType = DesktopType.additional;
-            IsAdditionalDesktop = true;
-            _mainDesktop.IsAdditionalDesktop = IsAdditionalDesktop;
-            _view = GetComponentInChildren<UIDesktopView>();
-            _viewModel = new DesktopViewModel(_mainDesktop, _view);
-            ViewModel = _viewModel;
-            // _gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
-            _spriteIconProductType.sprite = _mainDesktop._spriteIconProductType.sprite;
-            _mainDesktop._gameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
-            _mainDesktop.UpdateViewAvailabilityIndicator();
+        private void SetupDesktopInStore()
+        {
+            GameMode.Store.AddDesktop(this);
+        }
+        private void SetupSlotInStore(DesktopSlot slot) {
+            slot.gameObject.SetActive(true);
+            slot.ProductStoreType = ProductStoreType;
+            GameMode.Store.AddDesktopSlots(slot);
+            
 
+
+            // Корутина для активации покупателей с задержкой
+        }
+        public void SetupAdditionalDesktop() {
+            AdditionalDesktopGO.transform.position = AdditionalDesktopPointTransform.position;
+            AdditionalDesktopGO.SetActive(true);
+            SetupSlotInStore(DesktopSlot2);
 
         }
         private void UpdateViewAvailabilityIndicator() {
-            if (this == _mainDesktop) {
-                bool res = GameMode.Coins >= GameMode.DataMode
-                    .GetProductUpgradeSO(_mainDesktop.ProductStoreType).Upgrades[_mainDesktop.Level].Cost && !_mainDesktop.IsUpgradedForLevel;
-                _mainDesktop.AvailabilityIndicator.SetActive(res);
-                if (_additionalDesktop != null) {
-                    _additionalDesktop.AvailabilityIndicator.SetActive(res);
-                }
 
+            bool res = GameMode.Coins >= GameMode.DataMode
+                .GetProductUpgradeSO(ProductStoreType).Upgrades[Level].Cost && !IsUpgradedForLevel;
+            AvailabilityIndicatorMainGO.SetActive(res);
+            if (IsAdditionalDesktop)
+            {
+                AvailabilityIndicatorAdditionalGO.SetActive(res);
             }
         }
 
         public void UpdateOnChangeStatsOrMoney() {
-            //if(_viewModel.IsOpenedWindow) return;
+            
             SetCost();
             UpdateViewAvailabilityIndicator();
-            _viewModel.UpdateOnChangeMoney();
-            _additionalDesktop?.UpdateOnChangeStatsOrMoney();
+            ViewModel.UpdateOnChangeMoney();
+            
         }
 
 
         public void OnButtonUpgradeDesktop() {
 
-            var isSuccess = _mainDesktop.GameMode.OnButtonUpgradeDesktop(_mainDesktop);
+            var isSuccess = GameMode.OnButtonUpgradeDesktop(this);
             //UpdateOnChangeStatsOrMoney();
         }
 
         public void UpgradeLevelUp() {
-            _mainDesktop.Level++;
+            Level++;
             //Level++;
             // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
-            var upgradeData = _gameMode.DataMode.DataForUpgradeDesktopsMap[_mainDesktop.ProductStoreType];
+            var upgradeData = GameMode.DataMode.DataForUpgradeDesktopsMap[ProductStoreType];
 
             // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
-            var currentUpgradeData = upgradeData.Upgrades[_mainDesktop.Level];
+            var currentUpgradeData = upgradeData.Upgrades[Level];
 
             // Проверяем, существуют ли данные для данного уровня и не превышает ли уровень игры OpeningAtLevel
-            if (currentUpgradeData != null && _gameMode.GameLevel < currentUpgradeData.OpeningAtLevel) {
-                _mainDesktop.IsUpgradedForLevel = true;
+            if (currentUpgradeData != null && GameMode.GameLevel < currentUpgradeData.OpeningAtLevel) {
                 IsUpgradedForLevel = true;
+               
             }
 
 
@@ -153,20 +138,26 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 
 
         private void SetCost() {
-            Cost = _mainDesktop._economyAndUpgrade.SetCostBuyProductAndLevel(_mainDesktop.Level, ProductStoreType);
+            Cost = EconomyAndUpgrade.SetCostBuyProductAndLevel(Level, ProductStoreType);
 
         }
-        // protected override void OnTouchAction() {
-        //     _viewModel.ShowWindow();
-        //     UpdateOnChangeStatsOrMoney();
-        //
-        // }
-        // public override void OnPointerClick(PointerEventData eventData) {
-        //     _viewModel.ShowWindow();
-        //     UpdateOnChangeStatsOrMoney();
-        // }
+        
+        public void OnClickDesktop1()
+        {
+            UICanvasTransform.transform.position = UIPointTransformMain.position;
+            ViewModel.ShowWindow();
+        }
 
+        public void OnClickDesktop2() {
+            UICanvasTransform.transform.position = UIPointTransformAdditional.position;
+            ViewModel.ShowWindow();
+        }
 
+        public void AddAdditionalDesktop()
+        {
+            IsAdditionalDesktop = true;
+        }
 
+      
     }
 }

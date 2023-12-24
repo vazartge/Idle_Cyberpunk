@@ -9,7 +9,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 {
     public class DesktopViewModel: UnitViewModel  
     {
-        public  DesktopUnit _desktopModel;
+        public  DesktopUnit _desktop;
         private UIDesktopView _view;
         
         
@@ -22,31 +22,31 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 
        
 
-        public DesktopViewModel(DesktopUnit desktopModelUnit, UIDesktopView view)
+        public DesktopViewModel(DesktopUnit desktopUnit, UIDesktopView view)
         {
-            _desktopModel = desktopModelUnit;
+            _desktop = desktopUnit;
             _view = view;
-            _uiMode = _desktopModel.GameMode.UiMode;
-            _maxStars = _desktopModel.GameMode.DataMode.GetMaxStarsForProductType(_desktopModel.ProductStoreType);
+            _uiMode = _desktop.GameMode.UiMode;
+            _maxStars = _desktop.GameMode.DataMode.GetMaxStarsForProductType(_desktop.ProductStoreType);
             _view.Construct(this, _maxStars);
-            _view.Canvas.worldCamera = _desktopModel.GameMode.UiCamera;
+            _view.Canvas.worldCamera = _desktop.GameMode.UiCamera;
         }
 
        
         public void UpdateOnChangeMoney()
         {
-            var isButtonEnabled = _desktopModel.GameMode.DataMode.GameLevel >= _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductStoreType)
-                .Upgrades[_desktopModel.Level].OpeningAtLevel;// проверка соответствует ли уровень игры уровню прокачки отдельного стола
-            _productName = _uiMode.GetStringNameByProductType(_desktopModel.ProductStoreType);
-            _incomeValue = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductStoreType)
-                .Upgrades[_desktopModel.Level-1].IncomeMoney;
+            var isButtonEnabled = _desktop.GameMode.DataMode.GameLevel >= _desktop.GameMode.DataMode.GetProductUpgradeSO(_desktop.ProductStoreType)
+                .Upgrades[_desktop.Level].OpeningAtLevel;// проверка соответствует ли уровень игры уровню прокачки отдельного стола
+            _productName = _uiMode.GetStringNameByProductType(_desktop.ProductStoreType);
+            _incomeValue = _desktop.GameMode.DataMode.GetProductUpgradeSO(_desktop.ProductStoreType)
+                .Upgrades[_desktop.Level-1].IncomeMoney;
             if (Game.Instance.StoreStats.PurchasedIncreaseProfit)
             {
                 _incomeValue *=2;
             }
             _progressStarsValue = CalculateProgressToNextStar();
-            _view.UpdateOnChangeMoney(_desktopModel.Cost, _desktopModel.Level, _desktopModel.Money
-                , _productName, _incomeValue, _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductStoreType).Upgrades[_desktopModel.Level-1].Stars, _progressStarsValue, isButtonEnabled);
+            _view.UpdateOnChangeMoney(_desktop.Cost, _desktop.Level, _desktop.GameMode.Coins
+                , _productName, _incomeValue, _desktop.GameMode.DataMode.GetProductUpgradeSO(_desktop.ProductStoreType).Upgrades[_desktop.Level-1].Stars, _progressStarsValue, isButtonEnabled);
 
         }
 
@@ -56,7 +56,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
             // if(IsOpenedWindow) return;
             _uiMode.OpenNewViewModel(this);
             _view.ShowWindow();
-            _desktopModel._mainDesktop.UpdateOnChangeStatsOrMoney();
+            _desktop.UpdateOnChangeStatsOrMoney();
            
             // IsOpenedWindow = true;
 
@@ -73,12 +73,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
 
         public void OnButtonUpgrade()
         {
-            _desktopModel.OnButtonUpgradeDesktop();
+            _desktop.OnButtonUpgradeDesktop();
         }
 
         public float CalculateProgressToNextStar() {
-            var currentLevel = _desktopModel.Level; // Текущий уровень стола
-            var upgradesData = _desktopModel.GameMode.DataMode.GetProductUpgradeSO(_desktopModel.ProductStoreType).Upgrades;
+            var currentLevel = _desktop.Level; // Текущий уровень стола
+            var upgradesData = _desktop.GameMode.DataMode.GetProductUpgradeSO(_desktop.ProductStoreType).Upgrades;
 
             // Находим текущее улучшение
             var currentUpgrade = upgradesData.FirstOrDefault(upgrade => upgrade.Level == currentLevel);

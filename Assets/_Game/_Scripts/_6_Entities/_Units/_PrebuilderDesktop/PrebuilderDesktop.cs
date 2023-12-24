@@ -3,6 +3,7 @@ using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
     public class PrebuilderDesktop : BaseUnitGame {
@@ -11,7 +12,8 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         [Header("Тип продукта - ОБЯЗАТЕЛЬНО ЗАПОЛНИТЬ")]
         [SerializeField] private ProductStoreType _productStoreType;
         [Header("Угол поворота для стола против часовой стрелки")]
-        public float RotationAngleZ = 0f;
+        [SerializeField] public float RotationAngleZ = 0f;
+        [SerializeField] public Vector3 _positionPrebuilder;
         private GameMode _gameMode;
         private UIMode _uiMode;
 
@@ -48,7 +50,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
 
         }
         // Use this for initialization
-        public override void Construct(GameMode gameMode, DataMode_ dataMode) {
+        public void Construct(GameMode gameMode, DataMode_ dataMode) {
 
             GameMode =gameMode;
             _dataMode = dataMode;
@@ -62,11 +64,22 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             UpdateOnChangeStatsOrMoney();
         }
 
+        public void ConstructWithStoreStats(ProductStoreType productStoreType,
+            float rotationAngleZ/*, bool isActive, bool isDesktopPurchased, Vector3 position*/)
+        {
+            ProductStoreType = productStoreType;
+           // _positionPrebuilder = position;
+            RotationAngleZ = rotationAngleZ;
+            // IsActive = isActive;
+            // IsDesktopPurchased = isDesktopPurchased;
+        }
+
         private void UpdateOnChangeStatsOrMoney() {
             UpdateViewAvailabilityIndicator();
         }
 
         private void UpdateViewAvailabilityIndicator() {
+            if(IsDesktopPurchased) return;
             AvailableIndicator.SetActive(IsActive && GameMode.Coins >= GameMode.DataMode.GetProductUpgradeSO(ProductStoreType).Upgrades[0].Cost);
         }
 
@@ -78,14 +91,17 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
             IsDesktopPurchased = true;
         }
 
-        public void SetDeactivateChildTransform(bool value) {
-            // предполагая, что 'prebuilder' это ваш GameObject
-            foreach (Transform child in this.transform) {
-                child.gameObject.SetActive(value);
-                IsActive = value;
-            }
+        // public void SetDeactivateChildTransform(bool value) {
+        //     // предполагая, что 'prebuilder' это ваш GameObject
+        //     foreach (Transform child in this.transform) {
+        //         child.gameObject.SetActive(value);
+        //         IsActive = value;
+        //     }
+        // }
+        public void OnClickButton()
+        {
+            ViewModel.ShowWindow();
         }
-
 
 
     }

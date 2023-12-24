@@ -51,7 +51,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public LevelsUpgradesSO LevelsUpgrades => _levelsUpgrades;
 
         public GameObject PrefabsForCreateDesktop => _desktopPrefab;
-        public GameObject PreafabsForCreatePrebuilderDesktop => _prebuilderDesktopPrefab;
+        public GameObject PrefabsForCreatePrebuilderDesktop => _prebuilderDesktopPrefab;
         public int GameLevel => _gameMode.GameLevel;
         public List<LevelInfo> Levels => _levels;
 
@@ -122,7 +122,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         // public GameObject GetPrefabForPrebuilderDesktop() {
-        //     return PreafabsForCreatePrebuilderDesktop;
+        //     return PrefabsForCreatePrebuilderDesktop;
         // }
 
         public GameObject GetPrefabForDesktop() {

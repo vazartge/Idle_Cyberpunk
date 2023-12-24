@@ -13,7 +13,6 @@ using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop;
 using Assets._Game._Scripts._6_Entities._Units._Sellers;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 using Random = UnityEngine.Random;
 
 
@@ -36,6 +35,7 @@ namespace Assets._Game._Scripts._5_Managers {
         [Header("Refererences")]
         public Store Store;
         public long Coins => Game.Instance.StoreStats.Coins;
+        public StoreStats StoreStats => Game.Instance.StoreStats;
 
         public Camera UiCamera;
         public UIMode UiMode {
@@ -53,13 +53,13 @@ namespace Assets._Game._Scripts._5_Managers {
         private bool _isFirstDesktopCreate;
 
         [Header("PrebuildersDesktop")]
-        [SerializeField] private GameObject[] _prebuildersGO;
+       // [SerializeField] private GameObject[] _prebuildersGO;
 
-        [SerializeField] private List<PrebuilderDesktop> _prebuilderDesktopsList;
+        private List<PrebuilderDesktop> _prebuilderDesktops;
 
-        public bool IsOpenedAllPrebuilders => _prebuildersGO.Length <= _counterForUpgradeLevelOpenedPrebuilder;
-        public int _counterForUpgradeLevelOpenedPrebuilder = 0;
-        private int _countOpenedPrebuilder = 0;
+        public bool IsOpenedAllPrebuilders => _prebuilderDesktops.Count <=0;
+        // public int _counterForUpgradeLevelOpenedPrebuilder = 0;
+        // private int _countOpenedPrebuilder = 0;
 
         [Header("Desktops")]
         public Transform ParentForDesktops;
@@ -128,7 +128,7 @@ namespace Assets._Game._Scripts._5_Managers {
         {
             Game.Instance.RegisterGameMode(this);
         }
-        public void Construct(DataMode_ dataMode, UIMode uiMode, StoreStats storeStats) {
+        public void Construct(DataMode_ dataMode, UIMode uiMode) {
             _dataMode = dataMode;
             Debug.Log($"_dataMode != null {_dataMode!=null}");
             UiMode = uiMode;
@@ -142,7 +142,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
             Store = FindObjectOfType<Store>();
             _productRandomizerService = new ProductRandomizerService();
-            Store.Construct(storeStats);
+            Store.Construct(StoreStats);
             ActiveCustomers = new List<Customer>();
             Sellers = new List<Seller>();
             _customersPool = new Queue<Customer>();
@@ -156,86 +156,93 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public void InitializeComponents() {
             OnChangedStatsOrMoney?.Invoke();
-            StartCoroutine(InitializeUnitsPrebuldersOnScene(_countOpenedPrebuilder));
+            StartCoroutine(InitializeUnitsPrebuldersOnScene());
 
-            //AddSellerMainMethod();
             InitializeSellers();
             InitializeCustomers();
-            
+
             _isInitialized = true;
 
-            Debug.Log("_gameMode Start");
+            Debug.Log("GameMode Start");
            
             
         }
 
 
-        public IEnumerator InitializeUnitsPrebuldersOnScene(int countOpenedPrebuilder) {
+        public IEnumerator InitializeUnitsPrebuldersOnScene() {
             yield return new WaitForSeconds(0.1f);
 
+            if (Game.Instance.IsDataLoaded && !Game.Instance.IsNewLevel)
+            {
+                if (StoreStats.PrebuilderStats != null && StoreStats.PrebuilderStats.Count>0)
+                { 
+                    _prebuilderDesktops = new List<PrebuilderDesktop>(StoreStats.PrebuilderStats.Count);
+                
+                for (int i = 0; i < _prebuilderDesktops.Count; i++)
+                {
 
-            Debug.Log(gameObject.name);
-            foreach (var prebuilderGO in _prebuildersGO) {
-                var prebuilderDesktop = prebuilderGO.GetComponent<PrebuilderDesktop>();
-                prebuilderDesktop.Construct(this, DataMode);
-                //prebuilderDesktop.IsActive = true;
-               // prebuilderGO.SetActive(true);
-                _prebuilderDesktopsList.Add(prebuilderDesktop);
+                    _prebuilderDesktops[i] = RestorePrebuildersFromSave(i);
+                }
+                }
+                
 
             }
+            else
+            {
+                _prebuilderDesktops = FindObjectsOfType<PrebuilderDesktop>().ToList();
+                foreach (var prebuilderGO in _prebuilderDesktops) {
+                    var prebuilderDesktop = prebuilderGO.GetComponent<PrebuilderDesktop>();
+                    prebuilderDesktop.Construct(this, DataMode);
+                    
+                }
+            }
             if (Game.Instance.IsDataLoaded) {
-                RestoreGameFromSaveData();
+                RestoreDesktopsFromSaveData();
 
+            }
+        }
+
+        private PrebuilderDesktop RestorePrebuildersFromSave(int index)
+        {
+            var stats = StoreStats.PrebuilderStats[index];
+            if (stats == null) return null;
+            var prebuilderGO = Instantiate(DataMode.PrefabsForCreatePrebuilderDesktop, stats.Position, Quaternion.identity);
+            prebuilderGO.transform.SetParent(Store.PrebuilderParentTransform);
+            var prebuilder = prebuilderGO.GetComponentInChildren<PrebuilderDesktop>();
+            prebuilder.Construct(this, DataMode);
+            prebuilder.ConstructWithStoreStats(stats.ProductStoreType, stats.RotationAngleZ);
+            return prebuilder;
+        }
+
+        public void RestoreDesktopsFromSaveData() {
+
+            if (StoreStats.DesktopStatsList != null && StoreStats.DesktopStatsList.Count > 0)
+            {
+                for (int i = 0; i < StoreStats.DesktopStatsList.Count; i++)
+                {
+                    var stats = StoreStats.DesktopStatsList[i];
+                    if(stats == null) continue;
+                    CreateDesktopFromSave(i);
+                    Invoke("CallCustomersIfFirstDesktop", 0.3f);
+                    //Store.AddDesktop(CreateDesktopFromSave(i));
+
+                }
             }
            
         }
-        public void RestoreGameFromSaveData() {
-            // Восстановление состояния пребилдеров
-            foreach (var prebuilderData in Game.Instance.StoreStats.PrebuilderStats) {
-                var prebuilder = _prebuilderDesktopsList.FirstOrDefault(p => p.ProductStoreType == prebuilderData.ProductStoreType);
-                if (prebuilder != null) {
-                    prebuilder.RotationAngleZ = prebuilderData.RotationAngleZ;
-                   // prebuilder.transform.position = prebuilderData.Position;
-                   prebuilder.IsActive = prebuilderData.IsActive;
-                    prebuilder.SetDeactivateChildTransform(prebuilderData.IsActive);
-                    prebuilder.IsDesktopPurchased = prebuilderData.IsDesktopPurchased;
-                }
-            }
 
-            // Создание столов из пребилдеров
-            foreach (var prebuilderData in Game.Instance.StoreStats.PrebuilderStats) {
+        private DesktopUnit CreateDesktopFromSave(int index)
+        {
+            var stats = StoreStats.DesktopStatsList[index];
+            var desktopGO = Instantiate(DataMode.PrefabsForCreateDesktop, stats.Position, Quaternion.identity);
+            desktopGO.transform.SetParent(Store.DesktopsParentTransform);
+            var desktop = desktopGO.GetComponentInChildren<DesktopUnit>();
 
-                if ( prebuilderData.IsDesktopPurchased) {
-                    var prebuilder = _prebuilderDesktopsList.FirstOrDefault(p => p.ProductStoreType == prebuilderData.ProductStoreType);
-                    if (prebuilder != null) {
-                        CreateDesktopFromPrebuilder(prebuilder);
-                        
-                    }
-                }
-            }
-
-            // Создание дополнительных столов
-            foreach (var desktopData in Game.Instance.StoreStats.DesktopStatsList) {
-                Debug.Log($"Restoring desktop: ProductStoreType={desktopData.ProductStoreType}, UpgradeLevel={desktopData.UpgradeLevel}, DesktopType={desktopData.DesktopType}, IsAdditionalDesktop={desktopData.IsAdditionalDesktop}, IsUpgradedForLevel={desktopData.IsUpgradedForLevel}");
-
-                if (desktopData.DesktopType == DesktopType.main )
-                {
-                    var mainDesktop = Store.GetDesktopUnitsList()
-                        .FirstOrDefault(d => d.ProductStoreType == desktopData.ProductStoreType);// && d.Level == desktopData.UpgradeLevel);
-                    mainDesktop._mainDesktop.ProductStoreType = desktopData.ProductStoreType;
-                    mainDesktop._mainDesktop.Level = desktopData.UpgradeLevel;
-                    mainDesktop._mainDesktop.CurDesktopType = desktopData.DesktopType;
-                    mainDesktop._mainDesktop.IsAdditionalDesktop = desktopData.IsAdditionalDesktop;
-                    mainDesktop._mainDesktop.IsUpgradedForLevel = desktopData.IsUpgradedForLevel;
-
-                    if (desktopData.IsAdditionalDesktop) {
-                        CreateAdditionalDesktop(mainDesktop);
-                    }
-                }
-            }
-
-
-          
+            desktop.ConstructMain(this, stats.Position, stats.RotationAngleZ,
+                stats.ProductStoreType, stats.UpgradeLevel, stats.IsAdditionalDesktop,
+                stats.IsUpgradedForLevel);
+            
+            return desktop;
         }
 
         public void InitializeSellers() {
@@ -289,7 +296,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         public List<PrebuilderDesktop> GetPrebuildersList() {
-            return _prebuilderDesktopsList;
+            return _prebuilderDesktops;
         }
         #endregion
 
@@ -298,7 +305,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public void UpdateOnChangedStatsOrMoney() {
 
             OnChangedStatsOrMoney?.Invoke();
-            CheckPrebuilders();
+            
             UiMode?.UpdateOnChangedStatsOrMoney();
             //CanTransitionToNextLevel();
 
@@ -325,11 +332,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         #region Factory
 
-        // private void CreateCustomers() {
-        //     for (int i = 0; i < CountCustomersForPool; i++) {
-        //         InstantiateNewCustomer();
-        //     }
-        // }
+      
         public void AddSellerMainMethod() {
             if (Sellers.Count < MaxNuberSellers) {
                 RequiredNumberSellersOnScene++;
@@ -440,18 +443,7 @@ namespace Assets._Game._Scripts._5_Managers {
             return customer;
         }
 
-        public void DebugOrderCountsAndThreshold() {
-            var orderCounts = Store.GetOrderCountsByProductType();
-            int sellerThreshold = Sellers.Count * 3;
-
-            Debug.Log($"Количество продавцов: {Sellers.Count}, Порог заказов на тип продукта: {sellerThreshold}");
-
-            foreach (var productType in Enum.GetValues(typeof(ProductStoreType))) {
-                int currentOrderCount = orderCounts.ContainsKey((ProductStoreType)productType) ? orderCounts[(ProductStoreType)productType] : 0;
-                Debug.Log($"Тип продукта: {productType}, Количество заказов: {currentOrderCount}, Порог: {sellerThreshold}");
-            }
-        }
-
+       
         private int GetMaxProductsPerCustomer(int gameLevel) {
             // Здесь должна быть логика, определяющая максимальное количество продуктов в заказе на основе уровня игры
             // Например, можно использовать простой switch или словарь, если логика более сложная
@@ -507,11 +499,7 @@ namespace Assets._Game._Scripts._5_Managers {
         #endregion
 
         #region PrebuildersDesktop
-        private void CheckPrebuilders() {
-            if (_prebuildersGO[_countOpenedPrebuilder] == null && _countOpenedPrebuilder<=_prebuildersGO.Length) {
-                InitializeUnitsPrebuldersOnScene(_countOpenedPrebuilder);
-            }
-        }
+    
 
         private bool CreateDesktopFromPrebuilder(PrebuilderDesktop prebuilderDesktop) {
             var newDesktopObj = Instantiate(_dataMode.GetPrefabForDesktop()
@@ -519,42 +507,34 @@ namespace Assets._Game._Scripts._5_Managers {
                 Quaternion.identity);
             newDesktopObj.transform.parent = Store.DesktopsParentTransform;
             var newDesktop = newDesktopObj.GetComponentInChildren<DesktopUnit>();
-            newDesktop.ContainerForRotate.transform.rotation =  Quaternion.Euler(0f, 0f, prebuilderDesktop.RotationAngleZ);
-            newDesktop.ProductStoreType = prebuilderDesktop.ProductStoreType;
-            newDesktop.ConstructMain(this);
-            SetupNewDesktopAndSlot(newDesktop, newDesktopObj);
-            // prebuilderDesktop.ViewModel.HideWindow();
-
-            //_buttonAddCustomer.gameObject.SetActive(true);
+           newDesktop.ConstructMain(this, 
+               prebuilderDesktop.transform.position,
+               prebuilderDesktop.RotationAngleZ,
+               prebuilderDesktop.ProductStoreType,
+               1,
+               false,
+               false);
+           // SetupNewDesktopAndSlot(newDesktop, newDesktopObj);
             prebuilderDesktop.PurchasedDesktopSetBool();
-            //prebuilderDesktop.gameObject.SetActive(false);
-            prebuilderDesktop.SetDeactivateChildTransform(false);
-            _counterForUpgradeLevelOpenedPrebuilder++;
-
-            CheckFirstDesktopAndCreateCustomers();
-
+            // prebuilderDesktop.PurchasedDesktopSetBool();
+            _prebuilderDesktops.Remove(prebuilderDesktop);
+            Destroy(prebuilderDesktop.gameObject);
+            
+            Invoke("CallCustomersIfFirstDesktop", 0.3f);
             return true;
         }
 
-        private void SetupNewDesktopAndSlot(DesktopUnit newDesktop, GameObject newDesktopObj)
-        {
-            var newDesktopSlot = newDesktopObj.GetComponentInChildren<DesktopSlot>();
-            newDesktopSlot.ProductStoreType = newDesktop.ProductStoreType;
-            Store.AddDesktop(newDesktop);
-            Store.DesktopSlots.Add(newDesktopSlot);
-            newDesktopObj.SetActive(true);
+       
 
+        private void CallCustomersIfFirstDesktop()
+        {
             if (!_isFirstDesktopCreate)
             {
                 _isFirstDesktopCreate = true;
-               // StartCoroutine(ActivateCustomersWithDelay());
-
+                CheckFirstDesktopAndCreateCustomers();
+                // StartCoroutine(ActivateCustomersWithDelay());
             }
-            // Корутина для активации покупателей с задержкой
         }
-
-       
-        
 
         #endregion
 
@@ -564,35 +544,42 @@ namespace Assets._Game._Scripts._5_Managers {
             CreateAdditionalDesktop(desktopMain);
         }
 
-        private void CreateAdditionalDesktop(DesktopUnit desktopMain) {
-            var newDesktopGO = Instantiate(_dataMode.GetPrefabForDesktop(), desktopMain.AdditionalDesktopPointTransform.position
-            , Quaternion.identity); // Создаем новый объект стола
-            newDesktopGO.transform.parent = Store.DesktopsParentTransform;
-            var newDesktop = newDesktopGO.GetComponent<DesktopUnit>();
-            newDesktop.ContainerForRotate.transform.rotation = desktopMain.ContainerForRotate.transform.rotation;
-            newDesktop.IsAdditionalDesktop = true;
-            // // Рассчитываем позицию для нового стола
-            // var spriteRenderer = desktopMain.GetComponentInChildren<DesktopUnitMainSpriteRenderer>().GetComponent<SpriteRenderer>(); // Получаем компонент SpriteRenderer основного стола
-            // if (spriteRenderer != null) {
-            //     var spriteWidth = spriteRenderer.bounds.size.x; // Получаем ширину спрайта
-            //     var newPosition = desktopMain.transform.position + new Vector3(spriteWidth, 0, 0); // Сдвигаем новый стол на ширину спрайта вправо
-            //     newDesktopGO.transform.position = newPosition; // Устанавливаем позицию для нового стола
-            // }
-
-            SetupNewDesktopAndSlot(newDesktop, newDesktopGO, desktopMain);
-
+        private void CreateAdditionalDesktop(DesktopUnit desktopMain)
+        {
+            desktopMain.AddAdditionalDesktop();
+            desktopMain.SetupAdditionalDesktop();
+           
         }
 
-        private void SetupNewDesktopAndSlot(DesktopUnit newDesktop,
-             GameObject newDesktopObj, DesktopUnit desktopMain) {
-
-            newDesktop.ConstructAdditional(desktopMain);
-            var newDesktopSlot = newDesktopObj.GetComponentInChildren<DesktopSlot>();
-            newDesktopSlot.ProductStoreType = desktopMain.ProductStoreType;
-            Store.AddDesktop(newDesktop);
-            Store.DesktopSlots.Add(newDesktopSlot);
-            newDesktopObj.SetActive(true);
-        }
+        // private void CreateAdditionalDesktop(DesktopUnit desktopMain) {
+        //     var newDesktopGO = Instantiate(_dataMode.GetPrefabForDesktop(), desktopMain.AdditionalDesktopPointTransform.position
+        //     , Quaternion.identity); // Создаем новый объект стола
+        //     newDesktopGO.transform.parent = Store.DesktopsParentTransform;
+        //     var newDesktop = newDesktopGO.GetComponent<DesktopUnit>();
+        //     newDesktop.ContainerForRotateGO.transform.rotation = desktopMain.ContainerForRotateGO.transform.rotation;
+        //     newDesktop.IsAdditionalDesktop = true;
+        //     // // Рассчитываем позицию для нового стола
+        //     // var spriteRenderer = desktopMain.GetComponentInChildren<DesktopUnitMainSpriteRenderer>().GetComponent<SpriteRenderer>(); // Получаем компонент SpriteRenderer основного стола
+        //     // if (spriteRenderer != null) {
+        //     //     var spriteWidth = spriteRenderer.bounds.size.x; // Получаем ширину спрайта
+        //     //     var newPosition = desktopMain.transform.position + new Vector3(spriteWidth, 0, 0); // Сдвигаем новый стол на ширину спрайта вправо
+        //     //     newDesktopGO.transform.position = newPosition; // Устанавливаем позицию для нового стола
+        //     // }
+        //
+        //     SetupNewDesktopAndSlot(newDesktop, newDesktopGO, desktopMain);
+        //
+        // }
+        //
+        // private void SetupNewDesktopAndSlot(DesktopUnit newDesktop,
+        //      GameObject newDesktopObj, DesktopUnit desktopMain) {
+        //
+        //     newDesktop.ConstructAdditional(desktopMain);
+        //     var newDesktopSlot = newDesktopObj.GetComponentInChildren<DesktopSlot>();
+        //     newDesktopSlot.ProductStoreType = desktopMain.ProductStoreType;
+        //     Store.SetupAdditionalDesktop(newDesktop);
+        //     Store.DesktopSlots.Add(newDesktopSlot);
+        //     newDesktopObj.SetActive(true);
+        // }
 
         #endregion
 
@@ -681,5 +668,9 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
 
+        public void OnRewardedButton(DesktopUnit desktop)
+        {
+            
+        }
     }
 }
