@@ -8,60 +8,28 @@ namespace Assets._Game._Scripts._2_Game {
     [Serializable]
     public class StoreStats
     {
-
-        [SerializeField] private long coins = 10;
-        [SerializeField] private int levelGame = 1;
-        [SerializeField] private float speedMoveCustomer = 5f;
-        [SerializeField] private float speedMoveSeller = 5f;
-        [SerializeField] private float productionSpeed = 2f;
-        [SerializeField] private float takingOrder = 2f;
-        [SerializeField] private bool purchasedDisabledADS = false;
-        [SerializeField] private bool purchasedIncreaseProfit = false;
-
-        [SerializeField] private bool isPlayingMusic = true;
-        
-
-
+        [SerializeField] private GameStats gameStats = new GameStats();
         [SerializeField] private LevelUpgrade levelUpgrade = new LevelUpgrade(); // без начального значения
         [SerializeField] private List<PrebuilderStats> prebuilderStats = new List<PrebuilderStats>();
         [SerializeField] private List<DesktopStats> desktopStatsList = new List<DesktopStats>();
         [SerializeField] private List<SceneStat> sceneStatsList = new List<SceneStat>();
 
 
-        public long Coins
+        public StoreStats()
         {
-            get => coins;
-            set => coins = value;
         }
-
-        public int LevelGame
-        {
-            get => levelGame;
-            set => levelGame = value;
-        }
-
-        public float SpeedMoveCustomer
-        {
-            get => speedMoveCustomer;
-            set => speedMoveCustomer = value;
-        }
-
-        public float SpeedMoveSeller
-        {
-            get => speedMoveSeller;
-            set => speedMoveSeller = value;
-        }
-
-        public float ProductionSpeed
-        {
-            get => productionSpeed;
-            set => productionSpeed = value;
-        }
-
-        public float TakingOrder
-        {
-            get => takingOrder;
-            set => takingOrder = value;
+        public StoreStats(GameStats gameStats,
+            LevelUpgrade levelUpgrade,
+            List<PrebuilderStats> prebuilderStats,
+            List<DesktopStats> desktopStatsList,
+            List<SceneStat> sceneStatsList
+            ) {
+            GameStats=gameStats;
+            LevelUpgrade=levelUpgrade;
+            PrebuilderStats=prebuilderStats;
+            DesktopStatsList=desktopStatsList;
+            SceneStatsList=sceneStatsList;
+            
         }
 
         public LevelUpgrade LevelUpgrade
@@ -80,17 +48,7 @@ namespace Assets._Game._Scripts._2_Game {
             set => desktopStatsList = value;
         }
 
-        public bool PurchasedDisabledAds
-        {
-            get => purchasedDisabledADS;
-            set => purchasedDisabledADS = value;
-        }
-
-        public bool PurchasedIncreaseProfit
-        {
-            get => purchasedIncreaseProfit;
-            set => purchasedIncreaseProfit = value;
-        }
+      
 
         public List<SceneStat> SceneStatsList
         {
@@ -98,10 +56,10 @@ namespace Assets._Game._Scripts._2_Game {
             set => sceneStatsList = value;
         }
 
-        public bool IsPlayingMusic
+        public GameStats GameStats
         {
-            get => isPlayingMusic;
-            set => isPlayingMusic = value;
+            get => gameStats;
+            set => gameStats = value;
         }
     }
 }

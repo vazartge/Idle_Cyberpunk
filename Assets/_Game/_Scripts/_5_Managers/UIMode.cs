@@ -212,7 +212,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         private void CheckShopPurchaseButton()
         {
-            if (Game.Instance.StoreStats.PurchasedIncreaseProfit && Game.Instance.StoreStats.PurchasedDisabledAds)
+            if (Game.Instance.StoreStats.GameStats.PurchasedIncreaseProfit && Game.Instance.StoreStats.GameStats.PurchasedDisabledAds)
             {
                 if(!OpenShopPurchaseButton.activeSelf) return;
                 OpenShopPurchaseButton.SetActive(false);
@@ -337,7 +337,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public void CheckAvailabilityIndicatorForNextLevelButton()
         {
             if(!OpenNextLevelWindowButton.activeSelf) return;
-            AvailabilityIndicatorForNextLevelButton.SetActive(Game.Instance.StoreStats.Coins >= GetCostBuyNextLevel()); 
+            AvailabilityIndicatorForNextLevelButton.SetActive(Game.Instance.StoreStats.GameStats.Coins >= GetCostBuyNextLevel()); 
         }
         public int GetCostBuyNextLevel() {
             int costNextLevel;

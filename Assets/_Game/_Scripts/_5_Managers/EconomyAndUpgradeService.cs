@@ -14,14 +14,14 @@ namespace Assets._Game._Scripts._5_Managers
     {
         public long Coins
         {
-            get => Game.Instance.StoreStats.Coins;
-            set => Game.Instance.StoreStats.Coins = value;
+            get => Game.Instance.StoreStats.GameStats.Coins;
+            set => Game.Instance.StoreStats.GameStats.Coins = value;
         }
 
         public int LevelGame
         {
-            get => Game.Instance.StoreStats.LevelGame;
-            set => Game.Instance.StoreStats.LevelGame = value;
+            get => Game.Instance.StoreStats.GameStats.LevelGame;
+            set => Game.Instance.StoreStats.GameStats.LevelGame = value;
         }
 
         public GameMode GameMode
@@ -82,7 +82,7 @@ namespace Assets._Game._Scripts._5_Managers
             int level = desktop.Level;
             ProductStoreType productStoreType = desktop.ProductStoreType;
             int income = GameMode.DataMode.GetProductUpgradeSO(productStoreType).Upgrades[level-1].IncomeMoney;
-            if (Game.Instance.StoreStats.PurchasedIncreaseProfit)
+            if (Game.Instance.StoreStats.GameStats.PurchasedIncreaseProfit)
             {
                 income *= 2;
             }
@@ -160,7 +160,7 @@ namespace Assets._Game._Scripts._5_Managers
             if (productBoost.Price <= Coins && productBoost.IsPurchased != true) {
                 RemoveMoney(productBoost.Price);
                 productBoost.IsPurchased = true;
-                Game.Instance.StoreStats.ProductionSpeed *= productBoost.ProductMultiplier;
+                Game.Instance.StoreStats.GameStats.ProductionSpeed *= productBoost.ProductMultiplier;
                 _gameMode.UpdateOnChangedStatsOrMoney();
             }
         }
@@ -169,7 +169,7 @@ namespace Assets._Game._Scripts._5_Managers
             if (speedBoost.Price <= Coins && speedBoost.IsPurchased != true) {
                 RemoveMoney(speedBoost.Price);
                 speedBoost.IsPurchased = true;
-                Game.Instance.StoreStats.SpeedMoveSeller *= speedBoost.SpeedMultiplier;
+                Game.Instance.StoreStats.GameStats.SpeedMoveSeller *= speedBoost.SpeedMultiplier;
                 _gameMode.UpdateOnChangedStatsOrMoney();
             }
         }

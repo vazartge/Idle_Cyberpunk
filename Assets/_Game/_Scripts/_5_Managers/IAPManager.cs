@@ -98,14 +98,14 @@ namespace Assets._Game._Scripts._5_Managers
         public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args) {
             if (String.Equals(args.purchasedProduct.definition.id, PRODUCT_DISABLE_AD, StringComparison.Ordinal)) {
                 Debug.Log("Purchase Successful: " + args.purchasedProduct.definition.id);
-                Game.Instance.StoreStats.PurchasedDisabledAds = true;
+                Game.Instance.StoreStats.GameStats.PurchasedDisabledAds = true;
                 Game.Instance.GameMode.UpdateOnChangedStatsOrMoney();
                 // Сохранение состояния после восстановления покупок
                 Game.Instance.OnSaveGameButton();
                 // Любая дополнительная логика, связанная с отключением рекламы
             } else if (String.Equals(args.purchasedProduct.definition.id, PRODUCT_INCREASE_PROFIT, StringComparison.Ordinal)) {
                 Debug.Log("Purchase Successful: " + args.purchasedProduct.definition.id);
-                Game.Instance.StoreStats.PurchasedIncreaseProfit = true;
+                Game.Instance.StoreStats.GameStats.PurchasedIncreaseProfit = true;
                 Game.Instance.GameMode.UpdateOnChangedStatsOrMoney();
                 // Сохранение состояния после восстановления покупок
                 Game.Instance.OnSaveGameButton();

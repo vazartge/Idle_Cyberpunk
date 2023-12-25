@@ -32,9 +32,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._Sellers {
         public CharacterType CharacterType;
         public AnimationState AnimationState;
         private Animator _animator;
-        private float timeTakingOrder => Game.Instance.StoreStats.TakingOrder;
-        private float productionSpeed => Game.Instance.StoreStats.ProductionSpeed;
-       private float moveSpeed => Game.Instance.StoreStats.SpeedMoveSeller;
+        private float timeTakingOrder => Game.Instance.StoreStats.GameStats.TakingOrder;
+        private float productionSpeed => Game.Instance.StoreStats.GameStats.ProductionSpeed;
+       private float moveSpeed => Game.Instance.StoreStats.GameStats.SpeedMoveSeller;
         private GameMode _gameMode;
         private Store _store;
 

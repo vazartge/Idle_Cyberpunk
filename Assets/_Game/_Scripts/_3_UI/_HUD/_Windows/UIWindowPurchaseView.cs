@@ -18,8 +18,8 @@ namespace Assets._Game._Scripts._3_UI._HUD._Windows
 
         public void UpdateState()
         {
-            if (Game.Instance.StoreStats.PurchasedDisabledAds) NOADSButton.SetActive(false);
-            if (Game.Instance.StoreStats.PurchasedIncreaseProfit) Profitx2Button.SetActive(false);
+            if (Game.Instance.StoreStats.GameStats.PurchasedDisabledAds) NOADSButton.SetActive(false);
+            if (Game.Instance.StoreStats.GameStats.PurchasedIncreaseProfit) Profitx2Button.SetActive(false);
             if (!NOADSButton.activeSelf && !Profitx2Button.activeSelf) gameObject.SetActive(false);
         }
 

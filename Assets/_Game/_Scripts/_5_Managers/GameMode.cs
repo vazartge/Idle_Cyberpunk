@@ -26,14 +26,14 @@ namespace Assets._Game._Scripts._5_Managers {
         // Changed StoreStats
         public event Action OnChangedStatsOrMoney;
         //  public event Action OnChangedLevelPlayer;
-        public int GameLevel => Game.Instance.StoreStats.LevelGame;
+        public int GameLevel => Game.Instance.StoreStats.GameStats.LevelGame;
 
         private bool _isInitialized;
         private int _idOrder;
 
         [Header("Refererences")]
         public Store Store;
-        public long Coins => Game.Instance.StoreStats.Coins;
+        public long Coins => Game.Instance.StoreStats.GameStats.Coins;
         public StoreStats StoreStats => Game.Instance.StoreStats;
 
         public Camera UiCamera;
@@ -261,7 +261,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         public void InitializeSellers() {
-            var currentLevel = Game.Instance.StoreStats.LevelGame;
+            var currentLevel = Game.Instance.StoreStats.GameStats.LevelGame;
           //  if (Store.StoreStats.LevelUpgrade != null) {
                 int sellersNeeded = Game.Instance.StoreStats.LevelUpgrade.Sellers
                     .Where(s => s.IsPurchased)
@@ -276,7 +276,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         public void InitializeCustomers() {
-            var currentLevel = Game.Instance.StoreStats.LevelGame;
+            var currentLevel = Game.Instance.StoreStats.GameStats.LevelGame;
             if (Game.Instance.StoreStats.LevelUpgrade != null) {
                 int customersNeeded = Game.Instance.StoreStats.LevelUpgrade.Customers
                     .Where(c => c.IsPurchased)
@@ -653,7 +653,7 @@ namespace Assets._Game._Scripts._5_Managers {
             return Store.AreAllDesktopsUpgradedForLevel();
         }
         public void OnNextLevelButton() {
-            int nextLevel = Game.Instance.StoreStats.LevelGame + 1;
+            int nextLevel = Game.Instance.StoreStats.GameStats.LevelGame + 1;
             long cost = 0;
 
             switch (nextLevel) {
@@ -674,7 +674,7 @@ namespace Assets._Game._Scripts._5_Managers {
             }
             if (Coins<cost) return;
             EconomyAndUpgrade.RemoveMoney(cost);
-            Game.Instance.StoreStats.LevelGame++;
+            Game.Instance.StoreStats.GameStats.LevelGame++;
             Game.Instance.NextLevelStart();
         }
 

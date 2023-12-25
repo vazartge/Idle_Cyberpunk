@@ -20,6 +20,7 @@ namespace Assets._Game._Scripts._0.Data {
         public int CountRegister=0;
 
         public AudioClip BackGroundMusicClip;
-        
+        public AudioSource AudioSource;
+
     }
 }

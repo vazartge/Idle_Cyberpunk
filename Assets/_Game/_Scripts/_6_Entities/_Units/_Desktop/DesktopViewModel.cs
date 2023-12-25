@@ -40,7 +40,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
             _productName = _uiMode.GetStringNameByProductType(_desktop.ProductStoreType);
             _incomeValue = _desktop.GameMode.DataMode.GetProductUpgradeSO(_desktop.ProductStoreType)
                 .Upgrades[_desktop.Level-1].IncomeMoney;
-            if (Game.Instance.StoreStats.PurchasedIncreaseProfit)
+            if (Game.Instance.StoreStats.GameStats.PurchasedIncreaseProfit)
             {
                 _incomeValue *=2;
             }

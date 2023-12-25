@@ -5,7 +5,6 @@ using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
 using Assets._Game._Scripts._0.Data;
-using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -15,18 +14,19 @@ namespace Assets._Game._Scripts._2_Game {
         [SerializeField] private ReferencesData _referencesData;
         public static Game Instance;
 
-        private AudioSource _audioSource;
+        
         private StoreStatsService _storeStatsService;
         // [SerializeField] private StoreStats _storeStats;
         // public LevelsUpgradesSO levelsUpgradesSO;
         // [SerializeField] private int Level = 1;
         public bool IsDataLoaded;
-       // public bool IsNewLevel;
+        // public bool IsNewLevel;
 
         // public List<PrebuilderDesktop> prebuilders = new List<PrebuilderDesktop>();
 
         private bool isPaused;
         private int _countRegister = 0;
+        public bool IsInitializedGoogleService;
 
         public bool IsPaused {
             get => isPaused;
@@ -72,6 +72,11 @@ namespace Assets._Game._Scripts._2_Game {
             set => _referencesData.LevelsUpgradesSO = value;
         }
 
+        private AudioSource AudioSource
+        {
+            get=> _referencesData.AudioSource;
+            set=> _referencesData.AudioSource = value;
+        }
 
         private void Awake() {
             if (Instance != null) {
@@ -84,8 +89,8 @@ namespace Assets._Game._Scripts._2_Game {
             DontDestroyOnLoad(this.gameObject);
             Application.targetFrameRate = 30; // оставить только в Boot
 
-            _audioSource = GetComponent<AudioSource>();
-            _audioSource.clip = _referencesData.BackGroundMusicClip;
+            AudioSource = GetComponent<AudioSource>();
+            AudioSource.clip = _referencesData.BackGroundMusicClip;
 
 
         }
@@ -93,11 +98,13 @@ namespace Assets._Game._Scripts._2_Game {
         private void Start() {
 
             // InitializeGame();
-            PlayMusic();
+            InitializeGame();
+           
 
         }
         public void OnIAPInitialized() {
-            InitializeGame();
+            Debug.Log("Initialized IAP");
+            IsInitializedGoogleService = true;
         }
 
         private void InitializeGame() {
@@ -113,17 +120,20 @@ namespace Assets._Game._Scripts._2_Game {
             //     LoadLevel();
             // }
             StoreStats = LoadGame(); // Загрузка или создание StoreStats
+            CheckMusic();
             LoadLevel();
 
 
         }
 
 
+
+
         private void LoadLevel() {
 
 
-            SceneManager.LoadScene(StoreStats.LevelGame); // Загрузка соответствующей сцены
-                                                          // SceneManager.LoadScene(Level); // Загрузка соответствующей сцены
+            SceneManager.LoadScene(StoreStats.GameStats.LevelGame); // Загрузка соответствующей сцены
+                                                                    // SceneManager.LoadScene(Level); // Загрузка соответствующей сцены
 
         }
 
@@ -150,7 +160,7 @@ namespace Assets._Game._Scripts._2_Game {
                 DataMode.Construct(GameMode, UIMode);
                 GameMode.Construct(DataMode, UIMode);
                 CountRegister = 0;
-                
+
             }
         }
 
@@ -158,14 +168,14 @@ namespace Assets._Game._Scripts._2_Game {
             SaveGame();
         }
 
-        public void OnButtonLoadGame()
-        {
-            
+        public void OnButtonLoadGame() {
+
             SceneManager.LoadScene("Boot");
             Debug.Log($"CountRegister = {CountRegister}");
             InitializeGame();
         }
         private void SaveGame() {
+            if (GameMode == null) return;
             CollectDataForSave();
             Debug.Log("Save Game!");
             _storeStatsService = new StoreStatsService();
@@ -185,8 +195,8 @@ namespace Assets._Game._Scripts._2_Game {
                 // Создать новый StoreStats и загрузить LevelUpgrade из LevelsUpgradesSO
                 IsDataLoaded = false;
                 var newStoreStats = new StoreStats();
-                newStoreStats.LevelUpgrade = GetLevelUpgradeForLevel(newStoreStats.LevelGame);
-                Debug.Log($"GetLevelUpgradeForLevel(newStoreStats.LevelGame) = null {GetLevelUpgradeForLevel(newStoreStats.LevelGame)==null}");
+                newStoreStats.LevelUpgrade = GetLevelUpgradeForLevel(newStoreStats.GameStats.LevelGame);
+                Debug.Log($"GetLevelUpgradeForLevel(newStoreStats.LevelGame) = null {GetLevelUpgradeForLevel(newStoreStats.GameStats.LevelGame)==null}");
                 Debug.Log($"StoreStats.LevelUpgrade == null {newStoreStats.LevelUpgrade == null}");
                 return newStoreStats;
             }
@@ -206,7 +216,7 @@ namespace Assets._Game._Scripts._2_Game {
 
         // В классе Game
         public void NextLevelStart() {
-            
+
             IsPaused = true;
             DOTween.CompleteAll();
 
@@ -217,19 +227,19 @@ namespace Assets._Game._Scripts._2_Game {
             // StoreStats = new StoreStats();
             // StoreStats.Coins = coins;
             // StoreStats.LevelGame = levelGame;
-            StoreStats.Coins += 10;
-            StoreStats.SpeedMoveSeller = 5f;
-            StoreStats.SpeedMoveSeller = 5f;
-            StoreStats.ProductionSpeed = 2f;
-            StoreStats.TakingOrder = 2f;
+            StoreStats.GameStats.Coins += 10;
+            StoreStats.GameStats.SpeedMoveSeller = 5f;
+            StoreStats.GameStats.SpeedMoveSeller = 5f;
+            StoreStats.GameStats.ProductionSpeed = 2f;
+            StoreStats.GameStats.TakingOrder = 2f;
             StoreStats.DesktopStatsList.Clear();
             StoreStats.PrebuilderStats.Clear();
-            ChangeLevel(StoreStats.LevelGame);
+            ChangeLevel(StoreStats.GameStats.LevelGame);
 
 
-            SceneManager.LoadScene(StoreStats.LevelGame); // Загрузка соответствующей сцены
-            
-           
+            SceneManager.LoadScene(StoreStats.GameStats.LevelGame); // Загрузка соответствующей сцены
+
+
             // LoadLevel();
 
         }
@@ -264,6 +274,8 @@ namespace Assets._Game._Scripts._2_Game {
                 }
 
                 StoreStats.PrebuilderStats = prebuilderData;
+            } else {
+                StoreStats.PrebuilderStats.Clear();
             }
             //---------------------------------
 
@@ -294,29 +306,28 @@ namespace Assets._Game._Scripts._2_Game {
                 StoreStats.DesktopStatsList = desktopStatsList;
 
 
-                Debug.Log($"Saving StoreStats: Coins = {StoreStats.Coins}, LevelGame = {StoreStats.LevelGame}, SpeedMoveCustomer = {StoreStats.SpeedMoveCustomer}, SpeedMoveSeller = {StoreStats.SpeedMoveSeller}, ProductionSpeed = {StoreStats.ProductionSpeed}, TakingOrder = {StoreStats.TakingOrder}");
+                Debug.Log($"Saving StoreStats: Coins = {StoreStats.GameStats.Coins}, LevelGame = {StoreStats.GameStats.LevelGame}, SpeedMoveCustomer = {StoreStats.GameStats.SpeedMoveCustomer}, SpeedMoveSeller = {StoreStats.GameStats.SpeedMoveSeller}, ProductionSpeed = {StoreStats.GameStats.ProductionSpeed}, TakingOrder = {StoreStats.GameStats.TakingOrder}, IsMusic = {StoreStats.GameStats.IsPlayingMusic}");
 
                 // ... добавление данных от других сущностей ...
+            } else {
+                StoreStats.DesktopStatsList.Clear();
             }
 
 
             CollectSceneStatsForSave();
         }
 
-        private void CollectSceneStatsForSave()
-        {
+        private void CollectSceneStatsForSave() {
             var nameScene = SceneManager.GetActiveScene().name;
 
-            if (StoreStats.SceneStatsList == null)
-            {
+            if (StoreStats.SceneStatsList == null) {
                 StoreStats.SceneStatsList = new List<SceneStat>();
             }
 
             var currentStat = StoreStats.SceneStatsList.FirstOrDefault(stat => stat.NameScene == nameScene);
             if (currentStat != null) return;
 
-            var stat = new SceneStat
-            {
+            var stat = new SceneStat {
                 NameScene = nameScene,
                 IsOpened = true
             };
@@ -326,14 +337,14 @@ namespace Assets._Game._Scripts._2_Game {
 
         // Вызывается при выходе из приложения
         private void OnApplicationQuit() {
-            //   SaveGame();
+            SaveGame();
         }
 
         // Вызывается при паузе приложения (например, при сворачивании на мобильном устройстве)
         private void OnApplicationPause(bool pauseStatus) {
-            // if (pauseStatus) {
-            //     SaveGame();
-            // }
+
+            SaveGame();
+
         }
 
 
@@ -398,22 +409,35 @@ namespace Assets._Game._Scripts._2_Game {
         #region Settings Music
 
         public void PlayMusic() {
-            _audioSource.Play();
+            if (!AudioSource.isPlaying) {
+                AudioSource.Play();
+                StoreStats.GameStats.IsPlayingMusic = true;
+            }
+
 
         }
         public void PauseMusic() {
-            _audioSource.Pause();
+            if (AudioSource.isPlaying) {
+                AudioSource.Pause();
+                StoreStats.GameStats.IsPlayingMusic = false;
+            }
 
         }
-
+        private void CheckMusic() {
+            if (!StoreStats.GameStats.IsPlayingMusic) {
+                PauseMusic();
+            } else {
+                PlayMusic();
+            }
+        }
+        public bool IsMusicPlaying() {
+            return AudioSource.isPlaying;
+        }
         #endregion
 
-        public bool IsMusicPlaying() {
-            return _audioSource.isPlaying;
-        }
 
-        public bool GetSceneStatForLevel()
-        {
+
+        public bool GetSceneStatForLevel() {
             if (StoreStats.SceneStatsList == null) {
                 return false;
             }

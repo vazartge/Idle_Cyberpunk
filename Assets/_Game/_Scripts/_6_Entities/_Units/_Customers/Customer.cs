@@ -34,7 +34,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         public List<Order> Orders;
         private CustomerState _customerState;
 
-        private float speed => Game.Instance.StoreStats.SpeedMoveCustomer; // Скорость перемещения в единицах в секунду
+        private float speed => Game.Instance.StoreStats.GameStats.SpeedMoveCustomer; // Скорость перемещения в единицах в секунду
         private Transform _startPointTransform;
         private Transform _endPointTransform;
 

@@ -26,7 +26,7 @@ namespace Assets._Game._Scripts._3_UI._UpgradeButton {
             _uiMode = uiMode;
             _upgradeItem = upgradeItem;
 
-            SetupTextsButton(upgradeItem.Name, upgradeItem.Price, upgradeItem.Price <= Game.Instance.StoreStats.Coins);
+            SetupTextsButton(upgradeItem.Name, upgradeItem.Price, upgradeItem.Price <= Game.Instance.StoreStats.GameStats.Coins);
 
             // Дополнительная логика для кнопок UpgradeCustomer
             if (upgradeItem is UpgradeCustomer && !hasDesktops) {
