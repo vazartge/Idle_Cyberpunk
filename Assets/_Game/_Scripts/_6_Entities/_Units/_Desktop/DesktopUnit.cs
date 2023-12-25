@@ -1,8 +1,12 @@
-﻿using Assets._Game._Scripts._5_Managers;
+﻿using AppodealStack.Monetization.Api;
+using AppodealStack.Monetization.Common;
+using Assets._Game._Scripts._2_Game;
+using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Desktop._Base;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
@@ -16,6 +20,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] public GameObject AvailabilityIndicatorMainGO;
         [SerializeField] public GameObject AvailabilityIndicatorAdditionalGO;
         [SerializeField] public GameObject AdditionalDesktopGO;
+        [SerializeField] public GameObject RewardedButtonGO;
 
         [SerializeField] public Transform AdditionalDesktopPointTransform;
         [SerializeField] public Transform UIPointTransformMain;
@@ -33,6 +38,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] public UIDesktopView View;
         [SerializeField] public long Cost;
         [SerializeField] public bool IsUpgradedForLevel;
+        private readonly string DesktopTooltip5LevelsAdd = "DesktopTooltip5LevelsAdd";
 
 
         public void ConstructMain(GameMode gameMode,
@@ -115,23 +121,26 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             //UpdateOnChangeStatsOrMoney();
         }
 
-        public void UpgradeLevelUp() {
-            Level++;
-            //Level++;
-            // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
-            var upgradeData = GameMode.DataMode.DataForUpgradeDesktopsMap[ProductStoreType];
+        public void UpgradeLevelUp(int levelsToUpgrade) {
+            for (int i = 0; i < levelsToUpgrade; i++) {
+                Level++;
+                //Level++;
+                // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
+                var upgradeData = GameMode.DataMode.DataForUpgradeDesktopsMap[ProductStoreType];
 
-            // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
-            var currentUpgradeData = upgradeData.Upgrades[Level];
+                // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
+                var currentUpgradeData = upgradeData.Upgrades[Level];
 
-            // Проверяем, существуют ли данные для данного уровня и не превышает ли уровень игры OpeningAtLevel
-            if (currentUpgradeData != null && GameMode.GameLevel < currentUpgradeData.OpeningAtLevel) {
-                IsUpgradedForLevel = true;
+                // Проверяем, существуют ли данные для данного уровня и не превышает ли уровень игры OpeningAtLevel
+                if (currentUpgradeData != null && GameMode.GameLevel < currentUpgradeData.OpeningAtLevel) {
+                    IsUpgradedForLevel = true;
+                    RewardedButtonGO.SetActive(false);
+                    break;
+                }
 
+
+                Debug.Log($"IsUpgradedForLevel == {IsUpgradedForLevel}");
             }
-
-
-            Debug.Log($"IsUpgradedForLevel == {IsUpgradedForLevel}");
         }
 
 
@@ -153,6 +162,13 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
         public void AddAdditionalDesktop() {
             IsAdditionalDesktop = true;
+        }
+
+        public void OnRewardedClickButton() {
+           // if (ADSAppodeal.Instance.CheckReadyToShowRewardedAds() && Game.Instance.IsRewardedADSReady) {
+                Appodeal.Show(AppodealShowStyle.RewardedVideo, DesktopTooltip5LevelsAdd);
+
+           // }
         }
 
 

@@ -12,7 +12,7 @@ namespace Assets._Game._Scripts._3_UI._HUD._Windows
         public Button NextLevelViewButton;
         public TMP_Text _costNextLevelOnButton;
         private UIMode _mode;
-
+        Color activeColor = new Color(0.6666f, 0.9568f, 0.9803f, 1.0f);
         public void Construct(UIMode mode)
         {
             _mode = mode;
@@ -26,7 +26,7 @@ namespace Assets._Game._Scripts._3_UI._HUD._Windows
             if (enoughMoney)
             {
                 NextLevelViewButton.interactable = true;
-                _costNextLevelOnButton.color = Color.black;
+                _costNextLevelOnButton.color = activeColor;
             }
             else
             {

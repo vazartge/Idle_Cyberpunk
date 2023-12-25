@@ -14,8 +14,8 @@ namespace Assets._Game._Scripts._0.Data {
         public StoreStats StoreStats;
         public LevelsUpgradesSO LevelsUpgradesSO;
 
-        public IAPManager IAPManager;
-        public ADSAppodeal AdsAppodeal;
+      //  public IAPManager IAPManager;
+       // public ADSAppodeal ADSAppodeal;
 
         public int CountRegister=0;
 

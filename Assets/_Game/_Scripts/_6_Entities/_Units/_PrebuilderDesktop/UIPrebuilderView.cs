@@ -1,4 +1,5 @@
-﻿using Assets._Game._Scripts._3_UI;
+﻿using Assets._Game._Scripts._2_Game;
+using Assets._Game._Scripts._3_UI;
 using Assets._Game._Scripts._3_UI._UIUnits._Base;
 using Assets._Game._Scripts._4_Services;
 using TMPro;
@@ -29,10 +30,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop
         {
 
             _uiWindow.SetActive(true);
+            Debug.Log($" _viewModel.UiMode == null {_viewModel.UiMode==null}");
+            _typeProduct.text = Game.Instance.UIMode.GetStringNameByProductType(_viewModel.PrebuilderDesktop.ProductStoreType);
             if (!enough)
             {
-                _typeProduct.text =
-                    _viewModel.UiMode.GetStringNameByProductType(_viewModel.PrebuilderDesktop.ProductStoreType);
+                
                 _cost.color = Color.red;
                 _buyButton.interactable = false;
             }

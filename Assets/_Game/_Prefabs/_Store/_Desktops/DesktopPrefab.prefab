@@ -334,6 +334,7 @@ MonoBehaviour:
   AvailabilityIndicatorMainGO: {fileID: 8349708800589959504}
   AvailabilityIndicatorAdditionalGO: {fileID: 7731840097658181712}
   AdditionalDesktopGO: {fileID: 4580941572083205062}
+  RewardedButtonGO: {fileID: 53005077101381204}
   AdditionalDesktopPointTransform: {fileID: 773841648285158256}
   UIPointTransformMain: {fileID: 4441864348371244972}
   UIPointTransformAdditional: {fileID: 8597220162619397596}
@@ -3085,18 +3086,18 @@ PrefabInstance:
     - target: {fileID: 3822903546213394224, guid: 1aa1bd4654611c141966939f736af76a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 8642630551001470099, guid: a18b6478743abec49b6d90663263a418, type: 3}
+      objectReference: {fileID: 138140985839730835}
     - target: {fileID: 3822903546213394224, guid: 1aa1bd4654611c141966939f736af76a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3822903546213394224, guid: 1aa1bd4654611c141966939f736af76a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: OnRewardedButtonFor5LevelsUpgrade
+      value: OnRewardedClickButton
       objectReference: {fileID: 0}
     - target: {fileID: 3822903546213394224, guid: 1aa1bd4654611c141966939f736af76a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Assets._Game._Scripts._2_Game.Game, Assembly-CSharp
+      value: Assets._Game._Scripts._6_Entities._Units._Desktop.DesktopUnit, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3822903546213394224, guid: 1aa1bd4654611c141966939f736af76a, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName

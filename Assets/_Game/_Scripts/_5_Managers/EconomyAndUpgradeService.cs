@@ -33,7 +33,7 @@ namespace Assets._Game._Scripts._5_Managers
         public Store Store;
         private GameMode _gameMode;
         private BaseDataForUpgrade _baseUpgradeSo;
-
+        public bool IsBoostedFromRewarded;
 
 
         public EconomyAndUpgradeService(GameMode gameMode, Store store)
@@ -66,7 +66,7 @@ namespace Assets._Game._Scripts._5_Managers
             int cost = GameMode.DataMode.GetProductUpgradeSO(productStoreType).Upgrades[level].Cost;
             if (cost <= Coins)
             {
-                desktop.UpgradeLevelUp();
+                desktop.UpgradeLevelUp(1);
                 CheckDesktopAfterUpgrade(desktop);
                 RemoveMoney(cost);
                 return true;
@@ -83,6 +83,11 @@ namespace Assets._Game._Scripts._5_Managers
             ProductStoreType productStoreType = desktop.ProductStoreType;
             int income = GameMode.DataMode.GetProductUpgradeSO(productStoreType).Upgrades[level-1].IncomeMoney;
             if (Game.Instance.StoreStats.GameStats.PurchasedIncreaseProfit)
+            {
+                income *= 2;
+            }
+
+            if (IsBoostedFromRewarded)
             {
                 income *= 2;
             }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets._Game._Scripts._2_Game;
@@ -27,7 +28,8 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public  List<Order> Orders { get; set; }
         private Queue<Customer> _waitingOrderCustomer;
         private List< DesktopUnit> _desktopsList;
-       
+        
+
         public bool IsCustomerAvailable => _waitingOrderCustomer != null && _waitingOrderCustomer.Count > 0;
         public bool IsDesktopAvailable => DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied);
         //[SerializeField] private int CountOrderList;
@@ -266,6 +268,27 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public void AddDesktopSlots(DesktopSlot slot)
         {
             DesktopSlots.Add(slot);
+        }
+        private IEnumerator BoostProductionCoroutine() {
+            BoostProduction(); // Ускоряем производство
+           
+
+            yield return new WaitForSeconds(60f); // Ждем одну минуту (60 секунд)
+
+            NormalProduction(); // Возвращаем производство к нормальному режиму
+            //  isBoosted = false;
+        }
+
+        private void BoostProduction() {
+            // Логика для ускорения производства
+            Debug.Log("Производство ускорено!");
+            GameMode.EconomyAndUpgrade.IsBoostedFromRewarded = true;
+        }
+
+        private void NormalProduction() {
+            // Логика для возвращения к нормальному производству
+            Debug.Log("Производство возвращено к нормальному режиму.");
+            GameMode.EconomyAndUpgrade.IsBoostedFromRewarded = false;
         }
     }
 }

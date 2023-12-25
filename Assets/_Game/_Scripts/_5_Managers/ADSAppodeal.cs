@@ -43,9 +43,10 @@ namespace Assets._Game._Scripts._5_Managers
         
         public void OnInitializationFinished(object sender, SdkInitializedEventArgs e) {
             initComplete = true;
-            Game.Instance.AppodealInitialized(this);
+           // Game.Instance.AppodealInitialized(this);
             Appodeal.Cache(AppodealAdType.Interstitial); //кэширование межстраничной рекламы -надо ли?
             Appodeal.Cache(AppodealAdType.RewardedVideo); //кэширование ревард рекламы -надо ли?
+            Appodeal.Cache(AppodealAdType.Banner);
         
             AppodealCallbacks.Interstitial.OnLoaded += OnInterstitialLoaded;
             AppodealCallbacks.Interstitial.OnFailedToLoad += OnInterstitialFailedToLoad;
@@ -135,7 +136,6 @@ namespace Assets._Game._Scripts._5_Managers
         
         // Called when rewarded video is shown
         private void OnRewardedVideoShown(object sender, EventArgs e) {
-        
             Debug.Log("[APDUnity] [Callback] OnRewardedVideoShown()");
         }
         
@@ -148,8 +148,7 @@ namespace Assets._Game._Scripts._5_Managers
         // Called when rewarded video is viewed until the end
         private void OnRewardedVideoFinished(object sender, RewardedVideoFinishedEventArgs e) {
             Game.Instance.OnSuccesRewarded(sender, e);
-            Debug.Log(
-                $"[APDUnity] [Callback] OnRewardedVideoFinished(double amount:{e.Amount}, string name:{e.Currency})");
+            Debug.Log($"[APDUnity] [Callback] OnRewardedVideoFinished(double amount:{e.Amount}, string name:{e.Currency})");
         }
         
         // Called when rewarded video is clicked
@@ -198,7 +197,7 @@ namespace Assets._Game._Scripts._5_Managers
         
         #endregion
         
-        public void ShowInterstitialAds() {
+        public void ShowInterstitialADS() {
             if (Appodeal.IsLoaded(AppodealAdType.Interstitial)) {
                 Appodeal.Show(AppodealShowStyle.Interstitial);
             }
@@ -206,9 +205,10 @@ namespace Assets._Game._Scripts._5_Managers
         // пример вызова interstitial ads
         //Appodeal.Show(AppodealShowStyle.Interstitial);
         
-        public void ShowRewardedAds() {
-            if (Appodeal.IsLoaded(AppodealAdType.RewardedVideo)) {
-                Appodeal.Show(AppodealShowStyle.RewardedVideo);
+        public void ShowRewardedAds(string placement) {
+            if (CheckReadyToShowRewardedAds() && Game.Instance.IsRewardedADSReady) {
+                Appodeal.Show(AppodealShowStyle.RewardedVideo, placement);
+
             }
         }
         
@@ -218,7 +218,7 @@ namespace Assets._Game._Scripts._5_Managers
             return Appodeal.IsLoaded(AppodealAdType.RewardedVideo);
         }
         
-        public void ShowBannersExamples() {
+        public void ShowBanner() {
           //  if (!Appodeal.IsLoaded(AppodealAdType.Banner)) return;
             // ПРИМЕРЫ ОСТАВИТЬ ТОЛЬКО ОДИН
             // Display banner at the bottom of the screen
@@ -236,30 +236,14 @@ namespace Assets._Game._Scripts._5_Managers
         
         public void HideBanners() {
             Appodeal.Hide(AppodealAdType.Banner);
+            
+        }
+
+        public void DestroyBanner()
+        {
+            Appodeal.Destroy(AppodealAdType.Banner);
         }
         
-        private void CreateAdRequest() {
-            Appodeal.Cache(AppodealAdType.RewardedVideo); //кэширование ревард рекламы 
-        }
-        
-        public void SingleRewardRequest() {
-        
-            ShowRewardedAds();
-            // if (!Appodeal.IsLoaded(AppodealAdType.RewardedVideo)) {
-            //     
-            //         GD.ads.ErrorLoadRewardedVideo();
-            //     return;
-            // }
-        
-        }
-        // public bool CanShowRewardVideo() {
-        //     if (Appodeal.IsLoaded(AppodealAdType.RewardedVideo)) {
-        //         return true;
-        //     } else {
-        //         GD.ads.RequestRewardVideo();
-        //     }
-        //     return false;
-        // }
         
         public bool CheckInit() {
             return initComplete;

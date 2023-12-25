@@ -36,6 +36,7 @@ namespace Assets._Game._Scripts._5_Managers {
         public GameObject PurchaseWindowsGO;
         public GameObject UIWindowSettingsToggleViewGO;
         public GameObject OpenShopPurchaseButton;
+        public GameObject GameOverWindowGO;
         private UIWindowUpgradeView _upgradeWindowView;
         private UIWindowNextLevelView _nextLevelWinodwView;
         private UIWindowPurchaseView _uiWindowPurchaseView;
