@@ -16,9 +16,11 @@ namespace Assets._Game._Scripts._5_Managers
 
         private void Awake()
         {
-            if (Instance != null && Instance != this)
-            {
-                Destroy(this.gameObject);
+            if (Instance != null) {
+                if (Instance != this) {
+                    Destroy(this.gameObject);
+                }
+                return;
             }
 
             Instance = this;

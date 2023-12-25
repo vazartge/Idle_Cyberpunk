@@ -34,12 +34,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] public long Cost;
         [SerializeField] public bool IsUpgradedForLevel;
 
-       
+
         public void ConstructMain(GameMode gameMode,
-            Vector3 position, 
-            float rotationAngleZ, 
-            ProductStoreType productStoreType, 
-            int upgradeLevel, 
+            Vector3 position,
+            float rotationAngleZ,
+            ProductStoreType productStoreType,
+            int upgradeLevel,
             bool isAdditionalDesktop,
             bool isUpgradedForLevel) {
 
@@ -47,7 +47,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             View = GetComponentInChildren<UIDesktopView>();
             ViewModel = new DesktopViewModel(this, View);
             EconomyAndUpgrade = GameMode.EconomyAndUpgrade;
-            
+
             Position = position;
             RotationAngleZ = rotationAngleZ;
             ProductStoreType = productStoreType;
@@ -60,26 +60,26 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             SetupDesktopInStore();
             SetupSlotInStore(DesktopSlot1);
             foreach (var icon in SpriteIconProductTypes) {
-                icon.sprite = GameMode.DataMode.GetIconByProductType(ProductStoreType);
+                if (icon != null && icon.gameObject.activeSelf) {
+                    icon.sprite = GameMode.DataMode.GetIconByProductType(ProductStoreType);
+                }
             }
-            if (IsAdditionalDesktop)
-            {
+            if (IsAdditionalDesktop) {
                 SetupAdditionalDesktop();
-                
+
             }
             GameMode.OnChangedStatsOrMoney += UpdateOnChangeStatsOrMoney;
             UpdateViewAvailabilityIndicator();
         }
 
-        private void SetupDesktopInStore()
-        {
+        private void SetupDesktopInStore() {
             GameMode.Store.AddDesktop(this);
         }
         private void SetupSlotInStore(DesktopSlot slot) {
             slot.gameObject.SetActive(true);
             slot.ProductStoreType = ProductStoreType;
             GameMode.Store.AddDesktopSlots(slot);
-            
+
 
 
             // Корутина для активации покупателей с задержкой
@@ -95,18 +95,17 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             bool res = GameMode.Coins >= GameMode.DataMode
                 .GetProductUpgradeSO(ProductStoreType).Upgrades[Level].Cost && !IsUpgradedForLevel;
             AvailabilityIndicatorMainGO.SetActive(res);
-            if (IsAdditionalDesktop)
-            {
+            if (IsAdditionalDesktop) {
                 AvailabilityIndicatorAdditionalGO.SetActive(res);
             }
         }
 
         public void UpdateOnChangeStatsOrMoney() {
-            
+
             SetCost();
             UpdateViewAvailabilityIndicator();
             ViewModel.UpdateOnChangeMoney();
-            
+
         }
 
 
@@ -128,7 +127,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             // Проверяем, существуют ли данные для данного уровня и не превышает ли уровень игры OpeningAtLevel
             if (currentUpgradeData != null && GameMode.GameLevel < currentUpgradeData.OpeningAtLevel) {
                 IsUpgradedForLevel = true;
-               
+
             }
 
 
@@ -141,9 +140,8 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             Cost = EconomyAndUpgrade.SetCostBuyProductAndLevel(Level, ProductStoreType);
 
         }
-        
-        public void OnClickDesktop1()
-        {
+
+        public void OnClickDesktop1() {
             UICanvasTransform.transform.position = UIPointTransformMain.position;
             ViewModel.ShowWindow();
         }
@@ -153,11 +151,10 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             ViewModel.ShowWindow();
         }
 
-        public void AddAdditionalDesktop()
-        {
+        public void AddAdditionalDesktop() {
             IsAdditionalDesktop = true;
         }
 
-      
+
     }
 }

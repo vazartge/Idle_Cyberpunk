@@ -18,14 +18,14 @@ namespace Assets._Game._Scripts._2_Game {
         [SerializeField] private bool purchasedDisabledADS = false;
         [SerializeField] private bool purchasedIncreaseProfit = false;
 
-        [SerializeField] private bool IsPlayingMusic = true;
+        [SerializeField] private bool isPlayingMusic = true;
         
 
 
         [SerializeField] private LevelUpgrade levelUpgrade = new LevelUpgrade(); // без начального значения
         [SerializeField] private List<PrebuilderStats> prebuilderStats = new List<PrebuilderStats>();
         [SerializeField] private List<DesktopStats> desktopStatsList = new List<DesktopStats>();
-
+        [SerializeField] private List<SceneStat> sceneStatsList = new List<SceneStat>();
 
 
         public long Coins
@@ -90,6 +90,18 @@ namespace Assets._Game._Scripts._2_Game {
         {
             get => purchasedIncreaseProfit;
             set => purchasedIncreaseProfit = value;
+        }
+
+        public List<SceneStat> SceneStatsList
+        {
+            get => sceneStatsList;
+            set => sceneStatsList = value;
+        }
+
+        public bool IsPlayingMusic
+        {
+            get => isPlayingMusic;
+            set => isPlayingMusic = value;
         }
     }
 }

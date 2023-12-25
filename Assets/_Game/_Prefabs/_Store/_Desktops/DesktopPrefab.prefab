@@ -341,7 +341,9 @@ MonoBehaviour:
   IsAdditionalDesktop: 0
   Level: 1
   ProductStoreType: 0
-  SpriteIconProductTypes: []
+  SpriteIconProductTypes:
+  - {fileID: 4411511907515979894}
+  - {fileID: 7680352554910198531}
   GameMode: {fileID: 0}
   View: {fileID: 1400092126675542471}
   Cost: 0

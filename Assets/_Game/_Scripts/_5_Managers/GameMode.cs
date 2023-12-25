@@ -6,7 +6,6 @@ using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
-using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units;
 using Assets._Game._Scripts._6_Entities._Units._Customers;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
@@ -55,7 +54,7 @@ namespace Assets._Game._Scripts._5_Managers {
         [Header("PrebuildersDesktop")]
        // [SerializeField] private GameObject[] _prebuildersGO;
 
-        private List<PrebuilderDesktop> _prebuilderDesktops;
+        [SerializeField]public List<PrebuilderDesktop> _prebuilderDesktops;
 
         public bool IsOpenedAllPrebuilders => _prebuilderDesktops.Count <=0;
         // public int _counterForUpgradeLevelOpenedPrebuilder = 0;
@@ -156,11 +155,12 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public void InitializeComponents() {
             OnChangedStatsOrMoney?.Invoke();
-            StartCoroutine(InitializeUnitsPrebuldersOnScene());
+            Invoke("InitializeUnitsPrebuldersOnScene", 0.2f);
 
             InitializeSellers();
             InitializeCustomers();
 
+            
             _isInitialized = true;
 
             Debug.Log("GameMode Start");
@@ -169,34 +169,46 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
 
-        public IEnumerator InitializeUnitsPrebuldersOnScene() {
-            yield return new WaitForSeconds(0.1f);
-
-            if (Game.Instance.IsDataLoaded && !Game.Instance.IsNewLevel)
+        public void InitializeUnitsPrebuldersOnScene() {
+            _prebuilderDesktops = FindObjectsOfType<PrebuilderDesktop>().ToList();
+            Debug.Log($"Game.Instance.IsDataLoaded && Game.Instance.GetSceneStatForLevel() ==" +
+                          $" {Game.Instance.IsDataLoaded && Game.Instance.GetSceneStatForLevel()}");
+                
+            if (Game.Instance.IsDataLoaded && Game.Instance.GetSceneStatForLevel())
             {
-                if (StoreStats.PrebuilderStats != null && StoreStats.PrebuilderStats.Count>0)
-                { 
-                    _prebuilderDesktops = new List<PrebuilderDesktop>(StoreStats.PrebuilderStats.Count);
-                
-                for (int i = 0; i < _prebuilderDesktops.Count; i++)
+                if (StoreStats.PrebuilderStats != null)
                 {
+                    if (_prebuilderDesktops.Count > 0)
+                    {
+                        for (int i =0; i<_prebuilderDesktops.Count;i++)
+                        {
+                            Destroy(_prebuilderDesktops[i].gameObject);
 
-                    _prebuilderDesktops[i] = RestorePrebuildersFromSave(i);
+                        }
+                        _prebuilderDesktops.Clear();
+                    }
+                    _prebuilderDesktops = new List<PrebuilderDesktop>();
+
+                    for (int i = 0; i < StoreStats.PrebuilderStats.Count; i++)
+                    {
+                        _prebuilderDesktops.Add(RestorePrebuildersFromSave(i));
+                    }
                 }
-                }
-                
 
             }
             else
             {
-                _prebuilderDesktops = FindObjectsOfType<PrebuilderDesktop>().ToList();
+                Debug.Log($"Prebuilders find on scene");
+                
                 foreach (var prebuilderGO in _prebuilderDesktops) {
                     var prebuilderDesktop = prebuilderGO.GetComponent<PrebuilderDesktop>();
                     prebuilderDesktop.Construct(this, DataMode);
                     
                 }
+                Game.Instance.OnSaveGameButton();
             }
-            if (Game.Instance.IsDataLoaded) {
+            if (Game.Instance.IsDataLoaded  && Game.Instance.GetSceneStatForLevel()) {
+                if (StoreStats.DesktopStatsList == null) return;
                 RestoreDesktopsFromSaveData();
 
             }
@@ -204,6 +216,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         private PrebuilderDesktop RestorePrebuildersFromSave(int index)
         {
+            Debug.Log($"Prebuilder restore from save");
             var stats = StoreStats.PrebuilderStats[index];
             if (stats == null) return null;
             var prebuilderGO = Instantiate(DataMode.PrefabsForCreatePrebuilderDesktop, stats.Position, Quaternion.identity);
@@ -211,6 +224,7 @@ namespace Assets._Game._Scripts._5_Managers {
             var prebuilder = prebuilderGO.GetComponentInChildren<PrebuilderDesktop>();
             prebuilder.Construct(this, DataMode);
             prebuilder.ConstructWithStoreStats(stats.ProductStoreType, stats.RotationAngleZ);
+
             return prebuilder;
         }
 
@@ -218,6 +232,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
             if (StoreStats.DesktopStatsList != null && StoreStats.DesktopStatsList.Count > 0)
             {
+                
                 for (int i = 0; i < StoreStats.DesktopStatsList.Count; i++)
                 {
                     var stats = StoreStats.DesktopStatsList[i];

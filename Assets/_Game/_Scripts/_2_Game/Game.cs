@@ -3,6 +3,7 @@ using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using DG.Tweening;
 using System.Collections.Generic;
+using System.Linq;
 using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using UnityEngine;
@@ -20,7 +21,7 @@ namespace Assets._Game._Scripts._2_Game {
         // public LevelsUpgradesSO levelsUpgradesSO;
         // [SerializeField] private int Level = 1;
         public bool IsDataLoaded;
-        public bool IsNewLevel;
+       // public bool IsNewLevel;
 
         // public List<PrebuilderDesktop> prebuilders = new List<PrebuilderDesktop>();
 
@@ -73,8 +74,11 @@ namespace Assets._Game._Scripts._2_Game {
 
 
         private void Awake() {
-            if (Instance != null && Instance != this) {
-                Destroy(this.gameObject);
+            if (Instance != null) {
+                if (Instance != this) {
+                    Destroy(this.gameObject);
+                }
+                return;
             }
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
@@ -146,7 +150,7 @@ namespace Assets._Game._Scripts._2_Game {
                 DataMode.Construct(GameMode, UIMode);
                 GameMode.Construct(DataMode, UIMode);
                 CountRegister = 0;
-                SaveGame();
+                
             }
         }
 
@@ -202,7 +206,7 @@ namespace Assets._Game._Scripts._2_Game {
 
         // В классе Game
         public void NextLevelStart() {
-            IsNewLevel = true;
+            
             IsPaused = true;
             DOTween.CompleteAll();
 
@@ -213,14 +217,19 @@ namespace Assets._Game._Scripts._2_Game {
             // StoreStats = new StoreStats();
             // StoreStats.Coins = coins;
             // StoreStats.LevelGame = levelGame;
+            StoreStats.Coins += 10;
+            StoreStats.SpeedMoveSeller = 5f;
+            StoreStats.SpeedMoveSeller = 5f;
+            StoreStats.ProductionSpeed = 2f;
+            StoreStats.TakingOrder = 2f;
             StoreStats.DesktopStatsList.Clear();
             StoreStats.PrebuilderStats.Clear();
             ChangeLevel(StoreStats.LevelGame);
 
 
             SceneManager.LoadScene(StoreStats.LevelGame); // Загрузка соответствующей сцены
-            IsNewLevel = false;
-            IsDataLoaded = false;
+            
+           
             // LoadLevel();
 
         }
@@ -285,11 +294,34 @@ namespace Assets._Game._Scripts._2_Game {
                 StoreStats.DesktopStatsList = desktopStatsList;
 
 
-                Debug.Log(
-                    $"Saving StoreStats: Coins = {StoreStats.Coins}, LevelGame = {StoreStats.LevelGame}, SpeedMoveCustomer = {StoreStats.SpeedMoveCustomer}, SpeedMoveSeller = {StoreStats.SpeedMoveSeller}, ProductionSpeed = {StoreStats.ProductionSpeed}, TakingOrder = {StoreStats.TakingOrder}");
+                Debug.Log($"Saving StoreStats: Coins = {StoreStats.Coins}, LevelGame = {StoreStats.LevelGame}, SpeedMoveCustomer = {StoreStats.SpeedMoveCustomer}, SpeedMoveSeller = {StoreStats.SpeedMoveSeller}, ProductionSpeed = {StoreStats.ProductionSpeed}, TakingOrder = {StoreStats.TakingOrder}");
 
                 // ... добавление данных от других сущностей ...
             }
+
+
+            CollectSceneStatsForSave();
+        }
+
+        private void CollectSceneStatsForSave()
+        {
+            var nameScene = SceneManager.GetActiveScene().name;
+
+            if (StoreStats.SceneStatsList == null)
+            {
+                StoreStats.SceneStatsList = new List<SceneStat>();
+            }
+
+            var currentStat = StoreStats.SceneStatsList.FirstOrDefault(stat => stat.NameScene == nameScene);
+            if (currentStat != null) return;
+
+            var stat = new SceneStat
+            {
+                NameScene = nameScene,
+                IsOpened = true
+            };
+            StoreStats.SceneStatsList.Add(stat);
+            Debug.Log($" StoreStats.SceneStatsList.Add(stat) Name = {stat.NameScene}");
         }
 
         // Вызывается при выходе из приложения
@@ -378,6 +410,16 @@ namespace Assets._Game._Scripts._2_Game {
 
         public bool IsMusicPlaying() {
             return _audioSource.isPlaying;
+        }
+
+        public bool GetSceneStatForLevel()
+        {
+            if (StoreStats.SceneStatsList == null) {
+                return false;
+            }
+
+            return StoreStats.SceneStatsList.Any(stat => stat.NameScene == SceneManager.GetActiveScene().name);
+
         }
     }
 }
