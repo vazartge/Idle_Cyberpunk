@@ -1,5 +1,20 @@
 {
   "dependencies": {
+    "com.appodeal.mediation": {
+      "version": "https://github.com/appodeal/appodeal-unity-plugin-upm.git#v3.2.0",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.google.external-dependency-manager": "1.2.175"
+      },
+      "hash": "9d9a3dfac0795c03ca46a3062dc9e0581b108abf"
+    },
+    "com.google.external-dependency-manager": {
+      "version": "file:../com.google.external-dependency-manager-1.2.177.tgz",
+      "depth": 0,
+      "source": "local-tarball",
+      "dependencies": {}
+    },
     "com.manakhovn.figma_to_unity_importer": {
       "version": "https://github.com/ManakhovN/FigmaToUnityImporter.git?path=/Assets/FigmaImporter",
       "depth": 0,

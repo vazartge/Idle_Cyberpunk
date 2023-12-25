@@ -325,6 +325,7 @@ namespace Assets._Game._Scripts._5_Managers {
             //CanTransitionToNextLevel();
 
             CheckFirstDesktopAndCreateCustomers();
+            Game.Instance.UpdateADSState();
            
         }
 

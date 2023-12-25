@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "com.appodeal.mediation": "https://github.com/appodeal/appodeal-unity-plugin-upm.git#v3.2.0",
+    "com.google.external-dependency-manager": "file:../com.google.external-dependency-manager-1.2.177.tgz",
     "com.manakhovn.figma_to_unity_importer": "https://github.com/ManakhovN/FigmaToUnityImporter.git?path=/Assets/FigmaImporter",
     "com.unity.feature.2d": "2.0.0",
     "com.unity.ide.rider": "3.0.26",

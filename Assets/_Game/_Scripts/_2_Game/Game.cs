@@ -4,6 +4,7 @@ using Assets._Game._Scripts._6_Entities._Store;
 using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
+using AppodealStack.Monetization.Common;
 using Assets._Game._Scripts._0.Data;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -14,7 +15,7 @@ namespace Assets._Game._Scripts._2_Game {
         [SerializeField] private ReferencesData _referencesData;
         public static Game Instance;
 
-        
+
         private StoreStatsService _storeStatsService;
         // [SerializeField] private StoreStats _storeStats;
         // public LevelsUpgradesSO levelsUpgradesSO;
@@ -72,10 +73,9 @@ namespace Assets._Game._Scripts._2_Game {
             set => _referencesData.LevelsUpgradesSO = value;
         }
 
-        private AudioSource AudioSource
-        {
-            get=> _referencesData.AudioSource;
-            set=> _referencesData.AudioSource = value;
+        private AudioSource AudioSource {
+            get => _referencesData.AudioSource;
+            set => _referencesData.AudioSource = value;
         }
 
         private void Awake() {
@@ -99,7 +99,7 @@ namespace Assets._Game._Scripts._2_Game {
 
             // InitializeGame();
             InitializeGame();
-           
+
 
         }
         public void OnIAPInitialized() {
@@ -126,7 +126,21 @@ namespace Assets._Game._Scripts._2_Game {
 
         }
 
+        public void AppodealInitialized(ADSAppodeal appodeal) {
+            Debug.Log("AppodealInitialized");
+            _referencesData.AdsAppodeal = appodeal;
+            StartADS();
+        }
 
+        private void StartADS()
+        {
+            
+        }
+
+        public void UpdateADSState()
+        {
+
+        }
 
 
         private void LoadLevel() {
@@ -445,5 +459,22 @@ namespace Assets._Game._Scripts._2_Game {
             return StoreStats.SceneStatsList.Any(stat => stat.NameScene == SceneManager.GetActiveScene().name);
 
         }
+
+        #region ADS APPODEAL
+
+        public void ErrorLoadRewardedVideo() {
+
+        }
+
+        public void FiledShowRewardedVideo() {
+
+        }
+        public void OnSuccesRewarded(object sender, RewardedVideoFinishedEventArgs rewardedVideoFinishedEventArgs) {
+
+        }
+        #endregion
+
+
+
     }
 }
