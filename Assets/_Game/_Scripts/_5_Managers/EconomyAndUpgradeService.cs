@@ -41,7 +41,7 @@ namespace Assets._Game._Scripts._5_Managers
             GameMode = gameMode;
             Store = store;
             //_gameMode.UpdateOnChangedStatsOrMoney();
-            _gameMode.InitializeComponents();
+            //_gameMode.InitializeComponents();
         }
 
         public bool TryBuyPrebuilder(PrebuilderDesktop prebuilderDesktop)
@@ -102,7 +102,7 @@ namespace Assets._Game._Scripts._5_Managers
             return cost;
         }
 
-        private void CheckDesktopAfterUpgrade(DesktopUnit desktop)
+        public void CheckDesktopAfterUpgrade(DesktopUnit desktop)
         {
             var eventData = GameMode.DataMode.GetProductUpgradeSO(desktop.ProductStoreType).Upgrades[desktop.Level-1]
                 .Events;

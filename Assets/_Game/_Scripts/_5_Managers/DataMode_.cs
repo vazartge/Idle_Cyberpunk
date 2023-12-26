@@ -42,8 +42,8 @@ namespace Assets._Game._Scripts._5_Managers {
         [SerializeField] private GameObject _prebuilderDesktopPrefab;
         [SerializeField] private GameObject _starForTooltipPrafab;
 
-        [SerializeField] private GameMode _gameMode;
-        [SerializeField] private UIMode _uiMode;
+       // [SerializeField] private GameMode _gameMode;
+       // [SerializeField] private UIMode _uiMode;
         private List<LevelInfo> _levels;
 
         public Dictionary<ProductStoreType, BaseUpgradeSO> DataForUpgradeDesktopsMap => _dataForUpgradeDesktopsMap;
@@ -52,16 +52,29 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public GameObject PrefabsForCreateDesktop => _desktopPrefab;
         public GameObject PrefabsForCreatePrebuilderDesktop => _prebuilderDesktopPrefab;
-        public int GameLevel => _gameMode.GameLevel;
+        public int GameLevel => Game.Instance.StoreStats.GameStats.LevelGame; //GameMode.GameLevel;
         public List<LevelInfo> Levels => _levels;
 
         public CharacterSpritesDataSO CharacterSpritesDataSo => _characterSpritesDataSo;
 
+        public GameMode GameMode
+        {
+            get => Game.Instance.GameMode;
+            set => Game.Instance.GameMode = value;
+        }
+
+        public UIMode UiMode
+        {
+            get => Game.Instance.UIMode;
+            set => Game.Instance.UIMode = value;
+        }
+
+        private void Awake() {
+            Game.Instance.DataMode = this;
+        }
 
         private void Start() {
             
-            Game.Instance.RegisterDataMode_(this);
-
             //словарь данных для обновления столов 
             _dataForUpgradeDesktopsMap = new Dictionary<ProductStoreType, BaseUpgradeSO>()
             {
@@ -82,13 +95,13 @@ namespace Assets._Game._Scripts._5_Managers {
                 new LevelInfo(4, null, 8)
             };
 
-
+         
         }
-        public void Construct(GameMode gameMode, UIMode uiMode) {
-            _gameMode = gameMode;
-            _uiMode = uiMode;
+        public void Construct(/*GameMode gameMode, UIMode uiMode*/) {
+            /*_gameMode = gameMode;
+            _uiMode = uiMode;*/
            
-
+          //  Game.Instance.GameModeConstruct();
         }
 
         public long GetCoinsForStartLevel(int currentLevel) {

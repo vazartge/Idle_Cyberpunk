@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using Assets._Game._Scripts._2_Game;
-using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Slots;

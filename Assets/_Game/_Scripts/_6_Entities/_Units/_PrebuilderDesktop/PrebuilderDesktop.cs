@@ -3,7 +3,6 @@ using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
     public class PrebuilderDesktop : BaseUnitGame {
@@ -65,10 +64,9 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         }
 
         public void ConstructWithStoreStats(ProductStoreType productStoreType,
-            float rotationAngleZ/*, bool isActive, bool isDesktopPurchased, Vector3 position*/)
-        {
+            float rotationAngleZ/*, bool isActive, bool isDesktopPurchased, Vector3 position*/) {
             ProductStoreType = productStoreType;
-           // _positionPrebuilder = position;
+            // _positionPrebuilder = position;
             RotationAngleZ = rotationAngleZ;
             // IsActive = isActive;
             // IsDesktopPurchased = isDesktopPurchased;
@@ -79,7 +77,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         }
 
         private void UpdateViewAvailabilityIndicator() {
-            if(IsDesktopPurchased) return;
+            if (IsDesktopPurchased) return;
             AvailableIndicator.SetActive(IsActive && GameMode.Coins >= GameMode.DataMode.GetProductUpgradeSO(ProductStoreType).Upgrades[0].Cost);
         }
 
@@ -98,9 +96,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._PrebuilderDesktop {
         //         IsActive = value;
         //     }
         // }
-        public void OnClickButton()
-        {
-            ViewModel.ShowWindow();
+        public void OnClickButton() {
+            if (ViewModel != null) {
+                ViewModel.ShowWindow();
+            }
+
         }
 
 

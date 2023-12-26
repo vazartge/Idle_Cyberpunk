@@ -42,7 +42,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop
                 .Upgrades[_desktop.Level-1].IncomeMoney;
             if (Game.Instance.StoreStats.GameStats.PurchasedIncreaseProfit)
             {
-                _incomeValue *=2;
+                _incomeValue *= 2;
+            }
+
+            if (_desktop.GameMode.EconomyAndUpgrade.IsBoostedFromRewarded)
+            {
+                _incomeValue *= 2;
             }
             _progressStarsValue = CalculateProgressToNextStar();
             _view.UpdateOnChangeMoney(_desktop.Cost, _desktop.Level, _desktop.GameMode.Coins

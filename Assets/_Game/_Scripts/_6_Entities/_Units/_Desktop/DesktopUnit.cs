@@ -2,11 +2,9 @@
 using AppodealStack.Monetization.Common;
 using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._5_Managers;
-using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
 using Assets._Game._Scripts._6_Entities._Units._Desktop._Base;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
@@ -130,7 +128,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
                 // Находим данные об уровне прокачки стола, соответствующего его текущему уровню
                 var currentUpgradeData = upgradeData.Upgrades[Level];
-
+                GameMode.EconomyAndUpgrade.CheckDesktopAfterUpgrade(this);
                 // Проверяем, существуют ли данные для данного уровня и не превышает ли уровень игры OpeningAtLevel
                 if (currentUpgradeData != null && GameMode.GameLevel < currentUpgradeData.OpeningAtLevel) {
                     IsUpgradedForLevel = true;
@@ -138,9 +136,10 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
                     break;
                 }
 
-
+                
                 Debug.Log($"IsUpgradedForLevel == {IsUpgradedForLevel}");
             }
+            UpdateOnChangeStatsOrMoney();
         }
 
 
@@ -165,10 +164,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         }
 
         public void OnRewardedClickButton() {
-           // if (ADSAppodeal.Instance.CheckReadyToShowRewardedAds() && Game.Instance.IsRewardedADSReady) {
-                Appodeal.Show(AppodealShowStyle.RewardedVideo, DesktopTooltip5LevelsAdd);
-
-           // }
+           Game.Instance.OnRewardedButtonFor5LevelsUpgrade(this);
         }
 
 

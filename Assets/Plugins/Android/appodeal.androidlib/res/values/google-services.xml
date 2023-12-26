@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources tools:keep="@string/project_id,@string/google_api_key,@string/google_crash_reporting_api_key,@string/google_app_id,@string/gcm_defaultSenderId,@string/google_storage_bucket" xmlns:tools="http://schemas.android.com/tools">
+  <string name="project_id" translatable="false">idle-cyberpunk-android</string>
+  <string name="google_api_key" translatable="false">AIzaSyAVGGJmFHLWBbMVC-A_WFTA3ppw2EMwGOk</string>
+  <string name="google_crash_reporting_api_key" translatable="false">AIzaSyAVGGJmFHLWBbMVC-A_WFTA3ppw2EMwGOk</string>
+  <string name="google_app_id" translatable="false">1:370986366459:android:f00d35cc490d60b7d7475e</string>
+  <string name="gcm_defaultSenderId" translatable="false">370986366459</string>
+  <string name="google_storage_bucket" translatable="false">idle-cyberpunk-android.appspot.com</string>
+</resources>

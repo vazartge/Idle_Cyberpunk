@@ -2,17 +2,17 @@ using System.Collections.Generic;
 using System.Linq;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
 using Assets._Game._Scripts._2_Game;
-using Assets._Game._Scripts._3_UI._HUD;
 using Assets._Game._Scripts._3_UI._HUD._Windows;
 using Assets._Game._Scripts._3_UI._UIUnits._Base;
 using Assets._Game._Scripts._3_UI._UpgradeButton;
+using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using TMPro;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers {
     public class UIMode : MonoBehaviour {
-
+        [SerializeField] private TMP_Text _moneyText;
         public TMP_InputField inputField; // Ссылка на InputField  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ 
         public GameObject AvailabilityIndicatorForUpgradeWindows; // Ссылка на индикатор доступности для кнопки Окна прокачки
         public GameObject AvailabilityIndicatorForNextLevelButton;
@@ -21,11 +21,11 @@ namespace Assets._Game._Scripts._5_Managers {
             set => _economyAndUpgrade = value;
         }
 
-        private UIHUDCanvas _hudCanvas;
+        //[SerializeField]public UIHUDCanvas _hudCanvas;
 
-        private DataMode_ _dataMode;
+        // private DataMode_ _dataMode;
 
-        private GameMode _gameMode;
+        //  private GameMode _gameMode;
 
         private EconomyAndUpgradeService _economyAndUpgrade;
 
@@ -51,8 +51,13 @@ namespace Assets._Game._Scripts._5_Managers {
         [SerializeField] private GameObject _closeWindowsButton;
         private IUiUnitView _currentUiUnitView;
         public GameMode GameMode {
-            get => _gameMode;
-            set => _gameMode = value;
+            get => Game.Instance.GameMode;
+            set => Game.Instance.GameMode = value;
+
+        }
+        public DataMode_ DataMode {
+            get => Game.Instance.DataMode;
+            set => Game.Instance.DataMode = value;
 
         }
         // Метод, который можно вызвать, например, при потере фокуса поля ввода
@@ -68,10 +73,14 @@ namespace Assets._Game._Scripts._5_Managers {
             // Обнуляем поле ввода в любом случае
             inputField.text = "";
         }
-     
-        private void Start()
+
+        private void Awake()
         {
-            Game.Instance.RegisterUIMode(this);
+            Game.Instance.UIMode = this;
+        }
+
+        private void Start() {
+
             AvailabilityIndicatorForNextLevelButton.SetActive(false);
             AvailabilityIndicatorForUpgradeWindows.SetActive(false);
             _upgradeWindowView = UpgradeWindowGO.GetComponent<UIWindowUpgradeView>();
@@ -80,6 +89,39 @@ namespace Assets._Game._Scripts._5_Managers {
             _uiWindowPurchaseView = PurchaseWindowsGO.GetComponent<UIWindowPurchaseView>();
             _uiWindowSettingsToggleView = UIWindowSettingsToggleViewGO.GetComponent<UIWindowSettingsToggleView>();
 
+            // Game.Instance.RegisterUIMode(this);
+            Invoke("Construct",2f);
+        }
+
+
+
+        public void Construct(/*DataMode_ dataMode, GameMode gameMode*/) {
+
+            ProductTypeAndNameMap = new Dictionary<ProductStoreType, string>
+            {
+                {ProductStoreType.MechanicalEyeProduct, "Механический глаз"},
+                {ProductStoreType.RoboticArmProduct, "Роботизированная рука"},
+                {ProductStoreType.IronHeartProduct, "Железное сердце"},
+                {ProductStoreType.NeurochipProduct, "Нейрочип"},
+                // остальные заполнить
+            };
+            /*DataMode = dataMode;
+            GameMode = gameMode;*/
+
+            BeginPlay();
+
+
+        }
+
+        private void BeginPlay() {
+            _economyAndUpgrade = GameMode.EconomyAndUpgrade;
+            //_hudCanvas.Construct(this);
+            GameMode.OnChangedStatsOrMoney += UpdateOnChangedStatsOrMoney;
+            // _gameMode.OnChangedLevelPlayer += UpdateOnChangedLevelPlayer;
+            UpdateOnChangedStatsOrMoney();
+            CheckAvailabilityIndicatorForNextLevelButton();
+            GameMode.UpdateOnChangedStatsOrMoney();
+            InitializeUpgradeButtons();
 
         }
         private void InitializeUpgradeButtons() {
@@ -97,41 +139,6 @@ namespace Assets._Game._Scripts._5_Managers {
             CheckUpgradesAvailability();
             UpdateOnChangedStatsOrMoney();
         }
-
-
-        public void Construct(DataMode_ dataMode, GameMode gameMode) {
-
-            ProductTypeAndNameMap = new Dictionary<ProductStoreType, string>
-            {
-                {ProductStoreType.MechanicalEyeProduct, "Механический глаз"},
-                {ProductStoreType.RoboticArmProduct, "Роботизированная рука"},
-                {ProductStoreType.IronHeartProduct, "Железное сердце"},
-                {ProductStoreType.NeurochipProduct, "Нейрочип"},
-                // остальные заполнить
-            };
-            _dataMode = dataMode;
-            GameMode = gameMode;
-
-
-            _hudCanvas = GetComponent<UIHUDCanvas>();
-
-            BeginPlay();
-            InitializeUpgradeButtons();
-
-        }
-
-        private void BeginPlay() {
-            _economyAndUpgrade = GameMode.EconomyAndUpgrade;
-            _hudCanvas.Construct(this);
-            GameMode.OnChangedStatsOrMoney += UpdateOnChangedStatsOrMoney;
-            // _gameMode.OnChangedLevelPlayer += UpdateOnChangedLevelPlayer;
-            UpdateOnChangedStatsOrMoney();
-            CheckAvailabilityIndicatorForNextLevelButton();
-            _gameMode.UpdateOnChangedStatsOrMoney();
-          
-
-        }
-
         public void OpenNewView(IUiUnitView view) {
             // Если текущее окно открыто и совпадает с переданным view, закрываем его
             if (_currentUiUnitView != null && _currentUiUnitView == view) {
@@ -197,25 +204,24 @@ namespace Assets._Game._Scripts._5_Managers {
 
 
         public void UpdateOnChangedStatsOrMoney() {
-            _hudCanvas.UpdateUIHUD(_gameMode.EconomyAndUpgrade.Coins);
+            if (GameMode == null) return;
+            //_hudCanvas.UpdateUIHUD(GameMode.EconomyAndUpgrade.Coins);
             CheckUpgradesAvailability();
             UpdateAllUpgradeButtons();
             CheckAvailabilityIndicatorForNextLevelButton();
             CheckShopPurchaseButton();
             CheckShopWindowButtons();
+            _moneyText.text = NumberFormatterService.FormatNumber(GameMode.EconomyAndUpgrade.Coins);
         }
 
-        private void CheckShopWindowButtons()
-        {
-            if(!PurchaseWindowsGO.activeSelf) return;
+        private void CheckShopWindowButtons() {
+            if (!PurchaseWindowsGO.activeSelf) return;
             _uiWindowPurchaseView.UpdateState();
         }
 
-        private void CheckShopPurchaseButton()
-        {
-            if (Game.Instance.StoreStats.GameStats.PurchasedIncreaseProfit && Game.Instance.StoreStats.GameStats.PurchasedDisabledAds)
-            {
-                if(!OpenShopPurchaseButton.activeSelf) return;
+        private void CheckShopPurchaseButton() {
+            if (Game.Instance.StoreStats.GameStats.PurchasedIncreaseProfit && Game.Instance.StoreStats.GameStats.PurchasedDisabledAds) {
+                if (!OpenShopPurchaseButton.activeSelf) return;
                 OpenShopPurchaseButton.SetActive(false);
             }
         }
@@ -313,7 +319,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
             for (int i = 0; i < _upgradeButtons.Length; i++) {
                 if (i < sortedUpgrades.Count) {
-                    _upgradeButtons[i].Initialize(sortedUpgrades[i], this, _gameMode.HasDesktops());
+                    _upgradeButtons[i].Initialize(sortedUpgrades[i], this, GameMode.HasDesktops());
                     _upgradeButtons[i].gameObject.SetActive(true);
                 } else {
                     _upgradeButtons[i].gameObject.SetActive(false); // Если оставлять кнопки - это убрать
@@ -335,10 +341,10 @@ namespace Assets._Game._Scripts._5_Managers {
             PlayerPrefs.Save(); // Не забудь сохранить изменения
         }
 
-        public void CheckAvailabilityIndicatorForNextLevelButton()
-        {
-            if(!OpenNextLevelWindowButton.activeSelf) return;
-            AvailabilityIndicatorForNextLevelButton.SetActive(Game.Instance.StoreStats.GameStats.Coins >= GetCostBuyNextLevel()); 
+        public void CheckAvailabilityIndicatorForNextLevelButton() {
+            if (OpenNextLevelWindowButton == null) return;
+            if (!OpenNextLevelWindowButton.activeSelf) return;
+            AvailabilityIndicatorForNextLevelButton.SetActive(Game.Instance.StoreStats.GameStats.Coins >= GetCostBuyNextLevel());
         }
         public int GetCostBuyNextLevel() {
             int costNextLevel;
@@ -375,8 +381,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
 
-        public bool GetEnoughMoney()
-        {
+        public bool GetEnoughMoney() {
             return EconomyAndUpgrade.Coins >= GetCostBuyNextLevel();
         }
 

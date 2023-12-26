@@ -8,19 +8,21 @@ namespace Assets._Game._Scripts._0.Data {
 
     public class ReferencesData: ScriptableObject 
     {
-        public DataMode_ DataMode;
-        public UIMode UiMode;
-        public GameMode GameMode;
-        public StoreStats StoreStats;
-        public LevelsUpgradesSO LevelsUpgradesSO;
+        // [SerializeField] public DataMode_ DataMode;
+        // [SerializeField] public UIMode UiMode;
+        // [SerializeField] public GameMode GameMode;
+        // [SerializeField] public StoreStats StoreStats;
+        // [SerializeField] public LevelsUpgradesSO LevelsUpgradesSO;
 
-      //  public IAPManager IAPManager;
-       // public ADSAppodeal ADSAppodeal;
-
-        public int CountRegister=0;
-
-        public AudioClip BackGroundMusicClip;
-        public AudioSource AudioSource;
-
+        //  public IAPManager IAPManager;
+        // public ADSAppodeal ADSAppodeal;
+        
+        // [SerializeField] public AudioClip BackGroundMusicClip;
+        // [SerializeField] public AudioSource AudioSource;
+        //
+        //
+        // [SerializeField] public bool IsRewardedDesktopTooltip5LevelsAdd;
+        // [SerializeField] public bool IsRewardedIncreaseProfit2x;
+        // [SerializeField] public bool IsRewardedADSReady;
     }
 }

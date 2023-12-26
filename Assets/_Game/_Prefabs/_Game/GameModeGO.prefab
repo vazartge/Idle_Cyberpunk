@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8602084135447077340}
   m_Layer: 0
   m_Name: GameModeGO
-  m_TagString: Untagged
+  m_TagString: GameMode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,12 +47,8 @@ MonoBehaviour:
   numberOrders: 0
   Store: {fileID: 0}
   UiCamera: {fileID: 0}
-  _prebuildersGO:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  _countCustomerForID: 0
+  _prebuilderDesktops: []
+  ParentForDesktops: {fileID: 0}
   _requiredNumberCustomersOnScene: 0
   SellerPrefab: {fileID: 3698890507568529808, guid: 9ab6d206db7ffab47889fe878ff33699, type: 3}
   _requiredNumberSellersOnScene: 0

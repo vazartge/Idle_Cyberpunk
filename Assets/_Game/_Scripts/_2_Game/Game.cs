@@ -4,46 +4,54 @@ using Assets._Game._Scripts._6_Entities._Store;
 using DG.Tweening;
 using System.Collections.Generic;
 using System.Linq;
-using AppodealStack.Monetization.Common;
 using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEditor;
 
 
 namespace Assets._Game._Scripts._2_Game {
 
     public class Game : MonoBehaviour {
-        [SerializeField] public float adInterval = 180f; // Интервал в секундах для показа рекламы
-        [SerializeField] private float timerInterstitialADS;
+        public float adInterval = 10f; // Интервал в секундах для показа рекламы
+         private float timerInterstitialADS;
 
-        [SerializeField] public float rewardedADSInterval = 10f;
-        [SerializeField] private float timerRewardedADS;
+        public float rewardedADSInterval = 10f;
+        private float timerRewardedADS;
 
-
+        private bool wasPlayingMusic;
         public static Game Instance;
         [SerializeField] private ReferencesData _referencesData;
 
 
         private StoreStatsService _storeStatsService;
-        // [SerializeField] private StoreStats _storeStats;
-        // public LevelsUpgradesSO levelsUpgradesSO;
-        // [SerializeField] private int Level = 1;
+       
         public bool IsDataLoaded;
-        // public bool IsNewLevel;
-
-        // public List<PrebuilderDesktop> prebuilders = new List<PrebuilderDesktop>();
+       
 
         private bool isPaused;
         private int _countRegister = 0;
         public bool IsInitializedGoogleService;
         private bool isFirstInterstitialADS;
-        public bool IsRewardedADSReady;
+       
         private bool isStartBannerADS;
-        private readonly string DesktopTooltip5LevelsAdd = "DesktopTooltip5LevelsAdd";
-        private readonly string IncreaseProfit2x = "IncreaseProfit2x";
 
 
+        private DesktopUnit _desktopForReward;
+        private bool IsGameModeRegistered;
+        private bool IsUIModeRegistered;
+        private bool IsDataModeRegistered;
+        public LevelsUpgradesSO levelsUpgradesSO;
+        private GameMode gameMode;
+        private UIMode uiMode;
+        private DataMode_ dataMode;
+        private StoreStats storeStats;
+        private AudioSource audioSource;
+        public AudioClip BackGroundMusicClip;
+        private bool isRewardedADSReady;
+        private bool IsRewardedDesktopTooltip5LevelsAdd;
+        private bool isRewardedIncreaseProfit2x;
 
         public bool IsPaused {
             get => isPaused;
@@ -60,40 +68,50 @@ namespace Assets._Game._Scripts._2_Game {
         }
 
         public GameMode GameMode {
-            get => _referencesData.GameMode;
-            set => _referencesData.GameMode = value;
+            get => gameMode;
+            set =>gameMode = value;
         }
 
         public UIMode UIMode {
-            get => _referencesData.UiMode;
-            set => _referencesData.UiMode = value;
+            get => uiMode;
+            set => uiMode = value;
         }
 
         public DataMode_ DataMode {
-            get => _referencesData.DataMode;
-            set => _referencesData.DataMode = value;
+            get => dataMode;
+            set => dataMode = value;
         }
 
         public StoreStats StoreStats {
-            get => _referencesData.StoreStats;
-            set => _referencesData.StoreStats = value;
+            get => storeStats;
+            set => storeStats = value;
         }
 
-        public int CountRegister {
-            get => _referencesData.CountRegister;
-            set => _referencesData.CountRegister = value;
-        }
+      
 
         public LevelsUpgradesSO LevelsUpgradesSo {
-            get => _referencesData.LevelsUpgradesSO;
-            set => _referencesData.LevelsUpgradesSO = value;
+            get => levelsUpgradesSO;
+            set => levelsUpgradesSO = value;
         }
 
         private AudioSource AudioSource {
-            get => _referencesData.AudioSource;
-            set => _referencesData.AudioSource = value;
+            get => audioSource;
+            set => audioSource = value;
         }
         public bool IsInitializedAppodeal { get; set; }
+
+        public bool IsRewardedAdsReady
+        {
+            get => isRewardedADSReady;
+            set => isRewardedADSReady = value;
+        }
+
+        public bool IsRewardedIncreaseProfit2X
+        {
+            get => isRewardedIncreaseProfit2x;
+            set => isRewardedIncreaseProfit2x = value;
+        }
+
         private void Awake() {
             if (Instance != null) {
                 if (Instance != this) {
@@ -106,23 +124,26 @@ namespace Assets._Game._Scripts._2_Game {
             Application.targetFrameRate = 30; // оставить только в Boot
 
             AudioSource = GetComponent<AudioSource>();
-            AudioSource.clip = _referencesData.BackGroundMusicClip;
+            AudioSource.clip = BackGroundMusicClip;
 
-
+            timerInterstitialADS = adInterval; // Сбрасываем таймер
+            timerRewardedADS = rewardedADSInterval;
         }
+
+       
 
         private void Start() {
 
             // InitializeGame();
             InitializeGame();
 
-
+            
         }
 
         private void Update() {
             InterstitialTimerADS();
             RewardedTimer();
-            StartBanner();
+            //StartBanner();
         }
 
 
@@ -137,14 +158,6 @@ namespace Assets._Game._Scripts._2_Game {
 
             _storeStatsService = new StoreStatsService();
 
-            //  ClearPrebuildersList();
-            // if (Application.platform == RuntimePlatform.Android) {
-            //     StoreStats = LoadGame(); // Загрузка или создание StoreStats
-            //     IAPManager.Instance.RestorePurchases();
-            // } else {
-            //     StoreStats = LoadGame(); // Загрузка или создание StoreStats
-            //     LoadLevel();
-            // }
             StoreStats = LoadGame(); // Загрузка или создание StoreStats
             CheckMusic();
             LoadLevel();
@@ -152,19 +165,16 @@ namespace Assets._Game._Scripts._2_Game {
 
         }
 
-        public void AppodealInitialized(ADSAppodeal appodeal) {
+        public void AppodealInitialized() {
             Debug.Log("AppodealInitialized");
 
             IsInitializedAppodeal = true;
-            IsRewardedADSReady = true;
+            IsRewardedAdsReady = true;
+            StartBanner();
             // StartADS();
         }
 
-        // private void StartADS()
-        // {
-        //     
-        // }
-
+      
 
         #region LOAD DATA
 
@@ -175,40 +185,83 @@ namespace Assets._Game._Scripts._2_Game {
 
             SceneManager.LoadScene(StoreStats.GameStats.LevelGame); // Загрузка соответствующей сцены
                                                                     // SceneManager.LoadScene(Level); // Загрузка соответствующей сцены
-
+          //  DataModeConstruct();
+          Invoke("FindTags", 2f);
+          
+           
         }
 
-        public void RegisterGameMode(GameMode gameMode) {
-            GameMode = gameMode;
-            CountRegister++;
-            CheckCountRegister();
-        }
-        public void RegisterUIMode(UIMode uiMode) {
-            UIMode= uiMode;
-            CountRegister++;
-            CheckCountRegister();
+        private void FindTags()
+        {
+            DataMode = GameObject.FindGameObjectWithTag("DataMode").GetComponentInChildren<DataMode_>();
+            GameMode = GameObject.FindGameObjectWithTag("GameMode").GetComponentInChildren<GameMode>();
+            UIMode = GameObject.FindGameObjectWithTag("UIMode").GetComponentInChildren<UIMode>();
+            Debug.Log($"DataMode == null {DataMode == null}");
+            Debug.Log($"GameMode == null {GameMode == null}");
+            Debug.Log($"UIMode == null {UIMode == null}");
         }
 
-        public void RegisterDataMode_(DataMode_ dataMode) {
-            DataMode = dataMode;
-            CountRegister++;
-            CheckCountRegister();
-        }
-        private void CheckCountRegister() {
-            Debug.Log($"CountRegister = {CountRegister}");
-            if (CountRegister >= 3) {
-                Debug.Log("Game Start And Registered");
-                DataMode.Construct(GameMode, UIMode);
-                GameMode.Construct(DataMode, UIMode);
-                CountRegister = 0;
-
-            }
-        }
+        // public void RegisterGameMode(GameMode gameMode) {
+        //     Debug.Log("RegisterGameMode");
+        //     GameMode = gameMode;
+        //     IsGameModeRegistered = true;
+        //     CheckCountRegister();
+        // }
+        // public void RegisterUIMode(UIMode uiMode) {
+        //     Debug.Log("RegisterUIMode");
+        //     UIMode= uiMode;
+        //     IsUIModeRegistered = true;
+        //     CheckCountRegister();
+        // }
+        //
+        // public void RegisterDataMode_(DataMode_ dataMode) {
+        //     Debug.Log(" RegisterDataMode_");
+        //     DataMode = dataMode;
+        //     IsDataModeRegistered = true;
+        //     CheckCountRegister();
+        // }
+        // private void CheckCountRegister() {
+        //
+        //     if (IsDataModeRegistered && IsGameModeRegistered && IsUIModeRegistered) {
+        //         IsDataModeRegistered = false;
+        //         IsGameModeRegistered = false;
+        //         IsUIModeRegistered = false;
+        //         /*DataMode = UnityEngine.Object.FindObjectOfType<DataMode_>();
+        //         GameMode = UnityEngine.Object.FindObjectOfType<GameMode>();
+        //         UIMode = UnityEngine.Object.FindObjectOfType<UIMode>();*/
+        //         Debug.Log("All Managers Registrated");
+        //         DataModeConstruct();
+        //     }
+        //
+        //
+        // }
+        //
+        // public void DataModeConstruct()
+        // {
+        //    //DataMode = FindObjectOfType<DataMode_>();
+        //     DataMode.Construct(/*GameMode, UIMode*/);
+        //     //GameModeConstruct();
+        //     Invoke("GameModeConstruct",1f);
+        // }
+        //
+        // public void GameModeConstruct() {
+        //
+        //     GameMode.Construct(/*DataMode, UIMode*/);
+        //     //UIModeConstruct();
+        //     Invoke("UIModeConstruct", 1f);
+        // }
+        //
+        // public void UIModeConstruct() {
+        //
+        //     UIMode.Construct(/*DataMode, GameMode*/);
+        //     Debug.Log("DataMode, GameMode, UIMode - constructed");
+        //
+        // }
 
         public void OnButtonLoadGame() {
 
             SceneManager.LoadScene("Boot");
-            Debug.Log($"CountRegister = {CountRegister}");
+
             InitializeGame();
         }
 
@@ -284,8 +337,8 @@ namespace Assets._Game._Scripts._2_Game {
         }
 
         private void GameOver() {
-            isPaused = true;
-            _referencesData.UiMode.GameOverWindowGO.SetActive(true);
+            PauseGame();
+            UIMode.GameOverWindowGO.SetActive(true);
         }
 
         private void ChangeLevel(int newLevel) {
@@ -296,21 +349,22 @@ namespace Assets._Game._Scripts._2_Game {
         }
 
         public void OnExitApplicationButton() {
+            StoreStats = null;
+            // Очистка PlayerPrefs
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+
             Application.Quit();
         }
 
         public void OnPlayGameAgain() {
-            StoreStats.GameStats.Coins = 10;
-            StoreStats.GameStats.LevelGame = 1;
-            StoreStats.GameStats.SpeedMoveSeller = 5f;
-            StoreStats.GameStats.SpeedMoveSeller = 5f;
-            StoreStats.GameStats.ProductionSpeed = 2f;
-            StoreStats.GameStats.TakingOrder = 2f;
-            StoreStats.DesktopStatsList.Clear();
-            StoreStats.PrebuilderStats.Clear();
-            StoreStats.SceneStatsList.Clear();
+            
             StoreStats = null;
-            InitializeGame();
+            // Очистка PlayerPrefs
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+
+            SceneManager.LoadScene("Boot");
 
 
         }
@@ -423,13 +477,17 @@ namespace Assets._Game._Scripts._2_Game {
         }
         // Вызывается при выходе из приложения
         private void OnApplicationQuit() {
-            SaveGame();
+            if (GameMode != null) {
+                SaveGame();
+            }
         }
 
         // Вызывается при паузе приложения (например, при сворачивании на мобильном устройстве)
         private void OnApplicationPause(bool pauseStatus) {
+            if (GameMode != null) {
+                SaveGame();
+            }
 
-            SaveGame();
 
         }
         #endregion
@@ -522,17 +580,24 @@ namespace Assets._Game._Scripts._2_Game {
                 ADSAppodeal.Instance.DestroyBanner();
             }
         }
-        public void OnRewardedButtonFor5LevelsUpgrade() {
+        public void OnRewardedButtonFor5LevelsUpgrade(DesktopUnit desktop) {
             Debug.Log("Start RewardedFor5LevelsUpgrade");
-            // _referencesData.ADSAppodeal.ShowRewardedAds(DesktopTooltip5LevelsAdd);
+            IsRewardedAdsReady = false;
+            IsRewardedDesktopTooltip5LevelsAdd = true;
+            IsRewardedIncreaseProfit2X = false;
+            _desktopForReward = desktop;
+            ADSAppodeal.Instance.ShowRewardedAds();
+
         }
 
         public void OnRewardedButtonForBoostProduction() {
             Debug.Log("Try OnRewardedButtonForBoostProduction");
-            // if (ADSAppodeal.Instance.CheckReadyToShowRewardedAds() && IsRewardedADSReady)
-            // { 
-            Debug.Log("Start RewardedForBoosProduction");
-            ADSAppodeal.Instance.ShowRewardedAds(IncreaseProfit2x);
+            IsRewardedAdsReady = false;
+            IsRewardedIncreaseProfit2X = true;
+            IsRewardedDesktopTooltip5LevelsAdd = false;
+
+
+            ADSAppodeal.Instance.ShowRewardedAds();
 
             // }
 
@@ -545,28 +610,30 @@ namespace Assets._Game._Scripts._2_Game {
         public void FiledShowRewardedVideo() {
 
         }
-        public void OnSuccesRewarded(object sender, RewardedVideoFinishedEventArgs e) {
-            IsRewardedADSReady = false;
-            timerRewardedADS = adInterval;
+        public void OnSuccesRewarded() {
+            IsRewardedAdsReady = true;
+            timerRewardedADS = rewardedADSInterval;
 
-            string placement = e.Currency; // Предполагаем, что есть свойство Placement
 
-            Debug.Log($"rewardedVideoFinishedEventArgs.Currency = {placement}");
-            switch (placement) {
-                case "DesktopTooltip5LevelsAdd":
-                    // Логика для desktopTooltip5LevelsAdd
-                    var desktop = (DesktopUnit)sender;
-                    desktop.UpgradeLevelUp(5);
-                    break;
-                case "IncreaseProfit2x":
-                    // Логика для increaseProfit2x
-
-                    break;
-                // и так далее для других случаев
-                default:
-                    // Логика для неизвестного случая
-                    break;
+            Debug.Log($"rewardedVideoFinished");
+            if (/*IsRewardedDesktopTooltip5LevelsAdd*/_desktopForReward!=null) {
+                // Логика для desktopTooltip5LevelsAdd
+                Debug.Log("5 levels UP");
+                _desktopForReward.UpgradeLevelUp(1);
+                _desktopForReward = null;
             }
+            else
+            {
+                
+            /*if (IsRewardedIncreaseProfit2X) {*/
+                Debug.Log("Boost UP");
+                GameMode.Store.StartBoostProductionCoroutine();
+           // }
+            }
+                
+
+            IsRewardedDesktopTooltip5LevelsAdd = false;
+            IsRewardedIncreaseProfit2X = false;
         }
 
         private void InterstitialTimerADS() {
@@ -580,6 +647,7 @@ namespace Assets._Game._Scripts._2_Game {
 
             // Проверяем, не пора ли показать рекламу
             if (timerInterstitialADS <= 0f) {
+                Debug.Log("Try Show Interstitial ADS");
                 ADSAppodeal.Instance.ShowInterstitialADS();
                 timerInterstitialADS = adInterval; // Сбрасываем таймер
             }
@@ -589,17 +657,21 @@ namespace Assets._Game._Scripts._2_Game {
             if (!IsInitializedAppodeal) return;
             if (StoreStats == null || StoreStats.GameStats == null) return;
             // Проверяем, не пора ли показать рекламу
+            timerRewardedADS -=Time.deltaTime;
             if (timerRewardedADS <= 0f) {
-                IsRewardedADSReady = true;
-                timerRewardedADS = adInterval; // Сбрасываем таймер
+                IsRewardedAdsReady = true;
+                timerRewardedADS = rewardedADSInterval; // Сбрасываем таймер
             }
         }
 
+        public void OnFailedReward() {
+            IsRewardedDesktopTooltip5LevelsAdd = false;
+            IsRewardedIncreaseProfit2X = false;
+        }
+
         private void StartBanner() {
-            if (!IsInitializedAppodeal) return;
-            if (StoreStats == null || StoreStats.GameStats == null) return;
-            if (isStartBannerADS) return;
-            isStartBannerADS = true;
+
+            // isStartBannerADS = true;
             ADSAppodeal.Instance.ShowBanner();
 
         }
@@ -614,6 +686,27 @@ namespace Assets._Game._Scripts._2_Game {
         #endregion
 
 
+        public void PauseGame() {
+            isPaused = true;
+            Time.timeScale = 0;
+            if (AudioSource.isPlaying) {
+                wasPlayingMusic = true;
+                AudioSource.Pause();
+            } else {
+                wasPlayingMusic = false;
+            }
+        }
 
+        public void UnPauseGame() {
+            isPaused = false;
+            Time.timeScale = 1;
+            if (wasPlayingMusic) {
+                AudioSource.Play();
+            }
+        }
+
+        public bool GetIsRewardedADSReady() {
+            return IsRewardedAdsReady;
+        }
     }
 }

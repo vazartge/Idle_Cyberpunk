@@ -12,23 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d5ac1d21bda2154bb9fb4b1b33077b8, type: 3}
   m_Name: ReferecesData
   m_EditorClassIdentifier: 
-  DataMode: {fileID: 0}
-  UiMode: {fileID: 0}
-  GameMode: {fileID: 0}
+  DataMode: {fileID: 2788397219020811569, guid: 2bfd7c240258dbf4e9f16d8f472edc7a, type: 3}
+  UiMode: {fileID: 1104973736036528952, guid: ac882430bca5f1244ac8aa16244e64d7, type: 3}
+  GameMode: {fileID: 8602084135447077340, guid: 4cac00e3024d1a548b979a6dbf1b0342, type: 3}
   StoreStats:
-    coins: 0
-    levelGame: 1
-    speedMoveCustomer: 5
-    speedMoveSeller: 5
-    productionSpeed: 2
-    takingOrder: 2
-    purchasedDisabledADS: 0
-    purchasedIncreaseProfit: 0
-    IsPlayingMusic: 1
+    gameStats:
+      coins: 10
+      levelGame: 1
+      speedMoveCustomer: 5
+      speedMoveSeller: 5
+      productionSpeed: 2
+      takingOrder: 2
+      purchasedDisabledADS: 0
+      purchasedIncreaseProfit: 0
+      isPlayingMusic: 1
     prebuilderStats: []
     desktopStatsList: []
+    sceneStatsList: []
   LevelsUpgradesSO: {fileID: 11400000, guid: 148bbba99ce1d38479f7ea9e29d04c70, type: 2}
-  IAPManager: {fileID: 829334781187047900, guid: c0c10a8c98bbb5a468dc0b2c999846c2, type: 3}
-  AdsAppodeal: {fileID: 2133262417879216560, guid: 10d12cbf430cadc4da186f89b5444db0, type: 3}
-  CountRegister: 0
   BackGroundMusicClip: {fileID: 8300000, guid: 6016ff11528ec3c409307c92d4ad8a69, type: 3}
+  AudioSource: {fileID: 1429165417072166094, guid: a18b6478743abec49b6d90663263a418, type: 3}
+  IsRewardedDesktopTooltip5LevelsAdd: 0
+  IsRewardedIncreaseProfit2x: 0
+  IsRewardedADSReady: 1

@@ -1,7 +1,10 @@
 using System;
 using AppodealStack.Monetization.Api;
 using AppodealStack.Monetization.Common;
+using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._2_Game;
+using Assets._Game._Scripts._6_Entities._Units._Desktop;
+using UnityEditor;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers
@@ -25,9 +28,13 @@ namespace Assets._Game._Scripts._5_Managers
 
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
+           
+        }
+
+        public void Start()
+        {
             InitAppodeal();
         }
-        
         public void InitAppodeal() {
             int adTypes = AppodealAdType.Interstitial | AppodealAdType.Banner | AppodealAdType.RewardedVideo |
                           AppodealAdType.Mrec;
@@ -71,6 +78,9 @@ namespace Assets._Game._Scripts._5_Managers
             AppodealCallbacks.Banner.OnShowFailed += OnBannerShowFailed;
             AppodealCallbacks.Banner.OnClicked += OnBannerClicked;
             AppodealCallbacks.Banner.OnExpired += OnBannerExpired;
+
+
+            Game.Instance.AppodealInitialized();
         }
         
         #endregion
@@ -95,11 +105,13 @@ namespace Assets._Game._Scripts._5_Managers
         // Called when interstitial is shown
         private void OnInterstitialShown(object sender, EventArgs e) {
             Debug.Log("Interstitial shown");
+            PauseGame();
         }
         
         // Called when interstitial is closed
         private void OnInterstitialClosed(object sender, EventArgs e) {
             Debug.Log("Interstitial closed");
+            UnPauseGame();
         }
         
         // Called when interstitial is clicked
@@ -130,35 +142,53 @@ namespace Assets._Game._Scripts._5_Managers
         
         // Called when rewarded video was loaded, but cannot be shown (internal network errors, placement settings, etc.)
         private void OnRewardedVideoShowFailed(object sender, EventArgs e) {
-            Game.Instance.FiledShowRewardedVideo();
+            
             Debug.Log("[APDUnity] [Callback] OnRewardedVideoShowFailed()");
+            OnFailedReward();
         }
         
         // Called when rewarded video is shown
         private void OnRewardedVideoShown(object sender, EventArgs e) {
             Debug.Log("[APDUnity] [Callback] OnRewardedVideoShown()");
+            PauseGame();
+            
+            
         }
-        
+
+       
         // Called when rewarded video is closed
         private void OnRewardedVideoClosed(object sender, RewardedVideoClosedEventArgs e) {
             //GD.ads.CloseRewardedVideo();
             Debug.Log($"[APDUnity] [Callback] OnRewardedVideoClosed(bool finished:{e.Finished})");
+            UnPauseGame();
+            
+
         }
         
         // Called when rewarded video is viewed until the end
         private void OnRewardedVideoFinished(object sender, RewardedVideoFinishedEventArgs e) {
-            Game.Instance.OnSuccesRewarded(sender, e);
+            
             Debug.Log($"[APDUnity] [Callback] OnRewardedVideoFinished(double amount:{e.Amount}, string name:{e.Currency})");
+            UnPauseGame();
+            CallGameRewardSucces();
+
         }
-        
+
+        private void CallGameRewardSucces()
+        {
+            Game.Instance.OnSuccesRewarded();
+        }
+
         // Called when rewarded video is clicked
         private void OnRewardedVideoClicked(object sender, EventArgs e) {
             Debug.Log("[APDUnity] [Callback] OnRewardedVideoClicked()");
+            
         }
         
         //Called when rewarded video is expired and can not be shown
         private void OnRewardedVideoExpired(object sender, EventArgs e) {
             Debug.Log("[APDUnity] [Callback] OnRewardedVideoExpired()");
+            OnFailedReward();
         }
         
         #endregion
@@ -205,9 +235,9 @@ namespace Assets._Game._Scripts._5_Managers
         // ןנטלונ גûחמגא interstitial ads
         //Appodeal.Show(AppodealShowStyle.Interstitial);
         
-        public void ShowRewardedAds(string placement) {
-            if (CheckReadyToShowRewardedAds() && Game.Instance.IsRewardedADSReady) {
-                Appodeal.Show(AppodealShowStyle.RewardedVideo, placement);
+        public void ShowRewardedAds() {
+            if (CheckReadyToShowRewardedAds()) {
+                Appodeal.Show(AppodealShowStyle.RewardedVideo);
 
             }
         }
@@ -248,7 +278,20 @@ namespace Assets._Game._Scripts._5_Managers
         public bool CheckInit() {
             return initComplete;
         }
-        
+        private void PauseGame() {
+
+            Game.Instance.PauseGame();
+        }
+        private void UnPauseGame() {
+
+            Game.Instance.UnPauseGame();
+        }
+
+       
+
+        public void OnFailedReward() {
+           Game.Instance.OnFailedReward();
+        }
 
     }
 }

@@ -96,6 +96,7 @@ namespace Assets._Game._Scripts._5_Managers
         }
 
         public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args) {
+            Game.Instance.PauseGame();
             if (String.Equals(args.purchasedProduct.definition.id, PRODUCT_DISABLE_AD, StringComparison.Ordinal)) {
                 Debug.Log("Purchase Successful: " + args.purchasedProduct.definition.id);
                 Game.Instance.StoreStats.GameStats.PurchasedDisabledAds = true;
@@ -114,7 +115,7 @@ namespace Assets._Game._Scripts._5_Managers
                 Debug.Log("Purchase Failed: " + args.purchasedProduct.definition.id);
             }
 
-           
+           Game.Instance.UnPauseGame();
 
             return PurchaseProcessingResult.Complete;
         }

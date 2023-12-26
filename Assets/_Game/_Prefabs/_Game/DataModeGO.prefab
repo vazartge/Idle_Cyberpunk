@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2788397219020811569}
   m_Layer: 0
   m_Name: DataModeGO
-  m_TagString: Untagged
+  m_TagString: DataMode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -54,5 +54,3 @@ MonoBehaviour:
   _desktopPrefab: {fileID: 1432547884348984942, guid: 71ddebea52261bd4f8d4bf959e998ed9, type: 3}
   _prebuilderDesktopPrefab: {fileID: 7680442967510830823, guid: 97c06ce1b33965d459f0525ab37a9c48, type: 3}
   _starForTooltipPrafab: {fileID: 3788537711294052164, guid: 4644222ef81c4e44d9a7028062106cc4, type: 3}
-  _gameMode: {fileID: 0}
-  _uiMode: {fileID: 0}

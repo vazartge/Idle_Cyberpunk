@@ -23,12 +23,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         [SerializeField] private TMP_Text _textCost;
         [SerializeField] private Button _buyButton;
         [SerializeField] private GameObject RewardButton;
-       
+
         private int maxStarsForCurrentLevel;
         // Создание цвета
         Color activeColor = new Color(0.761f, 0.957f, 0.980f, 1.0f);
 
-       
+
         public void Construct(DesktopViewModel viewModel, int maxStars) {
             _viewModel = viewModel;
             maxStarsForCurrentLevel=maxStars;
@@ -74,39 +74,43 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
 
         public void UpdateOnChangeMoney(long сost, int level, long money, string productName
             , int incomeValue, int starsAmount, float progressStarIndicator, bool isButtonEnabled) {
-             // Debug.Log($"Прогресс индикатора: {progressStarIndicator}");
-             // Заполнение текста уровня
-             _textLevel.text = level.ToString();
-             // Заполнение текста продукта
-             _typeProduct.text = productName;
-             // Заполнение звезд
-             UpdateStars(starsAmount);
-            
-             /* Заполение индикатора прогресса открытия звезд - надо сделать формулу поискаколичества уровней
-               до следующего изменения уровня (общее количество уровней для данной прокачки), разделить 
-               текущее количество уровней на найденное общее*/
-             _indicator.fillAmount = progressStarIndicator;
-             // Заполнение доходности
-             _incomeText.text = NumberFormatterService.FormatNumber(incomeValue);
-             // Заполнение цены на кнопке
-             _textCost.text = NumberFormatterService.FormatNumber(сost);
-             if (сost > money) {
-                 _textCost.color = Color.red;
-                 _buyButton.interactable = false;
-             } else {
-                 _textCost.color =activeColor;
-                 _buyButton.interactable = true;
-             }
+            // Debug.Log($"Прогресс индикатора: {progressStarIndicator}");
+            // Заполнение текста уровня
+            _textLevel.text = level.ToString();
+            // Заполнение текста продукта
+            _typeProduct.text = productName;
+            // Заполнение звезд
+            UpdateStars(starsAmount);
 
-             _buyButton.interactable = isButtonEnabled;// проверка достиг ли уровень прокачки стола предела для данного уровня игры
-             // Заполнение рекламы
-             if (_viewModel._desktop.IsUpgradedForLevel)
-             {
-                 if (RewardButton.activeSelf)
-                 {
-                     RewardButton.SetActive(false);
-                 }
-             }
+            /* Заполение индикатора прогресса открытия звезд - надо сделать формулу поискаколичества уровней
+              до следующего изменения уровня (общее количество уровней для данной прокачки), разделить 
+              текущее количество уровней на найденное общее*/
+            _indicator.fillAmount = progressStarIndicator;
+            // Заполнение доходности
+            _incomeText.text = NumberFormatterService.FormatNumber(incomeValue);
+            // Заполнение цены на кнопке
+            _textCost.text = NumberFormatterService.FormatNumber(сost);
+            if (сost > money) {
+                _textCost.color = Color.red;
+                _buyButton.interactable = false;
+            } else {
+                _textCost.color =activeColor;
+                _buyButton.interactable = true;
+            }
+
+            _buyButton.interactable = isButtonEnabled;// проверка достиг ли уровень прокачки стола предела для данного уровня игры
+                                                      // Заполнение рекламы
+            if (_viewModel._desktop.IsUpgradedForLevel) {
+                if (RewardButton.activeSelf) {
+                    RewardButton.SetActive(false);
+
+                }
+
+                if (_buyButton.gameObject.activeSelf) {
+                    _buyButton.gameObject.SetActive(false);
+                }
+
+            }
         }
         // Обновляет количество активных звезд
         public void UpdateStars(int starsAmount) {
@@ -119,8 +123,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
             }
         }
 
-        public void OnRewardedButton()
-        {
+        public void OnRewardedButton() {
             _viewModel._desktop.GameMode.OnRewardedButton(_viewModel._desktop);
         }
     }

@@ -1041,9 +1041,9 @@ RectTransform:
   - {fileID: 940634420360472000}
   m_Father: {fileID: 7162637601849703019}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 3, y: 82}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 3, y: -221}
   m_SizeDelta: {x: 600, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6436852766943919065
@@ -1097,7 +1097,7 @@ GameObject:
   - component: {fileID: 7858967014776380820}
   m_Layer: 0
   m_Name: UIModeGO
-  m_TagString: Untagged
+  m_TagString: UIMode
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1132,6 +1132,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfa332a8ccbca5246bb31e94f4370a72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _moneyText: {fileID: 8395119017394141288}
   inputField: {fileID: 9113829439883530775}
   AvailabilityIndicatorForUpgradeWindows: {fileID: 157538978697117939}
   AvailabilityIndicatorForNextLevelButton: {fileID: 240877134327264281}

@@ -38,17 +38,17 @@ namespace Assets._Game._Scripts._5_Managers {
 
         public Camera UiCamera;
         public UIMode UiMode {
-            get => _uiMode;
-            set => _uiMode = value;
+            get => Game.Instance.UIMode;
+            set => Game.Instance.UIMode = value;
         }
         public DataMode_ DataMode {
-            get => _dataMode;
-            set => _dataMode = value;
+            get => Game.Instance.DataMode;
+            set => Game.Instance.DataMode = value;
         }
         private ProductRandomizerService _productRandomizerService;
         private InputControlService _inputControlService;
-        private DataMode_ _dataMode;
-        private UIMode _uiMode;
+        // private DataMode_ _dataMode;
+        // private UIMode _uiMode;
         private bool _isFirstDesktopCreate;
 
         [Header("PrebuildersDesktop")]
@@ -123,14 +123,21 @@ namespace Assets._Game._Scripts._5_Managers {
 
         #region Initialization
 
+        private void Awake()
+        {
+            Game.Instance.GameMode = this;
+        }
+
         private void Start()
         {
-            Game.Instance.RegisterGameMode(this);
+           // Game.Instance.RegisterGameMode(this);
+           Invoke("Construct",1f);
+          // Construct();
         }
-        public void Construct(DataMode_ dataMode, UIMode uiMode) {
-            _dataMode = dataMode;
-            Debug.Log($"_dataMode != null {_dataMode!=null}");
-            UiMode = uiMode;
+        public void Construct(/*DataMode_ dataMode, UIMode uiMode*/) {
+           // _dataMode = dataMode;
+         //   Debug.Log($"_dataMode != null {_dataMode!=null}");
+        //    UiMode = uiMode;
             maxProductsPerCustomer = new Dictionary<int, int>
             {
                 { 1, 2 },
@@ -139,23 +146,27 @@ namespace Assets._Game._Scripts._5_Managers {
                 { 4, 3 }
             };
 
-            Store = FindObjectOfType<Store>();
+            
             _productRandomizerService = new ProductRandomizerService();
-            Store.Construct(StoreStats);
+            
             ActiveCustomers = new List<Customer>();
             Sellers = new List<Seller>();
             _customersPool = new Queue<Customer>();
-
+           
+            //Store.Construct(StoreStats);
             //  StartCoroutine(UpdateCustomersOnScene());
             EconomyAndUpgrade = new EconomyAndUpgradeService(this, Store);
             _inputControlService = new InputControlService(this);
-            UiMode.Construct(_dataMode, this);
-
+            Store = FindObjectOfType<Store>();
+            Debug.Log($"Store == null {Store == null}");
+            //  UiMode.Construct(_dataMode, this);
+            
+          Invoke("InitializeComponents", 0.5f);
         }
 
         public void InitializeComponents() {
             OnChangedStatsOrMoney?.Invoke();
-            Invoke("InitializeUnitsPrebuldersOnScene", 0.2f);
+            Invoke("InitializeUnitsPrebuldersOnScene", 1f);
 
             InitializeSellers();
             InitializeCustomers();
@@ -291,7 +302,7 @@ namespace Assets._Game._Scripts._5_Managers {
                 Debug.LogError($"Level upgrade data not found for level {currentLevel}");
             }
             CheckFirstDesktopAndCreateCustomers();
-            
+          
         }
 
         private void CheckFirstDesktopAndCreateCustomers()
@@ -326,14 +337,14 @@ namespace Assets._Game._Scripts._5_Managers {
 
             CheckFirstDesktopAndCreateCustomers();
             Game.Instance.UpdateADSState();
-           
+            CanTransitionToNextLevel();
         }
 
 
         private void Update() {
             if (!_isInitialized) return;
             if (Game.Instance.IsPaused) return;
-            CanTransitionToNextLevel();
+            
             //_inputControlService.UpdateInputControl();
 
         }
@@ -518,7 +529,7 @@ namespace Assets._Game._Scripts._5_Managers {
     
 
         private bool CreateDesktopFromPrebuilder(PrebuilderDesktop prebuilderDesktop) {
-            var newDesktopObj = Instantiate(_dataMode.GetPrefabForDesktop()
+            var newDesktopObj = Instantiate(DataMode.GetPrefabForDesktop()
                 , prebuilderDesktop.gameObject.transform.position,
                 Quaternion.identity);
             newDesktopObj.transform.parent = Store.DesktopsParentTransform;
@@ -651,7 +662,7 @@ namespace Assets._Game._Scripts._5_Managers {
             UiMode.ShowButtonForNextLevel();
         }
         public bool CanUpgradeLevel() {
-            return Store.AreAllDesktopsUpgradedForLevel();
+            return Store.AreAllDesktopsUpgradedForLevel() && (_prebuilderDesktops == null || _prebuilderDesktops.Count == 0);
         }
         public void OnNextLevelButton() {
             int nextLevel = Game.Instance.StoreStats.GameStats.LevelGame + 1;

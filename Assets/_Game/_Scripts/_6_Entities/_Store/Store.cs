@@ -27,7 +27,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         [SerializeField] public List<DesktopSlot> DesktopSlots { get; set; }
         public  List<Order> Orders { get; set; }
         private Queue<Customer> _waitingOrderCustomer;
-        private List< DesktopUnit> _desktopsList;
+        [SerializeField] private List< DesktopUnit> _desktopsList;
         
 
         public bool IsCustomerAvailable => _waitingOrderCustomer != null && _waitingOrderCustomer.Count > 0;
@@ -235,10 +235,11 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
         public bool AreAllDesktopsUpgradedForLevel()
         {
+            return _desktopsList.Count > 0 && _desktopsList.All(desktop => desktop.IsUpgradedForLevel);
             //if(!GameMode.IsOpenedAllPrebuilders) return false;
-            if (_desktopsList.Count == 0) return false;
-                // Проверяем, удовлетворяет ли каждый стол в списке _desktopsList условию IsUpgradedForLevel == true
-                int count = 0;
+            //  if (_desktopsList.Count == 0) return false;
+            // Проверяем, удовлетворяет ли каждый стол в списке _desktopsList условию IsUpgradedForLevel == true
+            //   int count = 0;
             // foreach (var desktop in _desktopsList)
             // {
             //     if (desktop._desktopType == DesktopType.main &&
@@ -249,18 +250,18 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             // }
             // var countMainDesktop = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main).Count;
             // var countUpgradedDesktops = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main &&  desktop.IsUpgradedForLevel).Count;
-            var countUpgradedDesktops = _desktopsList.FindAll(desktop => desktop.IsUpgradedForLevel).Count;
-            var countAnyDesktops = _desktopsList.Count;
-            if (countUpgradedDesktops >= countAnyDesktops)
+            // var countUpgradedDesktops = _desktopsList.FindAll(desktop => desktop.IsUpgradedForLevel)/*.Count;*/
+            // var countAnyDesktops = _desktopsList.Count;
+            /*if (countUpgradedDesktops >= countAnyDesktops)
             {
                 return true;
             }
             else
             {
                 return false;
-            }
-               
-           
+            }*/
+
+
             //return _desktopsList.All(desktop => desktop._mainDesktop._desktopType == DesktopUnit.DesktopType.main && desktop._mainDesktop.IsUpgradedForLevel) && _desktopsList.Count>0;
 
         }
@@ -268,6 +269,11 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         public void AddDesktopSlots(DesktopSlot slot)
         {
             DesktopSlots.Add(slot);
+        }
+
+        public void StartBoostProductionCoroutine()
+        {
+            StartCoroutine(BoostProductionCoroutine());
         }
         private IEnumerator BoostProductionCoroutine() {
             BoostProduction(); // Ускоряем производство
