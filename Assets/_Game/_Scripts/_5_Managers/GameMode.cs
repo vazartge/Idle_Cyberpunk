@@ -129,8 +129,7 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
         private void Start() {
-            // Camera.main.enabled = false;
-            // GameObject.FindGameObjectWithTag("UICamera").GetComponentInChildren<UICameraScript>().GetComponentInChildren<Camera>().enabled=false;
+
 
             Invoke("Construct", 1f);
         }
@@ -164,9 +163,7 @@ namespace Assets._Game._Scripts._5_Managers {
             InitializeCustomers();
             _isInitialized = true;
             Debug.Log("GameMode Start");
-            // Camera.main.enabled = true;
-            // GameObject.FindGameObjectWithTag("UICamera").GetComponentInChildren<UICameraScript>().GetComponentInChildren<Camera>().enabled=true;
-
+          
 
         }
 
@@ -279,6 +276,8 @@ namespace Assets._Game._Scripts._5_Managers {
                 Debug.LogError($"Level upgrade data not found for level {currentLevel}");
             }
             CheckFirstDesktopAndCreateCustomers();
+
+          
 
         }
 

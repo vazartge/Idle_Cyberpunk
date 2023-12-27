@@ -17,6 +17,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         #region FIELDS
 
+        public GameObject CurtainGO;
         public GameObject UpgradeWindowGO;
         public GameObject NextLevelWindowGO;
         public GameObject PurchaseWindowsGO;
@@ -77,6 +78,7 @@ namespace Assets._Game._Scripts._5_Managers {
 
         private void Awake() {
             Game.Instance.UIMode = this;
+            CurtainGO.SetActive(true);
         }
 
         private void Start() {
@@ -139,6 +141,15 @@ namespace Assets._Game._Scripts._5_Managers {
             UpdateAllUpgradeButtons();
             CheckUpgradesAvailability();
             UpdateOnChangedStatsOrMoney();
+
+            //-------------------------------------------------------------------------------
+            // Finish Initialize
+            CloseCurtain();
+            //-------------------------------------------------------------------------------
+        }
+
+        public void CloseCurtain() {
+            CurtainGO.SetActive(false);
         }
         #endregion
 
@@ -439,5 +450,6 @@ namespace Assets._Game._Scripts._5_Managers {
 
         #endregion
 
+       
     }
 }
