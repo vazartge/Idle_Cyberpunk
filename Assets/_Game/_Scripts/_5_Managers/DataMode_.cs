@@ -10,6 +10,7 @@ using Assets._Game._Scripts._6_Entities._Store._Products;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers {
+    // Основной класс хранения всех ресурсов
     public class LevelInfo {
         public int Level { get; set; }
         public long? CoinsAtStart { get; set; }
@@ -97,68 +98,36 @@ namespace Assets._Game._Scripts._5_Managers {
 
          
         }
-        public void Construct(/*GameMode gameMode, UIMode uiMode*/) {
-            /*_gameMode = gameMode;
-            _uiMode = uiMode;*/
-           
-          //  Game.Instance.GameModeConstruct();
-        }
-
-        public long GetCoinsForStartLevel(int currentLevel) {
-            return Levels[currentLevel].CoinsAtStart ?? 0;
-        }
+      
+        
         public void UpdateMaxStarsOnLevel() {
-            foreach (var kvp in _dataForUpgradeDesktopsMap) {
+            foreach (var kvp in _dataForUpgradeDesktopsMap) {//Определение максимального количества звезд для текущего уровня
                 MaxStarsOnLevelMap[kvp.Key] = kvp.Value.GetMaxStarsForLevel(GameLevel);
             }
         }
-        public int GetMaxStarsForProductType(ProductStoreType productStoreType) {
+        public int GetMaxStarsForProductType(ProductStoreType productStoreType) { // Получение максимального количества звезд уже в конкретный тултип по типу продукта
             if (MaxStarsOnLevelMap.TryGetValue(productStoreType, out int maxStars)) {
                 return maxStars;
             }
             return 0; // Возвращаем 0, если в словаре нет записи для данного типа продукта
         }
 
-        // public GameObject GetStarPrefab()
-        // {
-        //     return _starForTooltipPrafab;
-        // }
 
-        public Sprite GetIconByProductType(ProductStoreType productStoreType) {
+        public Sprite GetIconByProductType(ProductStoreType productStoreType) { // Получение иконки по типу продукта
             var productInfo = ResData.ProductsInfo.FirstOrDefault(p => p.ProductStoreType.ToString() == productStoreType.ToString());
             return productInfo != null ? productInfo.ProductIcon : ResData.BaseIcon;
         }
 
 
-        public BaseUpgradeSO GetProductUpgradeSO(ProductStoreType productStoreType) {
+        public BaseUpgradeSO GetProductUpgradeSO(ProductStoreType productStoreType) { // Получение данных для прокачивания стола по типу продукта
             return DataForUpgradeDesktopsMap[productStoreType];
         }
 
-        // public GameObject GetPrefabForPrebuilderDesktop() {
-        //     return PrefabsForCreatePrebuilderDesktop;
-        // }
 
-        public GameObject GetPrefabForDesktop() {
+        public GameObject GetPrefabForDesktop() { // Получение префаба стола
             return PrefabsForCreateDesktop;
         }
-        // Другие методы класса DataMode_...
+      
 
-        // В классе DataMode_
-
-        public LevelUpgrade GetLevelUpgradeForLevel(int level) {
-            if (_levelsUpgrades.LevelUpgrades.TryGetValue(level, out var levelUpgrade)) {
-                // Возвращаем копию данных LevelUpgrade для данного уровня
-                return new LevelUpgrade(levelUpgrade);
-            } else {
-                Debug.LogError("Level data not found for level " + level);
-                return null;
-            }
-        }
-
-
-        public CharacterSpritesDataSO GetCharacterDataForSprites()
-        {
-            return CharacterSpritesDataSo;
-        }
     }
 }

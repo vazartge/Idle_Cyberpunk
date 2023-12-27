@@ -5,6 +5,7 @@ namespace Assets.CameraScaler
     [AddComponentMenu("Rendering/Camera Scaler")]
     [HelpURL("https://emeraldpowder.github.io/unity-assets/camera-scaler/")]
     public class CameraScaler : MonoBehaviour
+    // Фиксирование по ширине(в данном случае)
     {
         [Tooltip("Set this to the resolution you have set in Game View, or resolution you usually test you game with")]
         public Vector2 ReferenceResolution = new Vector2(1080, 1920);

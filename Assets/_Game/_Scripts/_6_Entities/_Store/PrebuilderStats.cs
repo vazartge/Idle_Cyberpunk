@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._6_Entities._Store
 {
+    // Статы пребилдеров для сохранения
     [Serializable]
     public class PrebuilderStats {
         public Vector3 Position;

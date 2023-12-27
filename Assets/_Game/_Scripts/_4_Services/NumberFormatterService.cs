@@ -1,6 +1,8 @@
 ﻿using System;
 
 namespace Assets._Game._Scripts._4_Services {
+
+    // Сервис для перевода денег в сокращенный формат и отображения его в UI
     public static class NumberFormatterService
     {
         public static string FormatNumber(long num)

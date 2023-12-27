@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Assets._Game._Scripts._2_Game;
-using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Slots;
@@ -20,28 +19,26 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             WaitProductState,
             MovingFromTradeState,
         }
-       
+
         public event Action OnUIChanged;
         public UiCustomerView CustomerView;
         public CustomerViewModel CustomerViewModel;
-
         public int IDSprites;
         public CharacterType CharacterType;
         public AnimationState AnimationState;
-        private GameMode _gameMode;
-        private Store _store;
         public CustomerSlot CustomerSlot;
         public List<Order> Orders;
-        private CustomerState _customerState;
 
+        private CustomerState _customerState;
+        private GameMode _gameMode;
+        private Store _store;
         private float speed => Game.Instance.StoreStats.GameStats.SpeedMoveCustomer; // Скорость перемещения в единицах в секунду
         private Transform _startPointTransform;
         private Transform _endPointTransform;
 
         public CharacterSpritesAndAnimationController characterSpritesAndAnimationController { get; set; }
-      //  public GameMode GameMode => _gameMode;
-        public void Awake()
-        {
+        //  public GameMode GameMode => _gameMode;
+        public void Awake() {
             CustomerView = GetComponentInChildren<UiCustomerView>();
             CustomerViewModel  = new CustomerViewModel(this, CustomerView);
             characterSpritesAndAnimationController = GetComponentInChildren<CharacterSpritesAndAnimationController>();
@@ -62,13 +59,13 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             CustomerSlot = freeSlot;
             CustomerSlot.Customer = this;
             Orders = orders;
-            
+
             UpdateStates(CustomerState.MovingToTradeState);
             characterSpritesAndAnimationController.UpdateAnimationAndSprites(AnimationState.walk_down);
         }
 
         private void UpdateStates(CustomerState state) {
-            
+
             _customerState = state;
             switch (_customerState) {
                 case CustomerState.None:
@@ -119,7 +116,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             _store.CustomerIsReachedStore(this, CustomerSlot);
             // Действия после достижения цели
 
-          //  Debug.Log($"{this.IDSprites}.Достигнута точка назначения");
+            //  Debug.Log($"{this.IDSprites}.Достигнута точка назначения");
         }
 
         public void TransferOrder() {
@@ -144,7 +141,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
 
             CustomerSlot.Customer = null;
             _store.CustomerLeftSlot(this);
-           
+
             // Вычисляем расстояние и продолжительность движения
             float distance = Vector3.Distance(transform.position, _endPointTransform.position);
             float duration = distance / speed;
@@ -164,11 +161,10 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
             _gameMode.CustomerLeftScene(this);
             // Действия после достижения цели
 
-           // Debug.Log($"Покупатель {this.IDSprites}Достигнута точка назначения");
+            // Debug.Log($"Покупатель {this.IDSprites}Достигнута точка назначения");
         }
 
-        private void OnDestroy()
-        {
+        private void OnDestroy() {
             OnUIChanged = null;
         }
     }

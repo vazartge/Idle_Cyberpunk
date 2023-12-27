@@ -1,6 +1,5 @@
 ﻿using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._3_UI._UIUnits._Base;
-using Assets._Game._Scripts._5_Managers;
 using UnityEngine;
 
 // Предполагаем, что здесь находится класс Customer

@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace Assets._Game._Scripts._0.Data._DataForUpgrade {
+    // Класс для данных прокачки столов разных типов продуктов 
     [CreateAssetMenu(fileName = "NeurochipUpgradeData", menuName = "Game/NeurochipDataForUpgrade")]
     public class NeurochipUpgradeSO : BaseUpgradeSO {
         public override BaseDataForUpgrade[] Upgrades => _upgrades;

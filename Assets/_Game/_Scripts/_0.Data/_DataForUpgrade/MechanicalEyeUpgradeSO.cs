@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._0.Data._DataForUpgrade
 {
+    // Класс для данных прокачки столов разных типов продуктов 
+
     [CreateAssetMenu(fileName = "MechanicalEyeUpgradeData", menuName = "Game/MechanicalEyeDataForUpgrade")]
     public class MechanicalEyeUpgradeSO : BaseUpgradeSO {
         public override BaseDataForUpgrade[] Upgrades => _upgrades;

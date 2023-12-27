@@ -8,50 +8,40 @@ using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._6_Entities._Units._Desktop;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEditor;
 
 
 namespace Assets._Game._Scripts._2_Game {
+    // Главный класс, который управляет игрой
 
     public class Game : MonoBehaviour {
-        public float adInterval = 10f; // Интервал в секундах для показа рекламы
-         private float timerInterstitialADS;
-
-        public float rewardedADSInterval = 10f;
-        private float timerRewardedADS;
-
-        private bool wasPlayingMusic;
-        public static Game Instance;
-        [SerializeField] private ReferencesData _referencesData;
 
 
-        private StoreStatsService _storeStatsService;
-       
-        public bool IsDataLoaded;
-       
-
-        private bool isPaused;
-        private int _countRegister = 0;
+        #region FIELDS
+        public static Game Instance; // Синглтон данного класс
+        public float adInterval = 10f; // Интервал в секундах для показа рекламы межстарничной
+        public float rewardedADSInterval = 10f; // интервал для реварад, чтобы не было множественных нажатий кнопок
+        public bool IsDataLoaded; // Есть ли файл сохранения или в превый раз игра запускается
         public bool IsInitializedGoogleService;
-        private bool isFirstInterstitialADS;
-       
-        private bool isStartBannerADS;
+        public LevelsUpgradesSO levelsUpgradesSO; //Структура для получения данных об улучшениях на уровне и применении в системе сохранений
+        public AudioClip BackGroundMusicClip; // Музыкальный клип - один
 
+        [SerializeField] private ReferencesData _referencesData; //В данный момент не используется - для хранения ссылок на другие объекты
+        private float timerRewardedADS; // Таймер ревард рекламы
+        private float timerInterstitialADS; // Таймер межстраничной рекламы
+        private bool wasPlayingMusic; // Временный флаг для сохранения текущего проигрывания музыки при паузе, чтобы вернуть это значения при продолжении игры
+        private StoreStatsService _storeStatsService; // Сервис по сериализации сохранения в JSON
+        private bool isPaused; // Есть ли пауза игры
+        private DesktopUnit _desktopForReward; // Ссылка на временный объект стола для вознаграждения - если null, то ревард на Увеличение прибыли, если not null, то прокачка этого стола
+        private GameMode gameMode; // Игровой режим
+        private UIMode uiMode; // UI режим
+        private DataMode_ dataMode; // Данные
+        private StoreStats storeStats; // Данные для сохранений
+        private AudioSource audioSource; // Проигрыватель звуков в игре - один
+        private bool isRewardedADSReady; // Проверка готовности реварда
 
-        private DesktopUnit _desktopForReward;
-        private bool IsGameModeRegistered;
-        private bool IsUIModeRegistered;
-        private bool IsDataModeRegistered;
-        public LevelsUpgradesSO levelsUpgradesSO;
-        private GameMode gameMode;
-        private UIMode uiMode;
-        private DataMode_ dataMode;
-        private StoreStats storeStats;
-        private AudioSource audioSource;
-        public AudioClip BackGroundMusicClip;
-        private bool isRewardedADSReady;
-        private bool IsRewardedDesktopTooltip5LevelsAdd;
-        private bool isRewardedIncreaseProfit2x;
+        #endregion
+
+        #region PROPERTIES
 
         public bool IsPaused {
             get => isPaused;
@@ -69,7 +59,7 @@ namespace Assets._Game._Scripts._2_Game {
 
         public GameMode GameMode {
             get => gameMode;
-            set =>gameMode = value;
+            set => gameMode = value;
         }
 
         public UIMode UIMode {
@@ -87,8 +77,6 @@ namespace Assets._Game._Scripts._2_Game {
             set => storeStats = value;
         }
 
-      
-
         public LevelsUpgradesSO LevelsUpgradesSo {
             get => levelsUpgradesSO;
             set => levelsUpgradesSO = value;
@@ -100,18 +88,31 @@ namespace Assets._Game._Scripts._2_Game {
         }
         public bool IsInitializedAppodeal { get; set; }
 
-        public bool IsRewardedAdsReady
-        {
+        public bool IsRewardedAdsReady {
             get => isRewardedADSReady;
             set => isRewardedADSReady = value;
         }
 
-        public bool IsRewardedIncreaseProfit2X
-        {
+        public bool IsRewardedIncreaseProfit2X {
             get => isRewardedIncreaseProfit2x;
             set => isRewardedIncreaseProfit2x = value;
         }
 
+        #endregion private bool isFirstInterstitialADS;
+
+        #region NOT USED FIELDS
+
+        private bool isStartBannerADS;
+        private int _countRegister = 0;
+        private bool IsGameModeRegistered;
+        private bool IsUIModeRegistered;
+        private bool IsDataModeRegistered;
+        private bool IsRewardedDesktopTooltip5LevelsAdd; // Не используется, но для получения реварда за просмотр из тултипа стола
+        private bool isRewardedIncreaseProfit2x;// Не используется, но для получения реварда за просмотр из кнопки HUD увеличения прибыли
+        #endregion
+
+        #region AWAKE START UPDATE
+        
         private void Awake() {
             if (Instance != null) {
                 if (Instance != this) {
@@ -130,14 +131,14 @@ namespace Assets._Game._Scripts._2_Game {
             timerRewardedADS = rewardedADSInterval;
         }
 
-       
+
 
         private void Start() {
 
             // InitializeGame();
             InitializeGame();
 
-            
+
         }
 
         private void Update() {
@@ -147,14 +148,16 @@ namespace Assets._Game._Scripts._2_Game {
         }
 
 
+        #endregion
 
+        #region INITIALIZATIONS
 
-        public void OnIAPInitialized() {
+        public void OnIAPInitialized() { // Сервис покупок IAP
             Debug.Log("Initialized IAP");
             IsInitializedGoogleService = true;
         }
 
-        private void InitializeGame() {
+        private void InitializeGame() { // Начало игры
 
             _storeStatsService = new StoreStatsService();
 
@@ -165,7 +168,7 @@ namespace Assets._Game._Scripts._2_Game {
 
         }
 
-        public void AppodealInitialized() {
+        public void AppodealInitialized() { 
             Debug.Log("AppodealInitialized");
 
             IsInitializedAppodeal = true;
@@ -174,25 +177,25 @@ namespace Assets._Game._Scripts._2_Game {
             // StartADS();
         }
 
-      
+        #endregion
 
         #region LOAD DATA
 
 
 
-        private void LoadLevel() {
+        private void LoadLevel() { // Загрузка уровня
 
 
             SceneManager.LoadScene(StoreStats.GameStats.LevelGame); // Загрузка соответствующей сцены
                                                                     // SceneManager.LoadScene(Level); // Загрузка соответствующей сцены
-          //  DataModeConstruct();
-          Invoke("FindTags", 2f);
-          
-           
+                                                                    //  DataModeConstruct();
+            Invoke("FindTags", 2f);
+
+
         }
 
-        private void FindTags()
-        {
+        private void FindTags() { // Получение ссылок на объекты на сцене, другими способами ссылки ломались почему-то
+
             DataMode = GameObject.FindGameObjectWithTag("DataMode").GetComponentInChildren<DataMode_>();
             GameMode = GameObject.FindGameObjectWithTag("GameMode").GetComponentInChildren<GameMode>();
             UIMode = GameObject.FindGameObjectWithTag("UIMode").GetComponentInChildren<UIMode>();
@@ -201,64 +204,9 @@ namespace Assets._Game._Scripts._2_Game {
             Debug.Log($"UIMode == null {UIMode == null}");
         }
 
-        // public void RegisterGameMode(GameMode gameMode) {
-        //     Debug.Log("RegisterGameMode");
-        //     GameMode = gameMode;
-        //     IsGameModeRegistered = true;
-        //     CheckCountRegister();
-        // }
-        // public void RegisterUIMode(UIMode uiMode) {
-        //     Debug.Log("RegisterUIMode");
-        //     UIMode= uiMode;
-        //     IsUIModeRegistered = true;
-        //     CheckCountRegister();
-        // }
-        //
-        // public void RegisterDataMode_(DataMode_ dataMode) {
-        //     Debug.Log(" RegisterDataMode_");
-        //     DataMode = dataMode;
-        //     IsDataModeRegistered = true;
-        //     CheckCountRegister();
-        // }
-        // private void CheckCountRegister() {
-        //
-        //     if (IsDataModeRegistered && IsGameModeRegistered && IsUIModeRegistered) {
-        //         IsDataModeRegistered = false;
-        //         IsGameModeRegistered = false;
-        //         IsUIModeRegistered = false;
-        //         /*DataMode = UnityEngine.Object.FindObjectOfType<DataMode_>();
-        //         GameMode = UnityEngine.Object.FindObjectOfType<GameMode>();
-        //         UIMode = UnityEngine.Object.FindObjectOfType<UIMode>();*/
-        //         Debug.Log("All Managers Registrated");
-        //         DataModeConstruct();
-        //     }
-        //
-        //
-        // }
-        //
-        // public void DataModeConstruct()
-        // {
-        //    //DataMode = FindObjectOfType<DataMode_>();
-        //     DataMode.Construct(/*GameMode, UIMode*/);
-        //     //GameModeConstruct();
-        //     Invoke("GameModeConstruct",1f);
-        // }
-        //
-        // public void GameModeConstruct() {
-        //
-        //     GameMode.Construct(/*DataMode, UIMode*/);
-        //     //UIModeConstruct();
-        //     Invoke("UIModeConstruct", 1f);
-        // }
-        //
-        // public void UIModeConstruct() {
-        //
-        //     UIMode.Construct(/*DataMode, GameMode*/);
-        //     Debug.Log("DataMode, GameMode, UIMode - constructed");
-        //
-        // }
+        
 
-        public void OnButtonLoadGame() {
+        public void OnButtonLoadGame() { // Для загрузки сохранения из любого места
 
             SceneManager.LoadScene("Boot");
 
@@ -267,7 +215,7 @@ namespace Assets._Game._Scripts._2_Game {
 
 
 
-        private StoreStats LoadGame() {
+        private StoreStats LoadGame() { // Загрузка данных сохранения из PlayerPrefs или если такого нет, то создание нового
 
             Debug.Log("Load Game!");
             string json = PlayerPrefs.GetString("StoreStats", "");
@@ -284,7 +232,7 @@ namespace Assets._Game._Scripts._2_Game {
                 return newStoreStats;
             }
         }
-        private LevelUpgrade GetLevelUpgradeForLevel(int level) {
+        private LevelUpgrade GetLevelUpgradeForLevel(int level) { // Получение данных для текущего уровня игры из  LevelsUpgradesSO
             // предполагая, что у тебя есть доступ к экземпляру LevelsUpgradesSO
             if (LevelsUpgradesSo.LevelUpgrades.TryGetValue(level, out LevelUpgrade levelUpgrade)) {
                 return levelUpgrade;
@@ -299,23 +247,14 @@ namespace Assets._Game._Scripts._2_Game {
 
         #region NEXT LEVEL
 
-
-
-
-
+        
         // В классе Game
-        public void NextLevelStart() {
+        public void NextLevelStart() { // Переход на следующий уровень - удаление информации из сохранения , кроме денег и номера уровня
 
             IsPaused = true;
             DOTween.CompleteAll();
 
-            // var coins = StoreStats.Coins;
-            // var levelGame = StoreStats.LevelGame;
-            //
-            // StoreStats = null;
-            // StoreStats = new StoreStats();
-            // StoreStats.Coins = coins;
-            // StoreStats.LevelGame = levelGame;
+           
             StoreStats.GameStats.Coins += 10;
             StoreStats.GameStats.SpeedMoveSeller = 5f;
             StoreStats.GameStats.SpeedMoveSeller = 5f;
@@ -331,43 +270,23 @@ namespace Assets._Game._Scripts._2_Game {
 
             SceneManager.LoadScene(StoreStats.GameStats.LevelGame); // Загрузка соответствующей сцены
 
-
-            // LoadLevel();
+            
 
         }
 
-        private void GameOver() {
+        private void GameOver() { // Конец игры при достижении 5го уровня
             PauseGame();
             UIMode.GameOverWindowGO.SetActive(true);
         }
 
-        private void ChangeLevel(int newLevel) {
+        private void ChangeLevel(int newLevel) { // Получение данных для текущего уровня игры из  LevelsUpgradesSO при переходе на новый уровень
             var levelUpgrade = GetLevelUpgradeForLevel(newLevel);
 
             StoreStats.LevelUpgrade = levelUpgrade;
 
         }
 
-        public void OnExitApplicationButton() {
-            StoreStats = null;
-            // Очистка PlayerPrefs
-            PlayerPrefs.DeleteAll();
-            PlayerPrefs.Save();
-
-            Application.Quit();
-        }
-
-        public void OnPlayGameAgain() {
-            
-            StoreStats = null;
-            // Очистка PlayerPrefs
-            PlayerPrefs.DeleteAll();
-            PlayerPrefs.Save();
-
-            SceneManager.LoadScene("Boot");
-
-
-        }
+        
         #endregion
 
         #region SAVE DATA
@@ -384,7 +303,7 @@ namespace Assets._Game._Scripts._2_Game {
             PlayerPrefs.Save();
         }
 
-        public void CollectDataForSave() {
+        public void CollectDataForSave() { // Сборщик данных при сохранении: статы пребилдеров, столов и прокачки магазина
 
 
             var prebuilderData = new List<PrebuilderStats>();
@@ -490,40 +409,20 @@ namespace Assets._Game._Scripts._2_Game {
 
 
         }
+        
         #endregion
-
-
+        
         #region IAP Purchase
 
         public void OnButtonPurchaseNOADS() {
-            //#if UNITY_EDITOR
             Debug.Log("Try Purchase NOADS");
-            //  Game.Instance.StoreStats.PurchasedDisabledAds = true;
-            //   Game.Instance.SaveGame();
-
-            //#endif
-            //#if !UNITY_EDITOR && PLATFORM_ANDROID
             IAPManager.Instance.BuyDisableADS();
-            //#endif
         }
 
         public void OnButtonPurchaseIncrease2xProfit() {
-            //#if UNITY_EDITOR
             Debug.Log("Try Purchase PurchaseIncrease2xProfit");
-            //Game.Instance.StoreStats.PurchasedIncreaseProfit = true;
-            //  Game.Instance.SaveGame();
-
-            //#endif
-            //#if !UNITY_EDITOR && PLATFORM_ANDROID
             IAPManager.Instance.BuyIncreaseProfit();
-            //#endif
         }
-        // public void OnSuccessPurchasedDisabledADS() {
-        //     StoreStats.PurchasedDisabledAds = true;
-        // }
-        // public void OnSuccessPurchasedIncreaseProfit() {
-        //     StoreStats.PurchasedIncreaseProfit = true;
-        // }
 
         public void OnPurchasesRestored(bool success) {
             if (success) {
@@ -542,7 +441,7 @@ namespace Assets._Game._Scripts._2_Game {
         }
         #endregion
 
-        #region SETTINGS MUSIC
+        #region SETTINGS
 
         public void PlayMusic() {
             if (!AudioSource.isPlaying) {
@@ -568,11 +467,51 @@ namespace Assets._Game._Scripts._2_Game {
         }
         public bool IsMusicPlaying() {
             return AudioSource.isPlaying;
+        } 
+        public void PauseGame() {
+            isPaused = true;
+            Time.timeScale = 0;
+            if (AudioSource.isPlaying) {
+                wasPlayingMusic = true;
+                AudioSource.Pause();
+            } else {
+                wasPlayingMusic = false;
+            }
+        }
+
+        public void UnPauseGame() {
+            isPaused = false;
+            Time.timeScale = 1;
+            if (wasPlayingMusic) {
+                AudioSource.Play();
+            }
+        }
+
+        public bool GetIsRewardedADSReady() {
+            return IsRewardedAdsReady;
+        }
+        public void OnExitApplicationButton() { 
+            StoreStats = null;
+            // Очистка PlayerPrefs
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+
+            Application.Quit();
+        }
+
+        public void OnPlayGameAgain() {
+
+            StoreStats = null;
+            // Очистка PlayerPrefs
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save();
+
+            SceneManager.LoadScene("Boot");
+
+
         }
         #endregion
-
-
-
+        
         #region ADS APPODEAL
         public void UpdateADSState() {
             if (StoreStats.GameStats.PurchasedDisabledAds) {
@@ -595,12 +534,9 @@ namespace Assets._Game._Scripts._2_Game {
             IsRewardedAdsReady = false;
             IsRewardedIncreaseProfit2X = true;
             IsRewardedDesktopTooltip5LevelsAdd = false;
-
-
+            
             ADSAppodeal.Instance.ShowRewardedAds();
-
-            // }
-
+            
         }
 
         public void ErrorLoadRewardedVideo() {
@@ -621,16 +557,14 @@ namespace Assets._Game._Scripts._2_Game {
                 Debug.Log("5 levels UP");
                 _desktopForReward.UpgradeLevelUp(1);
                 _desktopForReward = null;
-            }
-            else
-            {
-                
-            /*if (IsRewardedIncreaseProfit2X) {*/
+            } else {
+
+                /*if (IsRewardedIncreaseProfit2X) {*/
                 Debug.Log("Boost UP");
                 GameMode.Store.StartBoostProductionCoroutine();
-           // }
+                // }
             }
-                
+
 
             IsRewardedDesktopTooltip5LevelsAdd = false;
             IsRewardedIncreaseProfit2X = false;
@@ -671,42 +605,12 @@ namespace Assets._Game._Scripts._2_Game {
 
         private void StartBanner() {
 
-            // isStartBannerADS = true;
             ADSAppodeal.Instance.ShowBanner();
 
         }
 
-        // private void FirstInterstialADS()
-        // {
-        //     if(isFirstInterstitialADS) return;
-        //     isFirstInterstitialADS = true;
-        //     _referencesData.ADSAppodeal.ShowInterstitialADS();
-        // }
 
         #endregion
-
-
-        public void PauseGame() {
-            isPaused = true;
-            Time.timeScale = 0;
-            if (AudioSource.isPlaying) {
-                wasPlayingMusic = true;
-                AudioSource.Pause();
-            } else {
-                wasPlayingMusic = false;
-            }
-        }
-
-        public void UnPauseGame() {
-            isPaused = false;
-            Time.timeScale = 1;
-            if (wasPlayingMusic) {
-                AudioSource.Play();
-            }
-        }
-
-        public bool GetIsRewardedADSReady() {
-            return IsRewardedAdsReady;
-        }
+        
     }
 }

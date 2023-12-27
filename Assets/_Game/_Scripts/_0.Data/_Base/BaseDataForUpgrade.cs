@@ -2,9 +2,11 @@
 
 namespace Assets._Game._Scripts._0.Data._Base
 {
+    // Класс для данных прокачки столов разных типов продуктов 
     [System.Serializable]
     public abstract class BaseDataForUpgrade
     {
+
         [SerializeField] private int _stars;
         public int Stars { get => _stars; set => _stars = value; }
         [SerializeField] private int _level;

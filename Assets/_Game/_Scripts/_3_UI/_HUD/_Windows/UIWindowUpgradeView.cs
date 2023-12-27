@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace Assets._Game._Scripts._3_UI._HUD._Windows {
+    // Окно прокачивания магазина
     public class UIWindowUpgradeView : MonoBehaviour, IUiUnitView{
 
         public void ShowWindow()

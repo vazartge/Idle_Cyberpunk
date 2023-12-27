@@ -1,5 +1,4 @@
 ﻿using Assets._Game._Scripts._0.Data._SpritesForPersons;
-using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Units._Base;
 using UnityEngine;

@@ -1,12 +1,11 @@
-﻿using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 
 
 namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade{
 
-
+    // Структура используется для определения Апгрейда магазина, также в сохранениях StoreStats для сохранения купленных улучшений для текущего уровня
     [CreateAssetMenu(fileName = "LevelsUpgradesSO", menuName = "Game/LevelsUpgradesSO")]
     public class LevelsUpgradesSO : ScriptableObject
     {

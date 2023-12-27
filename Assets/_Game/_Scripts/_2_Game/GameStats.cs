@@ -2,6 +2,7 @@
 using UnityEngine;
 
 namespace Assets._Game._Scripts._2_Game {
+    // Структура для хранения текущего состояния игры для сохранений и геймплея 
     [Serializable]
     public class GameStats {
 

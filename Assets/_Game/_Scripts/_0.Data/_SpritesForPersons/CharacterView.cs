@@ -2,6 +2,8 @@
 
 namespace Assets._Game._Scripts._0.Data._SpritesForPersons
 {
+    // В сборных спрайтах персонажей некоторые спрайты меняют положение в зависимости от положения игрока вверх или вниз
+    
     public enum NeedChangeOrderGameobjectSpriteRenderer
     {
         none = 0,

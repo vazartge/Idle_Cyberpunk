@@ -4,6 +4,7 @@ using Assets._Game._Scripts._6_Entities._Units._Customers;
 
 namespace Assets._Game._Scripts._6_Entities._Store
 {
+    // Заказ товара Покупаетелем у Продавцов
     public class Order
     {
         public int ID { get; }

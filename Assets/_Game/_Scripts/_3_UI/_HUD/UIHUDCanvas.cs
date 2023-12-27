@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._3_UI._HUD
 {
+    // Класс для канваса на HUD, но пока не используется
     public class UIHUDCanvas : MonoBehaviour
     {
         private UIMode _uiMode;

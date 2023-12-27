@@ -4,8 +4,7 @@ using Unity.Services.Core;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
-namespace Assets._Game._Scripts._5_Managers
-{
+namespace Assets._Game._Scripts._5_Managers {
     public class IAPManager : MonoBehaviour, IStoreListener {
         public static IAPManager Instance;
         private static IStoreController m_StoreController;
@@ -14,8 +13,7 @@ namespace Assets._Game._Scripts._5_Managers
         public static string PRODUCT_DISABLE_AD = "com.disablead";
         public static string PRODUCT_INCREASE_PROFIT = "com.increaseprofit";
 
-        private void Awake()
-        {
+        private void Awake() {
             if (Instance != null) {
                 if (Instance != this) {
                     Destroy(this.gameObject);
@@ -25,7 +23,7 @@ namespace Assets._Game._Scripts._5_Managers
 
             Instance = this;
             DontDestroyOnLoad(this.gameObject);
-            
+
         }
 
         private async void Start() {
@@ -36,7 +34,7 @@ namespace Assets._Game._Scripts._5_Managers
                 InitializePurchasing();
             }
 
-          //  RestorePurchases(); // Вызов метода восстановления покупок при запуске
+            //  RestorePurchases(); // Вызов метода восстановления покупок при запуске
 
         }
 
@@ -90,9 +88,8 @@ namespace Assets._Game._Scripts._5_Managers
             Debug.Log("OnInitializeFailed InitializationFailureReason:" + error);
         }
 
-        public void OnInitializeFailed(InitializationFailureReason error, string message)
-        {
-        
+        public void OnInitializeFailed(InitializationFailureReason error, string message) {
+
         }
 
         public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args) {
@@ -115,7 +112,7 @@ namespace Assets._Game._Scripts._5_Managers
                 Debug.Log("Purchase Failed: " + args.purchasedProduct.definition.id);
             }
 
-           Game.Instance.UnPauseGame();
+            Game.Instance.UnPauseGame();
 
             return PurchaseProcessingResult.Complete;
         }

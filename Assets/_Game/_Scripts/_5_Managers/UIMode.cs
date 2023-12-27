@@ -12,44 +12,45 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers {
     public class UIMode : MonoBehaviour {
-        [SerializeField] private TMP_Text _moneyText;
-        public TMP_InputField inputField; // Ссылка на InputField  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ 
-        public GameObject AvailabilityIndicatorForUpgradeWindows; // Ссылка на индикатор доступности для кнопки Окна прокачки
-        public GameObject AvailabilityIndicatorForNextLevelButton;
-        public EconomyAndUpgradeService EconomyAndUpgrade {
-            get => _economyAndUpgrade;
-            set => _economyAndUpgrade = value;
-        }
 
-        //[SerializeField]public UIHUDCanvas _hudCanvas;
+        #region FIELDS
 
-        // private DataMode_ _dataMode;
-
-        //  private GameMode _gameMode;
-
-        private EconomyAndUpgradeService _economyAndUpgrade;
-
-
-        [SerializeField] private Transform upgradeButtonsContainer; // Родительский элемент для кнопок
         public GameObject UpgradeWindowGO;
         public GameObject NextLevelWindowGO;
         public GameObject PurchaseWindowsGO;
         public GameObject UIWindowSettingsToggleViewGO;
         public GameObject OpenShopPurchaseButton;
         public GameObject GameOverWindowGO;
+        public TMP_InputField inputField; // Ссылка на InputField  !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ УДАЛИТЬ 
+        public GameObject AvailabilityIndicatorForUpgradeWindows; // Ссылка на индикатор доступности для кнопки Окна прокачки
+        public GameObject AvailabilityIndicatorForNextLevelButton;
+        public GameObject OpenNextLevelWindowButton;
+        public GameObject UpgradeButtonPrefab;
+        public Dictionary<ProductStoreType, string> ProductTypeAndNameMap;
+
+        [SerializeField] private TMP_Text _moneyText;
+        [SerializeField] private Transform upgradeButtonsContainer; // Родительский элемент для кнопок
+        [SerializeField] private GameObject _closeWindowsButton;
+
+        private EconomyAndUpgradeService _economyAndUpgrade;
         private UIWindowUpgradeView _upgradeWindowView;
         private UIWindowNextLevelView _nextLevelWinodwView;
         private UIWindowPurchaseView _uiWindowPurchaseView;
         private UIWindowSettingsToggleView _uiWindowSettingsToggleView;
-        public GameObject OpenNextLevelWindowButton;
-        public GameObject UpgradeButtonPrefab;
         private UpgradeButton[] _upgradeButtons;
         private bool _isInitUpdateButtons;
-        public Dictionary<ProductStoreType, string> ProductTypeAndNameMap;
-
         private UnitViewModel _currentUnitViewModel;
-        [SerializeField] private GameObject _closeWindowsButton;
         private IUiUnitView _currentUiUnitView;
+
+
+        #endregion
+
+        #region PROPERTIES
+
+        public EconomyAndUpgradeService EconomyAndUpgrade {
+            get => _economyAndUpgrade;
+            set => _economyAndUpgrade = value;
+        }
         public GameMode GameMode {
             get => Game.Instance.GameMode;
             set => Game.Instance.GameMode = value;
@@ -60,22 +61,11 @@ namespace Assets._Game._Scripts._5_Managers {
             set => Game.Instance.DataMode = value;
 
         }
-        // Метод, который можно вызвать, например, при потере фокуса поля ввода
-        public void OnInputFieldChanged() {
-            // Проверяем, можно ли преобразовать текст в long
-            if (long.TryParse(inputField.text, out long result)) {
-                Debug.Log("Преобразованное значение: " + result);
-                _economyAndUpgrade.AddMoney(result);
-            } else {
-                Debug.Log("Введено некорректное значение. Поле будет обнулено.");
-            }
+        #endregion
 
-            // Обнуляем поле ввода в любом случае
-            inputField.text = "";
-        }
+        #region INITIALIZATIONS
 
-        private void Awake()
-        {
+        private void Awake() {
             Game.Instance.UIMode = this;
         }
 
@@ -90,9 +80,8 @@ namespace Assets._Game._Scripts._5_Managers {
             _uiWindowSettingsToggleView = UIWindowSettingsToggleViewGO.GetComponent<UIWindowSettingsToggleView>();
 
             // Game.Instance.RegisterUIMode(this);
-            Invoke("Construct",2f);
+            Invoke("Construct", 2f);
         }
-
 
 
         public void Construct(/*DataMode_ dataMode, GameMode gameMode*/) {
@@ -139,6 +128,11 @@ namespace Assets._Game._Scripts._5_Managers {
             CheckUpgradesAvailability();
             UpdateOnChangedStatsOrMoney();
         }
+        #endregion
+
+        #region OPEN CLOSE WINDOWS
+
+
         public void OpenNewView(IUiUnitView view) {
             // Если текущее окно открыто и совпадает с переданным view, закрываем его
             if (_currentUiUnitView != null && _currentUiUnitView == view) {
@@ -187,7 +181,10 @@ namespace Assets._Game._Scripts._5_Managers {
 
             _closeWindowsButton.SetActive(viewModel != null); // Активируем или деактивируем кнопку закрытия окон
         }
-
+        public void ShowButtonForNextLevel() {
+            OpenNextLevelWindowButton.SetActive(true);
+            CheckAvailabilityIndicatorForNextLevelButton();
+        }
         public void OnClosedAllWindowsButton() {
             if (_currentUnitViewModel != null) {
                 _currentUnitViewModel.HideWindow();
@@ -201,6 +198,10 @@ namespace Assets._Game._Scripts._5_Managers {
 
             _closeWindowsButton.SetActive(false);
         }
+
+        #endregion
+
+        #region UPDATES CHECKERS
 
 
         public void UpdateOnChangedStatsOrMoney() {
@@ -231,14 +232,7 @@ namespace Assets._Game._Scripts._5_Managers {
             return ProductTypeAndNameMap.GetValueOrDefault(productStoreType);
         }
 
-        public void OpenUpgradeWindow() {
-            Debug.Log("Open Upgrade wWindow");
-            OpenNewView(_upgradeWindowView);
-            GenerateButtons(Game.Instance.StoreStats);
-            UpdateAllUpgradeButtons();
 
-
-        }
         public void UpdateAllUpgradeButtons() {
             long currentCoins = GameMode.Coins;
             // Проверяем, что массив кнопок инициализирован
@@ -252,14 +246,6 @@ namespace Assets._Game._Scripts._5_Managers {
             }
         }
 
-        // private void CheckUpgradesAvailability() {
-        //     if(!_isInitUpdateButtons) return;
-        //     // Проверка наличия доступных улучшений
-        //     bool hasAvailableUpgrades = _upgradeButtons.Any(button => button.gameObject.activeSelf && !button._upgradeItem.IsPurchased && button._upgradeItem.Price <= EconomyAndUpgrade.Coins);
-        //
-        //     // Активация индикатора доступности, если есть доступные улучшения
-        //     AvailabilityIndicatorForUpgradeWindows.SetActive(hasAvailableUpgrades);
-        // }
         private void CheckUpgradesAvailability() {
             if (!_isInitUpdateButtons) return;
             bool hasAvailableUpgrades = false;
@@ -287,32 +273,6 @@ namespace Assets._Game._Scripts._5_Managers {
             // Активация индикатора доступности
             AvailabilityIndicatorForUpgradeWindows.SetActive(hasAvailableUpgrades);
         }
-
-
-        public void OnBuyUpgradeItem(IUpgradeItem upgradeItem) {
-            if (upgradeItem is UpgradeSeller upgradeSeller) {
-                _economyAndUpgrade.OnBuyUpgradeSeller(upgradeSeller);
-            } else if (upgradeItem is UpgradeCustomer upgradeCustomer) {
-                _economyAndUpgrade.OnBuyUpgradeCustomer(upgradeCustomer);
-            } else if (upgradeItem is ProductBoost productBoost) {
-                _economyAndUpgrade.OnBuyUpgradeProductionBoost(productBoost);
-            } else if (upgradeItem is SpeedBoost speedBoost) {
-                _economyAndUpgrade.OnBuyUpgradeSpeedBoost(speedBoost);
-            }
-            //После покупки деактивируем соответствующую кнопку - если надо
-            foreach (var button in _upgradeButtons) {
-                if (button.HasInitializedItem() && button._upgradeItem == upgradeItem) {
-                    button.DeactivateButton();
-                    break;
-                }
-            }
-        }
-
-
-
-        // public void CloseUpgradeWindow() {
-        //     _upgradeWindowView.SetActive(false);
-        // }
         public void GenerateButtons(StoreStats storeStats) {
             var upgrades = storeStats.LevelUpgrade.GetAllUnpurchasedUpgrades();
             var sortedUpgrades = upgrades.OrderBy(u => u.Price).ToList();
@@ -335,12 +295,6 @@ namespace Assets._Game._Scripts._5_Managers {
 
 
         }
-
-        public void OnButtonResetSaves() {
-            PlayerPrefs.DeleteAll();
-            PlayerPrefs.Save(); // Не забудь сохранить изменения
-        }
-
         public void CheckAvailabilityIndicatorForNextLevelButton() {
             if (OpenNextLevelWindowButton == null) return;
             if (!OpenNextLevelWindowButton.activeSelf) return;
@@ -368,10 +322,50 @@ namespace Assets._Game._Scripts._5_Managers {
 
             return costNextLevel;
         }
-        public void ShowButtonForNextLevel() {
-            OpenNextLevelWindowButton.SetActive(true);
-            CheckAvailabilityIndicatorForNextLevelButton();
+        public bool GetEnoughMoney() {
+            return EconomyAndUpgrade.Coins >= GetCostBuyNextLevel();
         }
+
+        #endregion
+
+        #region BUTTONS CALLS
+
+
+        public void OpenUpgradeWindow() {
+            Debug.Log("Open Upgrade wWindow");
+            OpenNewView(_upgradeWindowView);
+            GenerateButtons(Game.Instance.StoreStats);
+            UpdateAllUpgradeButtons();
+
+
+        }
+        public void OnBuyUpgradeItem(IUpgradeItem upgradeItem) {
+            if (upgradeItem is UpgradeSeller upgradeSeller) {
+                _economyAndUpgrade.OnBuyUpgradeSeller(upgradeSeller);
+            } else if (upgradeItem is UpgradeCustomer upgradeCustomer) {
+                _economyAndUpgrade.OnBuyUpgradeCustomer(upgradeCustomer);
+            } else if (upgradeItem is ProductBoost productBoost) {
+                _economyAndUpgrade.OnBuyUpgradeProductionBoost(productBoost);
+            } else if (upgradeItem is SpeedBoost speedBoost) {
+                _economyAndUpgrade.OnBuyUpgradeSpeedBoost(speedBoost);
+            }
+            //После покупки деактивируем соответствующую кнопку - если надо
+            foreach (var button in _upgradeButtons) {
+                if (button.HasInitializedItem() && button._upgradeItem == upgradeItem) {
+                    button.DeactivateButton();
+                    break;
+                }
+            }
+        }
+
+
+        public void OnButtonResetSaves() {
+            PlayerPrefs.DeleteAll();
+            PlayerPrefs.Save(); // Не забудь сохранить изменения
+        }
+
+
+
         public void OnOpenWindowForNextLevelButton() {
             Debug.Log("Open Window For Next Level");
             OpenNewView(_nextLevelWinodwView);
@@ -381,10 +375,6 @@ namespace Assets._Game._Scripts._5_Managers {
         }
 
 
-        public bool GetEnoughMoney() {
-            return EconomyAndUpgrade.Coins >= GetCostBuyNextLevel();
-        }
-
         public void OnOpenShopPurchaseButton() {
             Debug.Log("Open Shop");
             OpenNewView(_uiWindowPurchaseView);
@@ -393,5 +383,19 @@ namespace Assets._Game._Scripts._5_Managers {
             Debug.Log("Open Settings Window");
             OpenNewView(_uiWindowSettingsToggleView);
         }
+        // Метод, который добавляет денег для теста через input field
+        public void OnInputFieldChanged() {
+            // Проверяем, можно ли преобразовать текст в long
+            if (long.TryParse(inputField.text, out long result)) {
+                Debug.Log("Преобразованное значение: " + result);
+                _economyAndUpgrade.AddMoney(result);
+            } else {
+                Debug.Log("Введено некорректное значение. Поле будет обнулено.");
+            }
+
+            // Обнуляем поле ввода в любом случае
+            inputField.text = "";
+        }
+        #endregion
     }
 }

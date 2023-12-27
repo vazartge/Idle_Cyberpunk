@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 
 namespace Assets._Game._Scripts._3_UI._HUD._Windows {
+    // Окно настроек
     public class UIWindowSettingsToggleView : MonoBehaviour, IUiUnitView
     {
 

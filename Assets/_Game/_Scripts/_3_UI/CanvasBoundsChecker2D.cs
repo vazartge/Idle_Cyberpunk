@@ -2,6 +2,7 @@
 
 namespace Assets._Game._Scripts._3_UI
 {
+    // Удерживает тултипыстолов и пребилдеров в рамках камеры
     public class CanvasBoundsChecker2D : MonoBehaviour {
         public Camera mainCamera;
         public RectTransform canvasRectTransform;

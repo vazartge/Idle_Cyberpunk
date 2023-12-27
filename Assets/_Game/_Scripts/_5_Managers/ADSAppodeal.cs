@@ -1,10 +1,7 @@
 using System;
 using AppodealStack.Monetization.Api;
 using AppodealStack.Monetization.Common;
-using Assets._Game._Scripts._0.Data;
 using Assets._Game._Scripts._2_Game;
-using Assets._Game._Scripts._6_Entities._Units._Desktop;
-using UnityEditor;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._5_Managers

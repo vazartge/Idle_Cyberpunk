@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections;
-using Assets._Game._Scripts._5_Managers;
+﻿using System.Collections;
 using Assets._Game._Scripts._6_Entities._Units._Sellers;
 using UnityEngine;
 

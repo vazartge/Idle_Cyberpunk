@@ -1,7 +1,4 @@
-﻿using Assets._Game._Scripts._6_Entities._Units._Desktop;
-using UnityEngine;
-
-namespace Assets._Game._Scripts._3_UI._UIUnits._Base {
+﻿namespace Assets._Game._Scripts._3_UI._UIUnits._Base {
     public abstract class UnitViewModel : IUiUnitViewModel {
         public UiUnitView View { get; set; }
         public bool IsOpenedWindow;

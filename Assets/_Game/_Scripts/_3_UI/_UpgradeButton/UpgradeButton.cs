@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets._Game._Scripts._3_UI._UpgradeButton {
+    // Динамически создаваемые кнопки прокачивания при открытии окна Прокачивания магазина
     public class UpgradeButton : MonoBehaviour {
 
         public TMP_Text UpgradeNameText;

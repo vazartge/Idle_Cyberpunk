@@ -11,10 +11,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Customers {
         [SerializeField] private TMP_Text _productQuantity; // Количество товара
         [SerializeField] private Image _quantityImage;
         [SerializeField] private Canvas _canvas;
-        // private void Awake()
-        // {
-        //     _canvas = GetComponentInChildren<Canvas>();
-        // }
+       
         
         // Метод для обновления UI на основе данных
         public void UpdateCustomerUI(Sprite icon, int quantity) {

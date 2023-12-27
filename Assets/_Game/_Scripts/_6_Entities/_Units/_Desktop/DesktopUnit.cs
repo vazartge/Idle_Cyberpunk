@@ -1,6 +1,4 @@
-﻿using AppodealStack.Monetization.Api;
-using AppodealStack.Monetization.Common;
-using Assets._Game._Scripts._2_Game;
+﻿using Assets._Game._Scripts._2_Game;
 using Assets._Game._Scripts._5_Managers;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using Assets._Game._Scripts._6_Entities._Store._Slots;

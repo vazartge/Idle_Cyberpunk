@@ -1,9 +1,8 @@
-using Assets._Game._Scripts._2_Game;
-using Assets._Game._Scripts._5_Managers;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._1_Boot
 {
+    // В данный момент не используется
     public class Boot : MonoBehaviour
     {
        

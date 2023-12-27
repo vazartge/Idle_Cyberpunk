@@ -1,6 +1,9 @@
-﻿namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade
+﻿using System;
+
+namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade
 {
-    [System.Serializable]
+    // Структура используется для определения Апгрейда магазина, также в сохранениях StoreStats для сохранения купленных улучшений для текущего уровня
+    [Serializable]
     public class UpgradeSeller: IUpgradeItem {
         public string Name { get; set; }
         public int Amount { get; set; }

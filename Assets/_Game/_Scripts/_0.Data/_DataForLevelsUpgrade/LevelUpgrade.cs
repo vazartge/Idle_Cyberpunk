@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade
 {
+    // Структура используется для определения Апгрейда магазина, также в сохранениях StoreStats для сохранения купленных улучшений для текущего уровня
+    [Serializable]
     public class LevelUpgrade {
         public List<UpgradeCustomer> Customers { get; set; }
         public List<UpgradeSeller> Sellers { get; set; }

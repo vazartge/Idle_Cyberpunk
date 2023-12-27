@@ -1,4 +1,9 @@
-﻿namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade {
+﻿using System;
+
+namespace Assets._Game._Scripts._0.Data._DataForLevelsUpgrade {
+
+    // Структура используется для определения Апгрейда магазина, также в сохранениях StoreStats для сохранения купленных улучшений для текущего уровня
+    [Serializable]
     public class ProductBoost: IUpgradeItem {
         public string Name { get; set; }
 

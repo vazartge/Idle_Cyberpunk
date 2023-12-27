@@ -5,6 +5,7 @@ using Assets._Game._Scripts._6_Entities._Store;
 using UnityEngine;
 
 namespace Assets._Game._Scripts._2_Game {
+    // Главная структура для хранения текущего состояния игры для сохранений и геймплея 
     [Serializable]
     public class StoreStats
     {

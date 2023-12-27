@@ -12,31 +12,31 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 namespace Assets._Game._Scripts._6_Entities._Store {
-    public class Store : MonoBehaviour
-    {
+    // Магазин
+    public class Store : MonoBehaviour {
         public Transform DesktopsParentTransform;
         public Transform CustomersParentTransform;
         public Transform SellersParentTransform;
         public Transform PrebuilderParentTransform;
         public GameMode GameMode;
-       // public StoreStats StoreStats;
-        
-        public List<SellerSlot> SellerSlots { get; set; }
-        public List<CustomerSlot> CustomerSlots { get; set; }
+        // public StoreStats StoreStats;
+
+        [SerializeField] private List<DesktopUnit> _desktopsList;
+
+        private Queue<Customer> _waitingOrderCustomer;
+        public List<Order> Orders { get; set; }
 
         [SerializeField] public List<DesktopSlot> DesktopSlots { get; set; }
-        public  List<Order> Orders { get; set; }
-        private Queue<Customer> _waitingOrderCustomer;
-        [SerializeField] private List< DesktopUnit> _desktopsList;
-        
-
         public bool IsCustomerAvailable => _waitingOrderCustomer != null && _waitingOrderCustomer.Count > 0;
         public bool IsDesktopAvailable => DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied);
         //[SerializeField] private int CountOrderList;
-       
-        
+        public List<SellerSlot> SellerSlots { get; set; }
+        public List<CustomerSlot> CustomerSlots { get; set; }
+
+
+
         private void Awake() {
-           
+
             _desktopsList = new List<DesktopUnit>();
             GetAllStoreSlots();
             _waitingOrderCustomer = new Queue<Customer>();
@@ -70,7 +70,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
                 .ToDictionary(group => group.Key, group => group.Count()); // Преобразование в словарь
         }
 
-      
+
         public List<ProductStoreType> GetAvailableProductTypesWithDesks() {
             return DesktopSlots
                 .Select(slot => slot.ProductStoreType) // Выбираем типы продуктов
@@ -105,12 +105,12 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             SellerSlots = GetComponentsInChildren<SellerSlot>().ToList();
             CustomerSlots = GetComponentsInChildren<CustomerSlot>().ToList();
             DesktopSlots = GetComponentsInChildren<DesktopSlot>().ToList();
-           
+
 
         }
 
         public CustomerSlot GetFreeCustomerSlot() {
-         
+
             // Создание списка свободных слотов
             List<CustomerSlot> freeSlots = CustomerSlots.Where(slot => !slot.IsOccupied).ToList();
 
@@ -125,16 +125,15 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             return freeSlots[randomIndex];
         }
 
-        
+
 
         private void AddToWaitingCustomersQueue(Customer customer) {
             _waitingOrderCustomer.Enqueue(customer);
-            
-            
+
+
         }
 
-        public void AddNewOrders(List<Order> orders)
-        {
+        public void AddNewOrders(List<Order> orders) {
 
             Orders.AddRange(orders);
 
@@ -143,7 +142,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
         public void CustomerIsReachedStore(Customer customer, CustomerSlot slot) {
 
-          //  slot.Customer = customer;
+            //  slot.Customer = customer;
             // Добавить в очередь свободных слотов 
             AddToWaitingCustomersQueue(customer);
 
@@ -157,7 +156,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
         public void CustomerTakeProduct(Customer customer) {
             // Для статистики и управления в дальнейшем
-           
+
         }
 
         public void CustomerLeftSlot(Customer customer) {
@@ -172,13 +171,13 @@ namespace Assets._Game._Scripts._6_Entities._Store {
                 return null;
             }
             var firstCustomer = _waitingOrderCustomer.Dequeue();
-            
+
 
             return firstCustomer;
         }
 
         public SellerSlot GetSellerSlotByCustomerSlot(CustomerSlot customerSlot) {
-            
+
             return SellerSlots.FirstOrDefault(slot => slot.ID == customerSlot.ID);
         }
 
@@ -189,7 +188,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
             foreach (var order in Orders) {
                 // Найти свободный DesktopSlot, который может обработать продукт этого заказа
-               
+
                 suitableSlot = DesktopSlots.FirstOrDefault(slot => !slot.IsOccupied && slot.ProductStoreType == order.ProductStoreType);
 
                 if (suitableSlot != null) {
@@ -210,8 +209,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         }
 
         // Доделать для разных продуктов
-        public void DeliveredForSellProductSuccess(Order order)
-        {
+        public void DeliveredForSellProductSuccess(Order order) {
             ProductStoreType storeTypeProductStore = order.ProductStoreType;
             var desktop = _desktopsList.FirstOrDefault(desktops => desktops.ProductStoreType == storeTypeProductStore);
             // взять  тип продукта и выбрать нужный уровень стола в массиве - сдклать метод
@@ -219,65 +217,33 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
         }
 
-        public void AddDesktop(DesktopUnit newDesktop)
-        {
+        public void AddDesktop(DesktopUnit newDesktop) {
             _desktopsList.Add(newDesktop.GetComponentInChildren<DesktopUnit>());
         }
 
-        public List<DesktopUnit> GetDesktopUnitsList()
-        {
+        public List<DesktopUnit> GetDesktopUnitsList() {
             return _desktopsList;
         }
-        public bool HasActiveDesktops()
-        {
+        public bool HasActiveDesktops() {
             return _desktopsList != null && _desktopsList.Count > 0;
         }
 
-        public bool AreAllDesktopsUpgradedForLevel()
-        {
+        public bool AreAllDesktopsUpgradedForLevel() {
             return _desktopsList.Count > 0 && _desktopsList.All(desktop => desktop.IsUpgradedForLevel);
-            //if(!GameMode.IsOpenedAllPrebuilders) return false;
-            //  if (_desktopsList.Count == 0) return false;
-            // Проверяем, удовлетворяет ли каждый стол в списке _desktopsList условию IsUpgradedForLevel == true
-            //   int count = 0;
-            // foreach (var desktop in _desktopsList)
-            // {
-            //     if (desktop._desktopType == DesktopType.main &&
-            //         desktop.IsUpgradedForLevel)
-            //     {
-            //         count++;
-            //     }
-            // }
-            // var countMainDesktop = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main).Count;
-            // var countUpgradedDesktops = _desktopsList.FindAll(desktop => desktop._desktopType == DesktopType.main &&  desktop.IsUpgradedForLevel).Count;
-            // var countUpgradedDesktops = _desktopsList.FindAll(desktop => desktop.IsUpgradedForLevel)/*.Count;*/
-            // var countAnyDesktops = _desktopsList.Count;
-            /*if (countUpgradedDesktops >= countAnyDesktops)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }*/
-
-
-            //return _desktopsList.All(desktop => desktop._mainDesktop._desktopType == DesktopUnit.DesktopType.main && desktop._mainDesktop.IsUpgradedForLevel) && _desktopsList.Count>0;
+           
 
         }
 
-        public void AddDesktopSlots(DesktopSlot slot)
-        {
+        public void AddDesktopSlots(DesktopSlot slot) {
             DesktopSlots.Add(slot);
         }
 
-        public void StartBoostProductionCoroutine()
-        {
+        public void StartBoostProductionCoroutine() {
             StartCoroutine(BoostProductionCoroutine());
         }
         private IEnumerator BoostProductionCoroutine() {
             BoostProduction(); // Ускоряем производство
-           
+
 
             yield return new WaitForSeconds(60f); // Ждем одну минуту (60 секунд)
 

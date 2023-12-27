@@ -1,9 +1,8 @@
-﻿using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
-using Assets._Game._Scripts._2_Game;
-using Assets._Game._Scripts._5_Managers;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace Assets._Game._Scripts._0.Data {
+
+    // Использовался для хранения внешних ссылок в Game
     [CreateAssetMenu(fileName = "ReferecesData", menuName = "Game/Data/ReferencesData")]
 
     public class ReferencesData: ScriptableObject 

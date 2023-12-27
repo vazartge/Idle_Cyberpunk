@@ -1025,7 +1025,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1167824079556427460
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1132,19 +1132,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cfa332a8ccbca5246bb31e94f4370a72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moneyText: {fileID: 8395119017394141288}
-  inputField: {fileID: 9113829439883530775}
-  AvailabilityIndicatorForUpgradeWindows: {fileID: 157538978697117939}
-  AvailabilityIndicatorForNextLevelButton: {fileID: 240877134327264281}
-  upgradeButtonsContainer: {fileID: 6073128508974958919}
   UpgradeWindowGO: {fileID: 767015159980131985}
   NextLevelWindowGO: {fileID: 2545579671074294495}
   PurchaseWindowsGO: {fileID: 1730379989640145463}
   UIWindowSettingsToggleViewGO: {fileID: 1902956405894957683}
   OpenShopPurchaseButton: {fileID: 7759404864950555687}
   GameOverWindowGO: {fileID: 3155182774803481555}
+  inputField: {fileID: 9113829439883530775}
+  AvailabilityIndicatorForUpgradeWindows: {fileID: 157538978697117939}
+  AvailabilityIndicatorForNextLevelButton: {fileID: 240877134327264281}
   OpenNextLevelWindowButton: {fileID: 4443795246406875501}
   UpgradeButtonPrefab: {fileID: 838480487262861668, guid: 0308d7e3dd92b6e4e875a2dd0abd611c, type: 3}
+  _moneyText: {fileID: 8395119017394141288}
+  upgradeButtonsContainer: {fileID: 6073128508974958919}
   _closeWindowsButton: {fileID: 8716597301472409017}
 --- !u!114 &7858967014776380820
 MonoBehaviour:

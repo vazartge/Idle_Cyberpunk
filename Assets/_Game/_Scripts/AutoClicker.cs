@@ -6,6 +6,8 @@ using UnityEngine.UI;
 namespace Assets._Game._Scripts
 {
     public class AutoClicker : MonoBehaviour {
+
+        // Кликер для быстрого нажатия на клавиши покупки апгрейда стола - левый контрол + левая кнопка мыши на значок денег на кнопки апгрейда
         public float clickInterval = 0.1f; // Интервал между имитацией кликов
         private float timer;
         private bool isAutoClicking = false;

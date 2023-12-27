@@ -2,13 +2,14 @@
 
 namespace Assets._Game._Scripts._6_Entities._Store._Products
 {
+    // Типы продуктов - используются везде
     public enum ProductStoreType {
         MechanicalEyeProduct,
         RoboticArmProduct,
         IronHeartProduct,
         NeurochipProduct
     }
-
+    // Используется в сервисе Рандомазера, для определения порядка возрастания веса продукта при разных количствах открытых типов
     public static class ProductTypeExtensions {
         private static readonly Dictionary<ProductStoreType, int> Priorities = new Dictionary<ProductStoreType, int> {
             { ProductStoreType.MechanicalEyeProduct, 1 },

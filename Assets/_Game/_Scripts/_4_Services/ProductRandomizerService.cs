@@ -1,16 +1,14 @@
 ﻿using Assets._Game._Scripts._6_Entities._Store._Products;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Assets._Game._Scripts._4_Services {
     public class WeightsProductMap {
         public int Counts;
         public float[] Weights;
     }
-
+    // Получение случайного типа продукта в зависиости от весов дизайнера, в данный момент не используется
     public class ProductRandomizerService {
         private Dictionary<int, WeightsProductMap> _weightsMapByCount;
 

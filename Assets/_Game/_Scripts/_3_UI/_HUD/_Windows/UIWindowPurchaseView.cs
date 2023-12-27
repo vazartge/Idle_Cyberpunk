@@ -4,6 +4,7 @@ using UnityEngine;
 
 namespace Assets._Game._Scripts._3_UI._HUD._Windows
 {
+    // Окно покупок
     public class UIWindowPurchaseView : MonoBehaviour, IUiUnitView
     {
         public GameObject NOADSButton;
