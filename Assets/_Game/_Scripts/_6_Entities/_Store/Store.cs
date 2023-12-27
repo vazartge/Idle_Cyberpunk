@@ -243,43 +243,36 @@ namespace Assets._Game._Scripts._6_Entities._Store {
             StartCoroutine(BoostProductionCoroutine());
 
         }
-        private IEnumerator BoostProductionCoroutine() {
+        private IEnumerator BoostProductionCoroutine()
+        {
+            remainingTime = 60;
             BoostProduction(); // Ускоряем производство
             while (remainingTime > 0)
             {
-                UpdateTimerDisplay();
+                
                 yield return new WaitForSeconds(1f); // Ждем одну минуту (1 секунду)
                 remainingTime--;
-            }
-           // timerText.text = "00:00";
+            } 
+            // timerText.text = "00:00";
+            remainingTime = 60;
             NormalProduction(); // Возвращаем производство к нормальному режиму
             
         }
-        private void UpdateTimerDisplay(/*int remainingTime, int targetTime*/) {
-           // GameMode.UiMode.UpdateTimerDisplayIncreaseProfit();
-            // Форматируем время для отображения в формате минут:секунд
-            int minutes = Mathf.FloorToInt(remainingTime / 60);
-            int seconds = Mathf.FloorToInt(remainingTime % 60);
-           // timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-        }
-        // private void UpdateTimerDisplay() {
-        //     // Форматируем время для отображения в формате минут:секунд
-        //     int minutes = Mathf.FloorToInt(remainingTime / 60);
-        //     int seconds = Mathf.FloorToInt(remainingTime % 60);
-        //     timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-        // }
+     
 
         private void BoostProduction() {
             // Логика для ускорения производства
             Debug.Log("Производство ускорено!");
             GameMode.EconomyAndUpgrade.IsBoostedFromRewarded = true;
-        //    GameMode.UiMode.StartRewardedIcreaseIncome();
+            GameMode.UiMode.StartTimerBoostButton(remainingTime);
+            //    GameMode.UiMode.StartRewardedIcreaseIncome();
         }
 
         private void NormalProduction() {
             // Логика для возвращения к нормальному производству
             Debug.Log("Производство возвращено к нормальному режиму.");
             GameMode.EconomyAndUpgrade.IsBoostedFromRewarded = false;
+            
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets._Game._Scripts._0.Data._DataForLevelsUpgrade;
@@ -9,6 +10,7 @@ using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._6_Entities._Store._Products;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Assets._Game._Scripts._5_Managers {
     public class UIMode : MonoBehaviour {
@@ -42,6 +44,14 @@ namespace Assets._Game._Scripts._5_Managers {
         private UnitViewModel _currentUnitViewModel;
         private IUiUnitView _currentUiUnitView;
 
+        [Header("TIMER BOOST BUTTON")] 
+        [SerializeField] private GameObject BoostMessageWindowGO;
+        private UIWindowBoostMessageView _boostRewardedMessageWindow;
+        
+        [SerializeField] private Image fakeBoostButtonImage; // Ссылка на UI элемент Image
+        [SerializeField] private Button rewardedBoostButton; // Ссылка на кнопку
+        private float _timeoutDurationBoostButton; // Продолжительность таймаута в секундах
+        private float _timerBoostButton;
 
         #endregion
 
@@ -78,6 +88,8 @@ namespace Assets._Game._Scripts._5_Managers {
             _nextLevelWinodwView.Construct(this);
             _uiWindowPurchaseView = PurchaseWindowsGO.GetComponent<UIWindowPurchaseView>();
             _uiWindowSettingsToggleView = UIWindowSettingsToggleViewGO.GetComponent<UIWindowSettingsToggleView>();
+            _boostRewardedMessageWindow = BoostMessageWindowGO.GetComponent<UIWindowBoostMessageView>();
+            
 
             // Game.Instance.RegisterUIMode(this);
             Invoke("Construct", 2f);
@@ -397,5 +409,35 @@ namespace Assets._Game._Scripts._5_Managers {
             inputField.text = "";
         }
         #endregion
+
+        #region TIMER BOOST INCOME BUTTON REWARDED
+
+        public void StartTimerBoostButton(int remainingTime)
+        {
+            _boostRewardedMessageWindow.UpdateUI("Скорость производства увеличена в 2 раза на 1 минуту");
+            OpenNewView(_boostRewardedMessageWindow);
+            rewardedBoostButton.interactable = false;
+            fakeBoostButtonImage.gameObject.SetActive(true);
+            _timeoutDurationBoostButton = remainingTime;
+            _timerBoostButton = _timeoutDurationBoostButton;
+            StartCoroutine(RadialProgress());
+        }
+        private IEnumerator RadialProgress() {
+            while (_timerBoostButton > 0) {
+                _timerBoostButton -= Time.deltaTime;
+                fakeBoostButtonImage.fillAmount = _timerBoostButton / _timeoutDurationBoostButton;
+                yield return null;
+            }
+
+            fakeBoostButtonImage.fillAmount = 0;
+            rewardedBoostButton.interactable = true;
+            fakeBoostButtonImage.gameObject.SetActive(false);
+            _boostRewardedMessageWindow.UpdateUI("Скорость производства восстановлена");
+            OpenNewView(_boostRewardedMessageWindow);
+        }
+
+
+        #endregion
+
     }
 }

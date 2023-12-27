@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Assets._Game._Scripts._2_Game;
+using Assets._Game._Scripts._3_UI;
 using Assets._Game._Scripts._4_Services;
 using Assets._Game._Scripts._6_Entities._Store;
 using Assets._Game._Scripts._6_Entities._Store._Products;
@@ -124,9 +125,13 @@ namespace Assets._Game._Scripts._5_Managers {
 
         private void Awake() {
             Game.Instance.GameMode = this;
+
         }
 
         private void Start() {
+            // Camera.main.enabled = false;
+            // GameObject.FindGameObjectWithTag("UICamera").GetComponentInChildren<UICameraScript>().GetComponentInChildren<Camera>().enabled=false;
+
             Invoke("Construct", 1f);
         }
         public void Construct() {
@@ -159,6 +164,9 @@ namespace Assets._Game._Scripts._5_Managers {
             InitializeCustomers();
             _isInitialized = true;
             Debug.Log("GameMode Start");
+            // Camera.main.enabled = true;
+            // GameObject.FindGameObjectWithTag("UICamera").GetComponentInChildren<UICameraScript>().GetComponentInChildren<Camera>().enabled=true;
+
 
         }
 
