@@ -24,6 +24,7 @@ namespace Assets._Game._Scripts._6_Entities._Store {
         [SerializeField] private List<DesktopUnit> _desktopsList;
 
         private Queue<Customer> _waitingOrderCustomer;
+        private int remainingTime;
         public List<Order> Orders { get; set; }
 
         [SerializeField] public List<DesktopSlot> DesktopSlots { get; set; }
@@ -240,21 +241,39 @@ namespace Assets._Game._Scripts._6_Entities._Store {
 
         public void StartBoostProductionCoroutine() {
             StartCoroutine(BoostProductionCoroutine());
+
         }
         private IEnumerator BoostProductionCoroutine() {
             BoostProduction(); // Ускоряем производство
-
-
-            yield return new WaitForSeconds(60f); // Ждем одну минуту (60 секунд)
-
+            while (remainingTime > 0)
+            {
+                UpdateTimerDisplay();
+                yield return new WaitForSeconds(1f); // Ждем одну минуту (1 секунду)
+                remainingTime--;
+            }
+           // timerText.text = "00:00";
             NormalProduction(); // Возвращаем производство к нормальному режиму
-            //  isBoosted = false;
+            
         }
+        private void UpdateTimerDisplay(/*int remainingTime, int targetTime*/) {
+           // GameMode.UiMode.UpdateTimerDisplayIncreaseProfit();
+            // Форматируем время для отображения в формате минут:секунд
+            int minutes = Mathf.FloorToInt(remainingTime / 60);
+            int seconds = Mathf.FloorToInt(remainingTime % 60);
+           // timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        }
+        // private void UpdateTimerDisplay() {
+        //     // Форматируем время для отображения в формате минут:секунд
+        //     int minutes = Mathf.FloorToInt(remainingTime / 60);
+        //     int seconds = Mathf.FloorToInt(remainingTime % 60);
+        //     timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
+        // }
 
         private void BoostProduction() {
             // Логика для ускорения производства
             Debug.Log("Производство ускорено!");
             GameMode.EconomyAndUpgrade.IsBoostedFromRewarded = true;
+        //    GameMode.UiMode.StartRewardedIcreaseIncome();
         }
 
         private void NormalProduction() {

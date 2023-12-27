@@ -134,9 +134,11 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
                     break;
                 }
 
-                
+
                 Debug.Log($"IsUpgradedForLevel == {IsUpgradedForLevel}");
             }
+
+           
             UpdateOnChangeStatsOrMoney();
         }
 
@@ -148,7 +150,12 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         }
 
         public void OnClickDesktop1() {
-            UICanvasTransform.transform.position = UIPointTransformMain.position;
+            if (IsAdditionalDesktop) {
+                UICanvasTransform.transform.position = UIPointTransformAdditional.position;
+            } else {
+                UICanvasTransform.transform.position = UIPointTransformMain.position;
+            }
+
             ViewModel.ShowWindow();
         }
 
@@ -162,7 +169,7 @@ namespace Assets._Game._Scripts._6_Entities._Units._Desktop {
         }
 
         public void OnRewardedClickButton() {
-           Game.Instance.OnRewardedButtonFor5LevelsUpgrade(this);
+            Game.Instance.OnRewardedButtonFor5LevelsUpgrade(this);
         }
 
 
